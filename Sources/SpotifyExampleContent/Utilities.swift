@@ -1,6 +1,8 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
+
 extension Bundle {
    
     func decodeJson<T: Decodable>(
@@ -46,7 +48,6 @@ extension Bundle {
 
 }
 
-
 /*
  
  Templates:
@@ -61,3 +62,5 @@ extension Bundle {
  )!
  
  */
+
+#endif

@@ -1,5 +1,7 @@
 import Foundation
 
+#if SWIFT_TOOLS_5_3
+
 /// A namespace of images that can be used for
 /// testing. They are stored in jpeg format.
 public enum SpotifyExampleImages {
@@ -15,3 +17,4 @@ public enum SpotifyExampleImages {
 
 }
 
+#endif

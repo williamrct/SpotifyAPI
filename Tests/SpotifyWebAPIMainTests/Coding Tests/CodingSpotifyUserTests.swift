@@ -12,7 +12,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
     ]
 
     func testCodingCurrentSpotifyUser() {
-        
+        #if SWIFT_TOOLS_5_3
         let user = SpotifyUser.sampleCurrentUserProfile
         encodeDecode(user, areEqual: ==)
         
@@ -36,7 +36,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images, [])
         XCTAssertEqual(user.product, "premium")
-
+        #endif
 
     }
     

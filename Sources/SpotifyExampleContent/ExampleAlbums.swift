@@ -1,6 +1,8 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
+
 public extension Album {
     
     /// Sample data for testing purposes.
@@ -34,3 +36,5 @@ public extension Album {
     )!
     
 }
+
+#endif

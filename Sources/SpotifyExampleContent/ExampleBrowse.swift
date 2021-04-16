@@ -1,6 +1,8 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
+
 public extension PagingObject where Item == Playlist<PlaylistItemsReference> {
     
     /// Sample data for testing purposes.
@@ -30,3 +32,5 @@ public extension SpotifyCategory {
     )!
 
 }
+
+#endif

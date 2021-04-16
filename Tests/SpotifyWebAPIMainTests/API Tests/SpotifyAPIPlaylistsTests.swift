@@ -1466,6 +1466,8 @@ extension SpotifyAPIPlaylistsTests where
 
     func uploadPlaylistImage() {
 
+        #if SWIFT_TOOLS_5_3
+
         let expectation = XCTestExpectation(
             description: "uploadPlaylistImage"
         )
@@ -1524,6 +1526,8 @@ extension SpotifyAPIPlaylistsTests where
             .store(in: &Self.cancellables)
             
         self.wait(for: [expectation], timeout: 120)
+
+        #endif
 
     }
 

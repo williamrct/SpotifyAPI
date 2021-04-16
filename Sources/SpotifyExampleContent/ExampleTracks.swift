@@ -1,6 +1,8 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
+
 public extension Track {
     
     /// Sample data for testing purposes.
@@ -55,3 +57,4 @@ public extension PagingObject where Item == Track {
 
 }
 
+#endif

@@ -171,7 +171,7 @@ open class SpotifyAPITestCase: XCTestCase {
             """
 
         if let logFile = Self.logFile {
-            if #available(macOS 10.15.4, *) {
+            if #available(macOS 10.15.4, iOS 13.4, macCatalyst 13.4, tvOS 13.4, watchOS 6.2, *) {
                 try? message.append(to: logFile)
             }
         }

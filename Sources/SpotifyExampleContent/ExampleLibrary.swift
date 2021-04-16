@@ -1,6 +1,7 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
 
 public extension PagingObject where Item == SavedItem<Album> {
     
@@ -11,3 +12,5 @@ public extension PagingObject where Item == SavedItem<Album> {
     )!
 
 }
+
+#endif

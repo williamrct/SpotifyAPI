@@ -8,7 +8,7 @@ final class CursorPagingObjectPlayHistoryCodingTests: SpotifyAPITestCase {
     
     
     func testCoding() throws {
-        
+        #if SWIFT_TOOLS_5_3
         let playHistory = CursorPagingObject.sampleRecentlyPlayed
         try encodeDecode(playHistory, areEqual: { lhs, rhs in
             for x in [playHistory, lhs, rhs] {
@@ -18,6 +18,7 @@ final class CursorPagingObjectPlayHistoryCodingTests: SpotifyAPITestCase {
             XCTAssertEqual(playHistory, rhs)
             return lhs == rhs
         })
+        #endif
 
     }
     

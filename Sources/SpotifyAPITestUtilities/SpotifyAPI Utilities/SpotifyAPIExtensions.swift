@@ -66,3 +66,13 @@ public extension SpotifyAPI {
     }
 
 }
+
+#if !SWIFT_TOOLS_5_3
+extension Album {
+    
+    static let darkSideOfTheMoon = Album(
+        name: "The Dark Side of the Moon"
+    )
+
+}
+#endif

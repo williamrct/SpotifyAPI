@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.1
 
 import PackageDescription
 
@@ -34,21 +34,15 @@ let package = Package(
         .target(
             name: "SpotifyExampleContent",
             dependencies: ["SpotifyWebAPI"],
-            exclude: ["README.md"],
-            resources: [
-                .process("Resources")
-            ],
-            swiftSettings: [
-                .define("SWIFT_TOOLS_5_3")
-            ]
+            exclude: ["README.md"]
+            // resources: [
+            //     .process("Resources")
+            // ],
         ),
         .target(
             name: "SpotifyAPITestUtilities",
             dependencies: spotifyAPITestUtilitiesDependencies,
-            exclude: ["README.md"],
-            swiftSettings: [
-                .define("SWIFT_TOOLS_5_3")
-            ]
+            exclude: ["README.md"]
         ),
         
         // MARK: Test Targets
@@ -60,9 +54,6 @@ let package = Package(
                 "SpotifyExampleContent",
                 "RegularExpressions",
                 "SpotifyAPITestUtilities"
-            ],
-            swiftSettings: [
-                .define("SWIFT_TOOLS_5_3")
             ]
         )
     ]
@@ -72,22 +63,22 @@ var packageDependencies: [Package.Dependency] {
     
     var dependencies: [Package.Dependency] = [
         .package(
-            name: "RegularExpressions",
+            // name: "RegularExpressions",
             url: "https://github.com/Peter-Schorn/RegularExpressions.git",
             "2.0.7"..<"3.0.0"
         ),
         .package(
-            name: "swift-log",
+            // name: "swift-log",
             url: "https://github.com/apple/swift-log.git",
             from: "1.4.0"
         ),
         .package(
-            name: "OpenCombine",
+            // name: "OpenCombine",
             url: "https://github.com/OpenCombine/OpenCombine.git",
             from: "0.11.0"
         ),
         .package(
-            name: "swift-crypto",
+            // name: "swift-crypto",
             url: "https://github.com/apple/swift-crypto.git",
             from: "1.1.3"
         )
@@ -96,17 +87,17 @@ var packageDependencies: [Package.Dependency] {
     #if TEST
     dependencies += [
         .package(
-            name: "vapor",
+            // name: "vapor",
             url: "https://github.com/vapor/vapor.git",
             from: "4.41.9"
         ),
         .package(
-            name: "swift-nio",
+            // name: "swift-nio",
             url: "https://github.com/apple/swift-nio.git",
             from: "2.27.0"
         ),
         .package(
-            name: "async-http-client",
+            // name: "async-http-client",
             url: "https://github.com/swift-server/async-http-client.git",
             from: "1.2.5"
         )

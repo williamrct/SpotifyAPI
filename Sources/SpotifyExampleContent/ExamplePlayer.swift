@@ -1,6 +1,8 @@
 import Foundation
 import SpotifyWebAPI
 
+#if SWIFT_TOOLS_5_3
+
 public extension CursorPagingObject where Item == PlayHistory {
     
     /// Sample data for testing purposes.
@@ -19,3 +21,5 @@ public extension CurrentlyPlayingContext {
     )!
 
 }
+
+#endif
