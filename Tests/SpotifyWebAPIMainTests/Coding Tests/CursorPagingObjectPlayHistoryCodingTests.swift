@@ -35,14 +35,20 @@ final class CursorPagingObjectPlayHistoryCodingTests: SpotifyAPITestCase {
             "https://api.spotify.com/v1/me/player/recently-played?before=1600459749010&limit=45"
         )
         XCTAssertEqual(playHistory.limit, 45)
-        
-        let cursors = try XCTUnwrap(playHistory.cursors)
+
+        guard let cursors = playHistory.cursors else {
+            XCTFail("cursors should not be nil")
+            return
+        }
         XCTAssertEqual(cursors.before, "1600459749010")
         XCTAssertEqual(cursors.after, "1600711411419")
         
 
         let items = playHistory.items
-        try XCTSkipIf(items.count != 45)
+        if items.count != 45 {
+            XCTFail("items.count should be 45, not \(items.count)")
+            return
+        }
         
         // MARK: First Track
         do {
@@ -53,7 +59,11 @@ final class CursorPagingObjectPlayHistoryCodingTests: SpotifyAPITestCase {
                 accuracy: 43_200
             )
             
-            let context = try XCTUnwrap(bones.context)
+            guard let context = bones.context else {
+                XCTFail("context should not be nil")
+                return
+            }
+            
             XCTAssertEqual(
                 context.uri,
                 "spotify:playlist:33yLOStnp2emkEA76ew1Dz"
@@ -99,7 +109,10 @@ final class CursorPagingObjectPlayHistoryCodingTests: SpotifyAPITestCase {
                 accuracy: 43_200
             )
             
-            let context = try XCTUnwrap(breathe.context)
+            guard let context = breathe.context else {
+                XCTFail("context should not be nil")
+                return
+            }
             XCTAssertEqual(
                 context.uri,
                 "spotify:album:4LH4d3cOWNNsVw41Gqt2kv"

@@ -125,7 +125,10 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
         
         // MARK: Check Album
         
-        let album = try XCTUnwrap(track.album)
+        guard let album = track.album else {
+            XCTFail("album should not be nil")
+            return
+        }
         XCTAssertEqual(album.type, .album)
         XCTAssertEqual(album.availableMarkets, ["AD", "AE", "ZA"])
         XCTAssertEqual(
@@ -152,7 +155,10 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
             XCTFail("release date should not be nil")
         }
         
-        let albumImages = try XCTUnwrap(album.images)
+        guard let albumImages = album.images else {
+            XCTFail("album.images should not be nil")
+            return
+        }
         XCTAssertEqual(albumImages[0].height, 640)
         XCTAssertEqual(albumImages[0].width, 641)
         XCTAssertEqual(
@@ -176,7 +182,11 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
         
         // MARK: Check Artist
         
-        let artist = try XCTUnwrap(track.artists?.first)
+        guard let artist = track.artists?.first else {
+            XCTFail("artists should not be empty")
+            return
+        }
+        
 
         XCTAssertEqual(artist.name, "Men I Trust")
         XCTAssertEqual(

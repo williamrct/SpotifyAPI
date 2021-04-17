@@ -199,6 +199,8 @@ extension SpotifyAPIBrowseTests {
     
     func recommendations() {
         
+        var receivedGenres: [String]? = nil
+
         func createTrackAttributesFromGenres(
             _ genres: [String]
         ) -> TrackAttributes {
@@ -307,8 +309,6 @@ extension SpotifyAPIBrowseTests {
         .store(in: &cancellables)
 
         let expectation = XCTestExpectation(description: "testRecommendations")
-        
-        var receivedGenres: [String]? = nil
         
         Self.spotify.recommendationGenres()
             .XCTAssertNoFailure()

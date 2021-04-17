@@ -295,31 +295,31 @@ public class AuthorizationCodeFlowManagerBase {
         }
     }
 
-    /**
-     Returns a copy of self.
-     
-     Copies the following properties:
-     * `clientId`
-     * `clientSecret`
-     * `accessToken`
-     * `refreshToken`
-     * `expirationDate`
-     * `scopes`
-     * `networkAdaptor`
-     */
-    public func makeCopy() -> Self {
-        let instance = Self(
-            clientId: self.clientId, clientSecret: self.clientSecret
-        )
-        return self.updateAuthInfoDispatchQueue.sync {
-            instance._accessToken = self._accessToken
-            instance._refreshToken = self._refreshToken
-            instance._expirationDate = self._expirationDate
-            instance._scopes = self._scopes
-            instance.networkAdaptor = self.networkAdaptor
-            return instance
-        }
-    }
+//    /**
+//     Returns a copy of self.
+//     
+//     Copies the following properties:
+//     * `clientId`
+//     * `clientSecret`
+//     * `accessToken`
+//     * `refreshToken`
+//     * `expirationDate`
+//     * `scopes`
+//     * `networkAdaptor`
+//     */
+//    public func makeCopy() -> Self {
+//        let instance = Self(
+//            clientId: self.clientId, clientSecret: self.clientSecret
+//        )
+//        return self.updateAuthInfoDispatchQueue.sync {
+//            instance._accessToken = self._accessToken
+//            instance._refreshToken = self._refreshToken
+//            instance._expirationDate = self._expirationDate
+//            instance._scopes = self._scopes
+//            instance.networkAdaptor = self.networkAdaptor
+//            return instance
+//        }
+//    }
 }
 
 public extension AuthorizationCodeFlowManagerBase {

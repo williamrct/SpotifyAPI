@@ -25,6 +25,8 @@ swift_files: [str] = []
 
 package_file = os.path.join(project_directory, "Package.swift")
 swift_files.append(package_file)
+package_swift_5_1_file = os.path.join(project_directory, "Package@swift-5.1.swift")
+swift_files.append(package_swift_5_1_file)
 
 # search for all swift source code files
 for directory in (sources_directory, tests_directory):

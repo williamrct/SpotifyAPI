@@ -65,7 +65,7 @@ public extension StringProtocol {
 /// Assert the Spotify user is "petervschorn".
 public func assertUserIsPeter(
     _ user: SpotifyUser,
-    file: StaticString = #filePath,
+    file: StaticString = #file,
     line: UInt = #line
 ) {
  
@@ -221,7 +221,6 @@ public extension URLSession {
 
 }
 
-@available(macOS 10.15.4, iOS 13.4, macCatalyst 13.4, tvOS 13.4, watchOS 6.2, *)
 public extension String {
     
     func append(to file: URL, terminator: String = "\n") throws {
@@ -236,7 +235,17 @@ public extension String {
         if manager.fileExists(atPath: file.path) {
             let handle = try FileHandle(forUpdating: file)
             do {
-                try handle.seekToEnd()
+                #if compiler(>=5.3)
+                if #available(macOS 10.15.4, iOS 13.4, macCatalyst 13.4, tvOS 13.4, watchOS 6.2, *) {
+                    try handle.seekToEnd()
+                }
+                else {
+                    handle.seekToEndOfFile()
+                }
+                #else
+                handle.seekToEndOfFile()
+                #endif
+                
                 handle.write(data)
                 try handle.close()
 

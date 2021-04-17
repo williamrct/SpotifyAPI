@@ -23,8 +23,8 @@ final class CodingClientCredentialsFlowManagerTests: SpotifyAPITestCase {
         
         encodeDecode(clientCredentialsManager, areEqual: ==)
         
-        let copy = clientCredentialsManager.makeCopy()
-        XCTAssertEqual(clientCredentialsManager, copy)
+//        let copy = clientCredentialsManager.makeCopy()
+//        XCTAssertEqual(clientCredentialsManager, copy)
         
         let spotifyAPI = SpotifyAPI(
             authorizationManager: clientCredentialsManager

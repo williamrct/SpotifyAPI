@@ -65,7 +65,10 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.uri, "spotify:user:p8gjjfbirm8ucyt82ycfi9zuu")
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images?.count, 1)
-        let image = try XCTUnwrap(user.images?.first)
+        guard let image = user.images?.first else {
+            XCTFail("images should not be empty")
+            return
+        }
         XCTAssertNil(image.height)
         XCTAssertNil(image.width)
         XCTAssertEqual(

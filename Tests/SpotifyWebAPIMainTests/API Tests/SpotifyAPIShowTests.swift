@@ -313,6 +313,8 @@ extension SpotifyAPIShowTests {
         
         #if canImport(Combine)
 
+        var receivedPageIndices: Set<Int> = []
+
         func receiveShowEpisodes(_ episodes: PagingObject<Episode>) {
             // the index of the last item in the page
 //            let lastItemIndex = episodes.offset + episodes.items.count - 1
@@ -342,8 +344,6 @@ extension SpotifyAPIShowTests {
             }
 
         }
-
-        var receivedPageIndices: Set<Int> = []
 
         let expectation = XCTestExpectation(
             description: "showEpisodesExtendPagesConcurrent"

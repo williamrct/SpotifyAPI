@@ -1220,7 +1220,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: SpotifyScopeAuthoriz
             .XCTAssertNoFailure()
             .flatMap { devices -> AnyPublisher<Void, Error> in
 
-                guard let activeDevice = devices.first(where: \.isActive) else {
+                guard let activeDevice = devices.first(where: { $0.isActive }) else {
                     return SpotifyLocalError.other("no active device to use")
                         .anyFailingPublisher()
                 }

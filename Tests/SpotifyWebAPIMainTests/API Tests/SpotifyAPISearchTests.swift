@@ -183,6 +183,9 @@ extension SpotifyAPISearchTests {
     
     func specificTrackSearch() {
 
+        let trackName =
+            "Sgt. Pepper's Lonely Hearts Club Band - Reprise / Remastered 2009"
+
         func receiveResults(_ results: SearchResult) {
             
             encodeDecode(results)
@@ -217,9 +220,6 @@ extension SpotifyAPISearchTests {
             description: "testSpecificTrackSearch"
         )
         
-        let trackName =
-            "Sgt. Pepper's Lonely Hearts Club Band - Reprise / Remastered 2009"
-
         Self.spotify.search(
             query: trackName,
             categories: [.track],

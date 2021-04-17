@@ -40,7 +40,7 @@ private extension SpotifyAPI where
             // to use that one. For example, if content is already playing,
             // then it will be playing on the actice device. If not, then
             // just use the first available device.
-            let device = usableDevices.first(where: \.isActive)
+            let device = usableDevices.first(where: { $0.isActive })
                     ?? usableDevices.first
             
             if let deviceId = device?.id {

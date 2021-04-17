@@ -82,30 +82,6 @@ extension SpotifyAPIInsufficientScopeTests where
     /// scopes are known in advance.
     func insufficientScopeLocal() {
 
-        func receiveCompletion(
-            _ completion: Subscribers.Completion<Error>
-        ) {
-            guard case .failure(let error) = completion else {
-                XCTFail("should've finished with error")
-                return
-            }
-            guard let localError = error as? SpotifyLocalError else {
-                XCTFail("should've received SpotifyLocalError: \(error)")
-                return
-            }
-            switch localError {
-                case .insufficientScope(
-                    let requiredScopes, let authorizedScopes
-                ):
-                    XCTAssertEqual(
-                        requiredScopes, [.userModifyPlaybackState]
-                    )
-                    XCTAssertEqual(authorizedScopes, insufficientScopes)
-                default:
-                    XCTFail("unexpected error: \(localError)")
-            }
-        }
-
         var didChangeCount = 0
         var cancellables: Set<AnyCancellable> = []
         Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
@@ -146,6 +122,30 @@ extension SpotifyAPIInsufficientScopeTests where
             description: "testInsufficientScope play track"
         )
         
+        func receiveCompletion(
+            _ completion: Subscribers.Completion<Error>
+        ) {
+            guard case .failure(let error) = completion else {
+                XCTFail("should've finished with error")
+                return
+            }
+            guard let localError = error as? SpotifyLocalError else {
+                XCTFail("should've received SpotifyLocalError: \(error)")
+                return
+            }
+            switch localError {
+                case .insufficientScope(
+                    let requiredScopes, let authorizedScopes
+                ):
+                    XCTAssertEqual(
+                        requiredScopes, [.userModifyPlaybackState]
+                    )
+                    XCTAssertEqual(authorizedScopes, insufficientScopes)
+                default:
+                    XCTFail("unexpected error: \(localError)")
+            }
+        }
+
         Self.spotify.play(.init(URIs.Tracks.breathe))
             .sink(
                 receiveCompletion: { completion in

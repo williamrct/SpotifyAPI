@@ -23,8 +23,8 @@ final class CodingAuthorizationCodeFlowPKCEManagerTests: SpotifyAPITestCase {
         
         encodeDecode(authManager, areEqual: ==)
 
-        let copy = authManager.makeCopy()
-        XCTAssertEqual(authManager, copy)
+//        let copy = authManager.makeCopy()
+//        XCTAssertEqual(authManager, copy)
         
         let spotifyAPI = SpotifyAPI(authorizationManager: authManager)
 

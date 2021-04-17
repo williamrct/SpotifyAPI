@@ -86,7 +86,7 @@ extension SpotifyAPIFollowTests where
         .flatMap { arists -> AnyPublisher<CursorPagingObject<Artist>, Error> in
             allFollowedArtists = arists.items
             guard allFollowedArtists.count >= 3 else {
-                return XCTSkip(
+                return SpotifyLocalError.other(
                     "test requires the user to follow at least 3 artists"
                 )
                 .anyFailingPublisher()
