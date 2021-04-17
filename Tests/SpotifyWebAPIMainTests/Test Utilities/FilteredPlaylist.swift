@@ -43,7 +43,7 @@ extension FilteredPlaylist: Codable {
         let trackItems = try trackPagingObjectContainer.decode(
             [[String: FilteredTrack]].self, forKey: .items
         )
-        self.tracks = trackItems.flatMap(\.values)
+        self.tracks = trackItems.flatMap({ $0.values })
     }
     
     func encode(to encoder: Encoder) throws {

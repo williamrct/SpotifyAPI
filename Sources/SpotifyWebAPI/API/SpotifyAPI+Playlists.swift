@@ -1005,7 +1005,7 @@ public extension SpotifyAPI where
         with newItems: [SpotifyURIConvertible]
     ) -> AnyPublisher<String, Error> {
         
-        let body = ["uris": newItems.map(\.uri)]
+        let body = ["uris": newItems.map({ $0.uri })]
         
         return self.modifyPlaylist(
             playlist,

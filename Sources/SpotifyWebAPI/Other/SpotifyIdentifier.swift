@@ -62,7 +62,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
         let identifiers = try uris.map { uri in
             try Self(uri: uri)
         }
-        let allIdCategories = identifiers.map(\.idCategory).removingDuplicates()
+        let allIdCategories = identifiers.map({ $0.idCategory }).removingDuplicates()
         
         if let categories = categories {
             if !allIdCategories.allSatisfy({ category in
@@ -74,7 +74,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
             }
         }
         
-        return identifiers.map(\.id)
+        return identifiers.map({ $0.id })
 
     }
     
@@ -209,7 +209,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
             guard let idCategory = IDCategory(rawValue: idCategoryString) else {
                 errorMessage = """
                     : id category must be one of the following: \
-                    \(IDCategory.allCases.map(\.rawValue)), \
+                    \(IDCategory.allCases.map({ $0.rawValue })), \
                     but received '\(idCategoryString)'
                     """
                 break parseURI
@@ -286,7 +286,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
             guard let idCategory = IDCategory(rawValue: pathComponents[1]) else {
                 errorMessage = """
                     id category must be one of the following: \
-                    \(IDCategory.allCases.map(\.rawValue)), \
+                    \(IDCategory.allCases.map({ $0.rawValue })), \
                     but received '\(pathComponents[1])'"
                     """
                 break parseURL

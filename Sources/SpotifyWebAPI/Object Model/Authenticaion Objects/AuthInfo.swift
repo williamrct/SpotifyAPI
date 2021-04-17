@@ -144,7 +144,7 @@ extension AuthInfo: CustomStringConvertible {
         
         var scopeString = "nil"
         if let scopes = scopes {
-            scopeString = "\(scopes.map(\.rawValue))"
+            scopeString = "\(scopes.map({ $0.rawValue }))"
         }
         
         return """

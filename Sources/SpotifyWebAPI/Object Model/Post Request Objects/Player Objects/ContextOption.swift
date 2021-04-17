@@ -78,7 +78,7 @@ extension ContextOption: Codable {
                 )
             case .uris(let uris):
                 try container.encode(
-                    uris.map(\.uri), forKey: .uris
+                    uris.map({ $0.uri }), forKey: .uris
                 )
         }
     }
@@ -99,7 +99,7 @@ extension ContextOption: Hashable {
             case .contextURI(let context):
                 hasher.combine(context.uri)
             case .uris(let uris):
-                hasher.combine(uris.map(\.uri))
+                hasher.combine(uris.map({ $0.uri }))
         }
     }
     
@@ -109,7 +109,7 @@ extension ContextOption: Hashable {
             case (.contextURI(let lhsContext), .contextURI(let rhsContext)):
                 return lhsContext.uri == rhsContext.uri
             case (.uris(let lhsURIs), .uris(let rhsURIs)):
-                return lhsURIs.map(\.uri) == rhsURIs.map(\.uri)
+                return lhsURIs.map({ $0.uri }) == rhsURIs.map({ $0.uri })
             default:
                 return false
         }

@@ -73,7 +73,7 @@ extension Numeric where Magnitude: FloatingPoint {
     public func isApproximatelyEqual(
         to other: Self,
         relativeTolerance: Magnitude = Magnitude.ulpOfOne.squareRoot(),
-        norm: (Self) -> Magnitude = \.magnitude
+        norm: (Self) -> Magnitude = { $0.magnitude }
     ) -> Bool {
         return isApproximatelyEqual(
             to: other,
@@ -144,7 +144,7 @@ extension Numeric where Magnitude: FloatingPoint {
             to: other,
             absoluteTolerance: absoluteTolerance,
             relativeTolerance: relativeTolerance,
-            norm: \.magnitude
+            norm: { $0.magnitude }
         )
     }
 }

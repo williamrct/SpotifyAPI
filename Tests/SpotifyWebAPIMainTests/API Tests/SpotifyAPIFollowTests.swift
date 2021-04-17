@@ -91,7 +91,7 @@ extension SpotifyAPIFollowTests where
                 )
                 .anyFailingPublisher()
             }
-            let artistURIs = allFollowedArtists.map(\.uri)
+            let artistURIs = allFollowedArtists.map({ $0.uri })
             let thirdFromLastArtist = artistURIs[
                 allFollowedArtists.count - 3
             ]

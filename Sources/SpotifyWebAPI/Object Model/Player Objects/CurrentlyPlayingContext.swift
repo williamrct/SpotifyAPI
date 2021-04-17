@@ -248,7 +248,7 @@ extension CurrentlyPlayingContext: Codable {
                         """
                         unexpected PlaybackAction: '\(item.key)'; \
                         must be one of the following: \
-                        \(PlaybackActions.allCases.map(\.rawValue))
+                        \(PlaybackActions.allCases.map({ $0.rawValue }))
                         """
                     )
                     return nil

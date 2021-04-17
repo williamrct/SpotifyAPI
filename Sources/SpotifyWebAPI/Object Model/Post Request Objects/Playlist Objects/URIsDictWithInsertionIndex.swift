@@ -66,7 +66,7 @@ extension URIsDictWithInsertionIndex: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(
-            self.uris.map(\.uri), forKey: .uris
+            self.uris.map({ $0.uri }), forKey: .uris
         )
         try container.encodeIfPresent(
             self.position, forKey: .position
@@ -86,13 +86,13 @@ extension URIsDictWithInsertionIndex: Hashable {
     /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(position)
-        hasher.combine(uris.map(\.uri))
+        hasher.combine(uris.map({ $0.uri }))
     }
     
     /// :nodoc:
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.position == rhs.position &&
-                lhs.uris.map(\.uri) == rhs.uris.map(\.uri)
+                lhs.uris.map({ $0.uri }) == rhs.uris.map({ $0.uri })
     }
 
 }

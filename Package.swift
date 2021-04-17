@@ -50,9 +50,9 @@ let package = Package(
                 .define("SWIFT_TOOLS_5_3")
             ]
         ),
-        
+
         // MARK: Test Targets
-        
+
         .testTarget(
             name: "SpotifyWebAPIMainTests",
             dependencies: [
@@ -69,7 +69,7 @@ let package = Package(
 )
 
 var packageDependencies: [Package.Dependency] {
-    
+
     var dependencies: [Package.Dependency] = [
         .package(
             name: "RegularExpressions",
@@ -92,7 +92,7 @@ var packageDependencies: [Package.Dependency] {
             from: "1.1.3"
         )
     ]
-    
+
     #if TEST
     dependencies += [
         .package(
@@ -117,7 +117,7 @@ var packageDependencies: [Package.Dependency] {
 }
 
 var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
-    
+
     var dependencies: [Target.Dependency] = [
         "SpotifyWebAPI",
         "SpotifyExampleContent",
@@ -126,7 +126,7 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
         .product(name: "OpenCombineDispatch", package: "OpenCombine"),
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
-    
+
     #if TEST
     dependencies += [
         .product(name: "Vapor", package: "vapor"),
@@ -135,7 +135,7 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
         .product(name: "AsyncHTTPClient", package: "async-http-client")
     ]
     #endif
-    
+
     return dependencies
 
 }

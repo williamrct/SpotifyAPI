@@ -50,7 +50,7 @@ extension SpotifyAPIPlaylistsTests {
                         XCTFail("Crumb playlist should have at least 15 tracks")
                         return
                     }
-                    let tracks = playlist.items.items.map(\.item)
+                    let tracks = playlist.items.items.map({ $0.item })
                     for (i, track) in tracks.enumerated() {
                         guard trackNames.count > i else {
                             return
@@ -101,7 +101,7 @@ extension SpotifyAPIPlaylistsTests {
             receiveCompletion: { _ in expectation.fulfill() },
             receiveValue: { playlistTracks in
                 encodeDecode(playlistTracks, areEqual: ==)
-                let tracks = playlistTracks.items.map(\.item)
+                let tracks = playlistTracks.items.map({ $0.item })
                 XCTAssertEqual(playlistTracks.items.count, 10)
                 if playlistTracks.items.count < 10 { return }
 
@@ -142,7 +142,7 @@ extension SpotifyAPIPlaylistsTests {
             XCTAssertEqual(playlist.name, "Mac DeMarco")
             XCTAssertEqual(playlist.uri, "spotify:playlist:6oyVZ3dZZVCkXJm451Hj5v")
             XCTAssertEqual(playlist.ownerDisplayName, "petervschorn")
-            let artists = playlist.tracks.flatMap(\.artists)
+            let artists = playlist.tracks.flatMap({ $0.artists })
             for artist in artists {
                 XCTAssertEqual(artist.name, "Mac DeMarco")
                 XCTAssertEqual(artist.type, .artist)
@@ -271,7 +271,7 @@ extension SpotifyAPIPlaylistsTests {
             receiveCompletion: { _ in expectation.fulfill() },
             receiveValue: { playlistsArray in
                 encodeDecode(playlistsArray, areEqual: ==)
-                let playlists = playlistsArray.flatMap(\.items)
+                let playlists = playlistsArray.flatMap({ $0.items })
                 for playlist in playlists {
                     print("[\(playlist.name)]")
                 }
@@ -301,7 +301,7 @@ extension SpotifyAPIPlaylistsTests {
             internalQueue.sync {
                 receivePlaylistItemsCallCount += 1
             }
-            for user in playlistItems.items.map(\.addedBy) {
+            for user in playlistItems.items.map({ $0.addedBy }) {
                 guard let user = user else {
                     XCTFail("addedBy should not be nil")
                     continue
@@ -309,7 +309,7 @@ extension SpotifyAPIPlaylistsTests {
                 assertUserIsPeter(user)
             }
 
-            let items = playlistItems.items.map(\.item)
+            let items = playlistItems.items.map({ $0.item })
 
             if !onlyTracks {
                 encodeDecode(items)
@@ -642,7 +642,7 @@ extension SpotifyAPIPlaylistsTests where
                 // we just added, in the same order.
                 XCTAssertEqual(
                     playlist.items.items.compactMap(\.item?.uri),
-                    itemsToAddToPlaylist.map(\.uri)
+                    itemsToAddToPlaylist.map({ $0.uri })
                 )
 
                 // unfollow the playlist
@@ -664,7 +664,7 @@ extension SpotifyAPIPlaylistsTests where
                     XCTAssertFalse(
                         // ensure the user is no longer following the playlist
                         // because we just unfollowed it
-                        playlists.items.map(\.uri).contains(createdPlaylistURI)
+                        playlists.items.map({ $0.uri }).contains(createdPlaylistURI)
                     )
                 }
             )
@@ -694,8 +694,8 @@ extension SpotifyAPIPlaylistsTests where
         encodeDecode(urisDict, areEqual: ==)
 
         XCTAssertEqual(
-            urisDict.uris.map(\.uri),
-            itemsToAddToPlaylist.map(\.uri)
+            urisDict.uris.map({ $0.uri }),
+            itemsToAddToPlaylist.map({ $0.uri })
         )
         XCTAssertEqual(urisDict.position, 5)
 
@@ -827,7 +827,7 @@ extension SpotifyAPIPlaylistsTests where
                 // MARK: Ensure the playlist has the items we added
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    itemsToAddToPlaylist.map(\.uri)
+                    itemsToAddToPlaylist.map({ $0.uri })
                 )
 
                 // MARK: Reorder the items in the playlist 1
@@ -848,7 +848,7 @@ extension SpotifyAPIPlaylistsTests where
                 // MARK: Ensure the items in the playlist were reordered as requested 1
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    reordered1.map(\.uri)
+                    reordered1.map({ $0.uri })
                 )
                 // MARK: Reorder the items in the playlist 2
                 return Self.spotify.reorderPlaylistItems(
@@ -870,7 +870,7 @@ extension SpotifyAPIPlaylistsTests where
                 // MARK: Ensure the items in the playlist were reordered as requested 2
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    reordered2.map(\.uri)
+                    reordered2.map({ $0.uri })
                 )
                 // MARK: Unfollow the playlist
                 return Self.spotify.unfollowPlaylistForCurrentUser(
@@ -896,7 +896,7 @@ extension SpotifyAPIPlaylistsTests where
                         // ensure the user is no longer following the playlist
                         // because we just unfollowed it
                         // MARK: Ensure the playlist is no longer being followed
-                        playlists.items.map(\.uri).contains(createdPlaylistURI)
+                        playlists.items.map({ $0.uri }).contains(createdPlaylistURI)
                     )
                 }
             )
@@ -1004,7 +1004,7 @@ extension SpotifyAPIPlaylistsTests where
                 encodeDecode(playlistItems, areEqual: ==)
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    itemsToAddToPlaylist.map(\.uri)
+                    itemsToAddToPlaylist.map({ $0.uri })
                 )
 
                 XCTAssertNotNil(playlistSnapshotId)
@@ -1025,7 +1025,7 @@ extension SpotifyAPIPlaylistsTests where
                 encodeDecode(playlistItems, areEqual: ==)
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    itemsLeftInPlaylist.map(\.uri)
+                    itemsLeftInPlaylist.map({ $0.uri })
                 )
 
                 return Self.spotify.unfollowPlaylistForCurrentUser(
@@ -1169,7 +1169,7 @@ extension SpotifyAPIPlaylistsTests where
 
                 let playlistItems = playlist.items.items.compactMap(\.item?.uri)
                 XCTAssertEqual(
-                    playlistItems, itemsToAddToPlaylist.map(\.uri)
+                    playlistItems, itemsToAddToPlaylist.map({ $0.uri })
                 )
 
                 XCTAssertNotNil(playlistSnapshotId)
@@ -1195,7 +1195,7 @@ extension SpotifyAPIPlaylistsTests where
                 encodeDecode(playlistItems, areEqual: ==)
                 XCTAssertEqual(
                     playlistItems.items.compactMap(\.item?.uri),
-                    itemsLeftInPlaylist.map(\.uri)
+                    itemsLeftInPlaylist.map({ $0.uri })
                 )
 
                 return Self.spotify.unfollowPlaylistForCurrentUser(
@@ -1294,7 +1294,7 @@ extension SpotifyAPIPlaylistsTests where
             .flatMap { playlistItems -> AnyPublisher<String, Error> in
 
                 let tracks = playlistItems.items.compactMap(\.item?.uri)
-                XCTAssertEqual(tracks, itemsToAddToPlaylist.map(\.uri))
+                XCTAssertEqual(tracks, itemsToAddToPlaylist.map({ $0.uri }))
 
                 return Self.spotify.replaceAllPlaylistItems(
                     createdPlaylistURI, with: replacementItems
@@ -1318,7 +1318,7 @@ extension SpotifyAPIPlaylistsTests where
             .flatMap { playlistItems -> AnyPublisher<String, Error> in
 
                 let tracks = playlistItems.items.compactMap(\.item?.uri)
-                XCTAssertEqual(tracks, replacementItems.map(\.uri))
+                XCTAssertEqual(tracks, replacementItems.map({ $0.uri }))
 
                 return Self.spotify.replaceAllPlaylistItems(
                     createdPlaylistURI, with: []
@@ -1362,7 +1362,7 @@ extension SpotifyAPIPlaylistsTests where
                         // ensure the user is no longer following the playlist
                         // because we just unfollowed it
                         // MARK: Ensure the playlist is no longer being followed
-                        playlists.items.map(\.uri).contains(createdPlaylistURI)
+                        playlists.items.map({ $0.uri }).contains(createdPlaylistURI)
                     )
                 }
             )

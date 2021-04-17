@@ -368,7 +368,7 @@ public extension Scope {
      [1]: https://developer.spotify.com/documentation/general/guides/scopes/
      */
     static func makeString(_ scopes: Set<Scope>) -> String {
-        return scopes.map(\.rawValue).joined(separator: " ")
+        return scopes.map({ $0.rawValue }).joined(separator: " ")
     }
     
     /**
@@ -409,7 +409,7 @@ public extension Scope {
            The string must contain only a single scope.
      */
     static func contains(_ scope: String) -> Bool {
-        return Self.allCases.map(\.rawValue).contains(scope.strip())
+        return Self.allCases.map({ $0.rawValue }).contains(scope.strip())
     }
     
 }

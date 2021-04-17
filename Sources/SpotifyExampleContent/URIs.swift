@@ -24,7 +24,7 @@ public extension SpotifyURIConvertibleEnum {
     /// - Parameter items: A variadic array of URIs.
     @inlinable
     static func array(_ items: Self...) -> [String] {
-        return items.map(\.uri)
+        return items.map({ $0.uri })
     }
     
 }

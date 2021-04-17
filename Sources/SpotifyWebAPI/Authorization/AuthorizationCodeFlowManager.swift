@@ -595,7 +595,7 @@ extension AuthorizationCodeFlowManager: CustomStringConvertible {
                     .description(with: .autoupdatingCurrent)
                     ?? "nil"
             
-            let scopeString = _scopes.map({ "\($0.map(\.rawValue))" })
+            let scopeString = _scopes.map({ "\($0.map({ $0.rawValue }))" })
                     ?? "nil"
             
             return """

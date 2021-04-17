@@ -10,7 +10,7 @@ private extension SpotifyAPI {
         
         _ = self.playlist("")
             .sinkIgnoringCompletion{ (playlist: Playlist<PlaylistItems>) in
-                let playlistItems: [PlaylistItem] = playlist.items.items.compactMap(\.item)
+                let playlistItems: [PlaylistItem] = playlist.items.items.compactMap({ $0.item })
                 _ = playlistItems
             }
         
@@ -20,7 +20,7 @@ private extension SpotifyAPI {
         
         _ = self.playlistTracks("")
             .sinkIgnoringCompletion { (playlistTracks: PlaylistTracks) in
-                let tracks: [Track] = playlistTracks.items.compactMap(\.item)
+                let tracks: [Track] = playlistTracks.items.compactMap({ $0.item })
                 _ = tracks
             }
         
@@ -30,7 +30,7 @@ private extension SpotifyAPI {
         
         _ = self.playlistItems("")
             .sinkIgnoringCompletion { (playlistItems: PlaylistItems) in
-                let items: [PlaylistItem] = playlistItems.items.compactMap(\.item)
+                let items: [PlaylistItem] = playlistItems.items.compactMap({ $0.item })
                 _ = items
             }
         
@@ -40,7 +40,7 @@ private extension SpotifyAPI {
         
         _ = self.userPlaylists(for: "")
             .sinkIgnoringCompletion { (playlists: PagingObject<Playlist<PlaylistItemsReference>>) in
-                let uris: [String] = playlists.items.map(\.uri)
+                let uris: [String] = playlists.items.map({ $0.uri })
                 _ = uris
             }
 
@@ -56,7 +56,7 @@ private extension SpotifyAPI where
         
         _ = self.currentUserPlaylists()
             .sinkIgnoringCompletion { (playlists: PagingObject<Playlist<PlaylistItemsReference>>) in
-                let uris: [String] = playlists.items.map(\.uri)
+                let uris: [String] = playlists.items.map({ $0.uri })
                 _ = uris
             }
 

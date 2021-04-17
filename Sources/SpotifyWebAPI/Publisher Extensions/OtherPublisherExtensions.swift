@@ -137,7 +137,7 @@ public extension Publisher where Output: PagingObjectProtocol {
             .map { pages in
                 return pages
                     .sorted(by: { $0.offset < $1.offset })
-                    .flatMap(\.items)
+                    .flatMap({ $0.items })
             }
             .eraseToAnyPublisher()
 

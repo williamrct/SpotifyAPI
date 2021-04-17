@@ -291,9 +291,9 @@ public struct TrackAttributes: Hashable {
         timeSignature: AttributeRange<Int>? = nil,
         valence: AttributeRange<Double>? = nil
     ) {
-        self.seedArtists = seedArtists?.map(\.uri)
+        self.seedArtists = seedArtists?.map({ $0.uri })
         self.seedGenres = seedGenres
-        self.seedTracks = seedTracks?.map(\.uri)
+        self.seedTracks = seedTracks?.map({ $0.uri })
         self.acousticness = acousticness
         self.danceability = danceability
         self.durationMS = durationMS

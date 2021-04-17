@@ -65,7 +65,7 @@ private func testPlaylistItems<AuthorizationManager: SpotifyAuthorizationManager
                     ------------------------
                     """
                 )
-                for track in playlistItemsPage.items.compactMap(\.item) {
+                for track in playlistItemsPage.items.compactMap({ $0.item }) {
                     print(track.name)
                 }
             }

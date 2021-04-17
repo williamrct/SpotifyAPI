@@ -48,7 +48,7 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedAlbumsArray)
                 
                 let allAlbums = savedAlbumsArray
-                    .flatMap(\.items)
+                    .flatMap({ $0.items })
                 for album in allAlbums {
                     XCTAssertEqual(album.type, .album)
                 }
@@ -149,7 +149,7 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedAlbumsArray)
                     
                     let allAlbums = savedAlbumsArray
-                        .flatMap(\.items)
+                        .flatMap({ $0.items })
                     for album in allAlbums {
                         XCTAssertEqual(album.type, .album)
                     }
@@ -195,7 +195,7 @@ extension SpotifyAPILibraryTests where
             .flatMap { savedTracksArray -> AnyPublisher<Void, Error> in
                 encodeDecode(savedTracksArray)
                 let allTracks = savedTracksArray
-                    .flatMap(\.items)
+                    .flatMap({ $0.items })
                 for track in allTracks {
                     XCTAssertEqual(track.type, .track)
                 }
@@ -295,7 +295,7 @@ extension SpotifyAPILibraryTests where
                 receiveValue: { savedTracksArray in
                     encodeDecode(savedTracksArray)
                     let allTracks = savedTracksArray
-                        .flatMap(\.items)
+                        .flatMap({ $0.items })
                     for track in allTracks {
                         XCTAssertEqual(track.type, .track)
                     }
@@ -342,7 +342,7 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedEpisodesArray)
                 
                 let allEpisodes = savedEpisodesArray
-                    .flatMap(\.items)
+                    .flatMap({ $0.items })
                 for episode in allEpisodes {
                     XCTAssertEqual(episode.type, .episode)
                 }
@@ -451,7 +451,7 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedEpisodesArray)
                     
                     let allEpisodes = savedEpisodesArray
-                        .flatMap(\.items)
+                        .flatMap({ $0.items })
                     for episode in allEpisodes {
                         XCTAssertEqual(episode.type, .episode)
                     }
@@ -498,7 +498,7 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedShowsArray)
                 
                 let allShows = savedShowsArray
-                    .flatMap(\.items)
+                    .flatMap({ $0.items })
                 for show in allShows {
                     XCTAssertEqual(show.type, .show)
                 }
@@ -607,7 +607,7 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedShowsArray)
                     
                     let allShows = savedShowsArray
-                        .flatMap(\.items)
+                        .flatMap({ $0.items })
                     for show in allShows {
                         XCTAssertEqual(show.type, .show)
                     }

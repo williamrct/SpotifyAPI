@@ -96,13 +96,13 @@ extension URIsContainer: Hashable {
     /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(snapshotId)
-        hasher.combine(items.map(\.uri))
+        hasher.combine(items.map({ $0.uri }))
     }
     
     /// :nodoc:
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.snapshotId == rhs.snapshotId &&
-                lhs.items.lazy.map(\.uri) == rhs.items.lazy.map(\.uri)
+                lhs.items.lazy.map({ $0.uri }) == rhs.items.lazy.map({ $0.uri })
     }
 
 }

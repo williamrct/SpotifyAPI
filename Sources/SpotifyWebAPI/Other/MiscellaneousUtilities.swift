@@ -129,7 +129,7 @@ public extension Sequence where
      */
     @inlinable @inline(__always)
     func commaSeparatedString() -> String {
-        return self.map(\.rawValue).joined(separator: ",")
+        return self.map({ $0.rawValue }).joined(separator: ",")
     }
     
 }

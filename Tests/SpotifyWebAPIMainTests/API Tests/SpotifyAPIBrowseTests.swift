@@ -287,7 +287,7 @@ extension SpotifyAPIBrowseTests {
                 XCTAssertNil(genre.href)
             }
             
-            let seedGenresIds = seedGenres.map(\.id)
+            let seedGenresIds = seedGenres.map({ $0.id })
             for genre in receivedGenres {
                 XCTAssert(
                     seedGenresIds.contains(genre),

@@ -160,15 +160,15 @@ extension SpotifyLocalError: CustomStringConvertible {
                 return """
                     SpotifyLocalError.insufficientScope: The endpoint you \
                     tried to access requires the following scopes: \
-                    \(required.map(\.rawValue)) \
+                    \(required.map({ $0.rawValue })) \
                     but your app is only authorized for theses scopes: \
-                    \(authorized.map(\.rawValue))
+                    \(authorized.map({ $0.rawValue }))
                     """
             case .invalidIdCategory(let expected, let received):
                 return """
                     SpotifyLocalError.invalidIdCategory: expected id categories \
-                    to match the following: \(expected.map(\.rawValue)), \
-                    but received \(received.map(\.rawValue))
+                    to match the following: \(expected.map({ $0.rawValue })), \
+                    but received \(received.map({ $0.rawValue }))
                     """
             case .topLevelKeyNotFound(let key, let dict):
                 return """

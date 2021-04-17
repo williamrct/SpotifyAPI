@@ -45,7 +45,7 @@ extension SpotifyAPI {
         for scopes: Set<Scope>, tolerance: Double = 120
     ) -> AnyPublisher<String, Error> {
         
-        self.logger.trace("scopes: \(scopes.map(\.rawValue))")
+        self.logger.trace("scopes: \(scopes.map({ $0.rawValue }))")
         
         /*
          It's more informative for the client to notifiy them that
