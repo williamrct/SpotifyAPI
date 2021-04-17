@@ -64,7 +64,7 @@ let package = Package(
         #endif
         
         return dependencies
-}(),
+    }(),
     targets: [
         .target(
             name: "SpotifyWebAPI",
@@ -110,7 +110,7 @@ let package = Package(
                 
                 return dependencies
                 
-        }()
+            }()
 //            exclude: ["README.md"]
         ),
         
