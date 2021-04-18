@@ -30,7 +30,7 @@ public func openAuthorizationURLAndWaitForRedirect(
     
     var redirectURIWithQuery: URL? = nil
     
-    var redirectListener = RedirectListener(url: localHostURL)
+    var redirectListener = RedirectListener()
     
     let dispatchGroup = DispatchGroup()
     

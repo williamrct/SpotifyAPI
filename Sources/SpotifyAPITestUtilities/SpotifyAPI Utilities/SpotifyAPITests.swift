@@ -36,26 +36,11 @@ public extension SpotifyAPITests where
         scopes: Set<Scope>, showDialog: Bool = false
     ) {
         
-        fatalError("not implemented")
-
-//        if let spotify = Self.spotify as?
-//                SpotifyAPI<AuthorizationCodeFlowManager> {
-//            spotify.authorizeAndWaitForTokens(
-//                scopes: scopes, showDialog: showDialog
-//            )
-//        }
-//        else if let spotify = Self.spotify as?
-//                SpotifyAPI<AuthorizationCodeFlowPKCEManager> {
-//            spotify.authorizeAndWaitForTokens(
-//                scopes: scopes
-//            )
-//        }
-//        else {
-//            fatalError(
-//                "unsupported authorization manager: " +
-//                "\(type(of: Self.spotify.authorizationManager))"
-//            )
-//        }
+        Self.spotify._authorizeAndWaitForTokens(
+            scopes: scopes,
+            showDialog: showDialog
+        )
+        
     }
     
 }
@@ -75,4 +60,35 @@ public extension SpotifyAuthorizationManager {
         }
     }
     
+}
+
+
+fileprivate extension SpotifyAPI where AuthorizationManager: SpotifyScopeAuthorizationManager {
+    
+    func _authorizeAndWaitForTokens(
+        scopes: Set<Scope>,
+        showDialog: Bool = false
+    ) {
+
+        if let spotify = self as?
+                SpotifyAPI<AuthorizationCodeFlowManager> {
+            spotify.authorizeAndWaitForTokens(
+                scopes: scopes, showDialog: showDialog
+            )
+        }
+        else if let spotify = self as?
+                SpotifyAPI<AuthorizationCodeFlowPKCEManager> {
+            spotify.authorizeAndWaitForTokens(
+                scopes: scopes
+            )
+        }
+        else {
+            fatalError(
+                "unsupported authorization manager: " +
+                "\(type(of: self.authorizationManager))"
+            )
+        }
+
+    }
+
 }
