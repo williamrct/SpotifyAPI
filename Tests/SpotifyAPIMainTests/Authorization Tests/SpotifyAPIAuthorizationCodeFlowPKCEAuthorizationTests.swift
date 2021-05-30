@@ -861,7 +861,12 @@ extension SpotifyAPIAuthorizationCodeFlowPKCEAuthorizationTests {
         encodeDecode(Self.spotify.authorizationManager, areEqual: ==)
      
         #else
-        throw XCTSkip("cannot test \(#function) without WebKit")
+        let errorMessage = "cannot test \(#function) without WebKit"
+        #if compiler(>=5.2)
+        throw XCTSkip(errorMessage)
+        #else
+        XCTFail(errorMessage)
+        #endif
         #endif
     }
 

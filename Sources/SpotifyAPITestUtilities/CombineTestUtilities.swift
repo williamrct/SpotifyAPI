@@ -145,6 +145,7 @@ public func assertURLExists(
  - Returns: An array of expectations that will be fulfilled when each image is
  loaded from its URL.
  */
+#if compiler(>=5.3)
 #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
 public func XCTAssertImagesExist(
     _ images: [SpotifyImage],
@@ -185,4 +186,5 @@ public func XCTAssertImagesExist(
     
     return (expectations: imageExpectations, cancellables: cancellables)
 }
+#endif
 #endif

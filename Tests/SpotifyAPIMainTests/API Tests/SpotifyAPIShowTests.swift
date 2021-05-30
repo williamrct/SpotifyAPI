@@ -244,8 +244,9 @@ extension SpotifyAPIShowTests {
 
             if let episode1 = show.items.first {
                 // MARK: Check Images for First Episode.
+                #if compiler(>=5.3)
+                #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
                 if let images = episode1.images {
-                    #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
                     var imageExpectations: [XCTestExpectation] = []
                     for (i, image) in images.enumerated() {
                         let expectation = XCTestExpectation(
@@ -264,11 +265,16 @@ extension SpotifyAPIShowTests {
                         for: imageExpectations,
                         timeout: TimeInterval(60 * images.count)
                     )
-                    #endif
                 }
                 else {
                     XCTFail("images should not be nil")
                 }
+                #else
+                _ = episode1
+                #endif
+                #else
+                _ = episode1
+                #endif
             }
             else {
                 XCTFail("show should have at least one episode")

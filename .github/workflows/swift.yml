@@ -62,17 +62,19 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-          image: ["swift:5.3", "swift:5.4"]
+          image: ["swift:5.1", "swift:5.2", "swift:5.3", "swift:5.4"]
 
     runs-on: ubuntu-latest
     container: ${{ matrix.image }}
     steps:
     - uses: actions/checkout@v2
-    - name: Build ${{ matrix.image }}
+    - name: enable_testing
+      if: ${{ matrix.image == "swift:5.3" || matrix.image == "swift:5.4" }}
       run: |
         apt-get update && apt-get install -y python3
         python3 enable_testing.py true
-        swift build --build-tests
+    - name: Build ${{ matrix.image }}
+      run: swift build --build-tests
     - name: Run tests ${{ matrix.image }}
       run: |
         swift test --filter "\

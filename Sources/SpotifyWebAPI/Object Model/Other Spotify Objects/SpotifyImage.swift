@@ -83,6 +83,7 @@ public struct SpotifyImage: Codable, Hashable {
 
 public extension SpotifyImage {
     
+    #if compiler(>=5.3)
     #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
     /**
      Loads the image from `self.url`.
@@ -122,6 +123,7 @@ public extension SpotifyImage {
             .eraseToAnyPublisher()
         
     }
+    #endif
     #endif
     
 }

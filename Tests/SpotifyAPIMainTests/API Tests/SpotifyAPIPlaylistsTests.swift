@@ -1401,6 +1401,7 @@ extension SpotifyAPIPlaylistsTests where
             print("line \(#line): recevied \(images.count) images")
             XCTAssertFalse(images.isEmpty)
             
+            #if compiler(>=5.3)
             #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
 
             var imageExpectations: [XCTestExpectation] = []
@@ -1445,6 +1446,7 @@ extension SpotifyAPIPlaylistsTests where
 
             self.wait(for: imageExpectations, timeout: TimeInterval(60 * images.count))
             
+            #endif
             #endif
         }
 
