@@ -165,7 +165,7 @@ open class SpotifyAPITestCase: XCTestCase {
         
     }
     
-    #if canImport(ObjectiveC)
+    #if canImport(ObjectiveC) && compiler(>=5.3)
     
     open override func record(_ issue: XCTIssue) {
         

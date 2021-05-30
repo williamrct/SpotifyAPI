@@ -233,6 +233,30 @@ public class AuthorizationCodeFlowPKCEBackendManager<Backend: AuthorizationCodeF
                 """
         }
     }
+    
+    /**
+     Returns a copy of self.
+     
+     Copies the following properties:
+     * `backend`
+     * `accessToken`
+     * `refreshToken`
+     * `expirationDate`
+     * `scopes`
+     */
+    public func makeCopy() -> AuthorizationCodeFlowPKCEBackendManager<Backend> {
+        let copy = Self(
+            backend: self.backend
+        )
+        return self.updateAuthInfoQueue.sync {
+            copy._accessToken = self._accessToken
+            copy._refreshToken = self._refreshToken
+            copy._expirationDate = self._expirationDate
+            copy._scopes = self._scopes
+            return copy
+        }
+    }
+
 }
 
 public extension AuthorizationCodeFlowPKCEBackendManager {

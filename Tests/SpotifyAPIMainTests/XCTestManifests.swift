@@ -141,7 +141,7 @@ extension ExampleContentTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__ExampleContentTests = [
-        ("testAadioAnalysis", testAadioAnalysis),
+        ("testAudioAnalysis", testAudioAnalysis),
         ("testAlbums", testAlbums),
         ("testArtists", testArtists),
         ("testAudioFeatures", testAudioFeatures),

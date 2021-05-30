@@ -89,10 +89,15 @@ extension SpotifyAPIFollowTests where
         .flatMap { arists -> AnyPublisher<CursorPagingObject<Artist>, Error> in
             allFollowedArtists = arists.items
             guard allFollowedArtists.count >= 3 else {
-                return XCTSkip(
-                    "test requires the user to follow at least 3 artists"
-                )
-                .anyFailingPublisher()
+                let skipMessage =
+                        "test requires the user to follow at least 3 artists"
+                #if compiler(>=5.2)
+                return XCTSkip(skipMessage)
+                    .anyFailingPublisher()
+                #else
+                return SpotifyGeneralError.other(skipMessage)
+                    .anyFailingPublisher()
+                #endif
             }
             let artistURIs = allFollowedArtists.map({ $0.uri })
             let thirdFromLastArtist = artistURIs[

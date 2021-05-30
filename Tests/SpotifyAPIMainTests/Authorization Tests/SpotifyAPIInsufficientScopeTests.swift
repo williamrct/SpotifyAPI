@@ -22,6 +22,11 @@ extension SpotifyAPIInsufficientScopeTests {
     /// scopes are known in advance.
     func insufficientScopeLocal() {
 
+        let insufficientScopes: Set<Scope> = [
+            .userFollowModify, .userLibraryModify, .userFollowRead,
+            .userReadEmail, .userTopRead, .playlistModifyPrivate
+        ]
+
         func receiveCompletion(
             _ completion: Subscribers.Completion<Error>
         ) {
@@ -80,11 +85,6 @@ extension SpotifyAPIInsufficientScopeTests {
                 }
             })
             .store(in: &cancellables)
-        
-        let insufficientScopes: Set<Scope> = [
-            .userFollowModify, .userLibraryModify, .userFollowRead,
-            .userReadEmail, .userTopRead, .playlistModifyPrivate
-        ]
         
         Self.spotify.authorizationManager.deauthorize()
         XCTAssertEqual(

@@ -30,7 +30,7 @@ var packageDependencies: [Package.Dependency] {
     #if TEST
     dependencies += [
         .package(
-            name: "vapor",
+            // name: "vapor",
             url: "https://github.com/vapor/vapor.git",
             // from: "4.45.3"
             .branch("3")

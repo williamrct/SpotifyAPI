@@ -741,6 +741,8 @@ extension SpotifyAPIErrorTests where
     
     func uploadTooLargePlaylistImage() {
         
+        #if SWIFT_TOOLS_5_3
+
         func receiveUploadImageCompletion(
             _ completion: Subscribers.Completion<Error>
         ) {
@@ -849,7 +851,11 @@ extension SpotifyAPIErrorTests where
         
         spotifyDecodeLogger.logLevel = spotifyDecodeLogLevel
         Self.spotify.apiRequestLogger.logLevel = apiRequestLogLevel
-            
+        
+        #else
+        XCTFail("cannot test without swift tools 5.3")
+        #endif
+
     }
 }
 

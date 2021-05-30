@@ -52,7 +52,7 @@ extension SpotifyAPILibraryTests where
                 }
                 
                 let albumURIs = allAlbums
-                    .compactMap(\.item.uri)
+                    .compactMap({ $0.item.uri })
                 for album in albumURIs {
                     XCTAssertFalse(fullAlbums.contains(album))
                 }
@@ -80,7 +80,7 @@ extension SpotifyAPILibraryTests where
                 for album in savedAlbums {
                     XCTAssertEqual(album.type, .album)
                 }
-                let albumURIs = savedAlbums.compactMap(\.item.uri)
+                let albumURIs = savedAlbums.compactMap({ $0.item.uri })
                 for album in partialAlbums {
                     XCTAssert(albumURIs.contains(album))
                 }
@@ -153,7 +153,7 @@ extension SpotifyAPILibraryTests where
                     }
                     
                     let albumURIs = allAlbums
-                        .compactMap(\.item.uri)
+                        .compactMap({ $0.item.uri })
                     for album in albumURIs {
                         XCTAssertFalse(fullAlbums.contains(album))
                     }
@@ -199,7 +199,7 @@ extension SpotifyAPILibraryTests where
                 }
 
                 let trackURIs = allTracks
-                    .compactMap(\.item.uri)
+                    .compactMap({ $0.item.uri })
                 for track in trackURIs {
                     XCTAssertFalse(fullTracks.contains(track))
                 }
@@ -227,7 +227,7 @@ extension SpotifyAPILibraryTests where
                 for track in savedTracks {
                     XCTAssertEqual(track.type, .track)
                 }
-                let trackURIs = savedTracks.compactMap(\.item.uri)
+                let trackURIs = savedTracks.compactMap({ $0.item.uri })
                 for track in partialTracks {
                     XCTAssert(trackURIs.contains(track))
                 }
@@ -299,7 +299,7 @@ extension SpotifyAPILibraryTests where
                     }
 
                     let trackURIs = allTracks
-                        .compactMap(\.item.uri)
+                        .compactMap({ $0.item.uri })
                     for track in trackURIs {
                         XCTAssertFalse(fullTracks.contains(track))
                     }
@@ -346,7 +346,7 @@ extension SpotifyAPILibraryTests where
                 }
                 
                 let episodeURIs = allEpisodes
-                    .map(\.item.uri)
+                    .map({ $0.item.uri })
                 for episode in episodeURIs {
                     XCTAssertFalse(fullEpisodes.contains(episode))
                 }
@@ -374,7 +374,7 @@ extension SpotifyAPILibraryTests where
                 for episode in savedEpisodes {
                     XCTAssertEqual(episode.type, .episode)
                 }
-                let episodeURIs = savedEpisodes.map(\.item.uri)
+                let episodeURIs = savedEpisodes.map({ $0.item.uri })
                 for episode in partialEpisodes {
                     XCTAssert(episodeURIs.contains(episode))
                 }
@@ -455,7 +455,7 @@ extension SpotifyAPILibraryTests where
                     }
                     
                     let episodeURIs = allEpisodes
-                        .map(\.item.uri)
+                        .map({ $0.item.uri })
                     for episode in episodeURIs {
                         XCTAssertFalse(fullEpisodes.contains(episode))
                     }
@@ -502,7 +502,7 @@ extension SpotifyAPILibraryTests where
                 }
                 
                 let showURIs = allShows
-                    .map(\.item.uri)
+                    .map({ $0.item.uri })
                 for show in showURIs {
                     XCTAssertFalse(fullShows.contains(show))
                 }
@@ -530,7 +530,7 @@ extension SpotifyAPILibraryTests where
                 for show in savedShows {
                     XCTAssertEqual(show.type, .show)
                 }
-                let showURIs = savedShows.map(\.item.uri)
+                let showURIs = savedShows.map({ $0.item.uri })
                 for show in partialShows {
                     XCTAssert(showURIs.contains(show))
                 }
@@ -611,7 +611,7 @@ extension SpotifyAPILibraryTests where
                     }
                     
                     let showURIs = allShows
-                        .map(\.item.uri)
+                        .map({ $0.item.uri })
                     for show in showURIs {
                         XCTAssertFalse(fullShows.contains(show))
                     }

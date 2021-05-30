@@ -71,6 +71,10 @@ extension SpotifyAPIAuthorizationCodeFlowAuthorizationTests {
 
     func refreshWithInvalidRefreshToken() {
 
+        let expectation = XCTestExpectation(
+            description: "refreshWithInvalidRefreshToken"
+        )
+
         func receiveCompletion(
             _ completion: Subscribers.Completion<Error>
         ) {
@@ -159,10 +163,6 @@ extension SpotifyAPIAuthorizationCodeFlowAuthorizationTests {
                 didDeauthorizeCount += 1
             })
             .store(in: &cancellables)
-
-        let expectation = XCTestExpectation(
-            description: "refreshWithInvalidRefreshToken"
-        )
 
         Self.spotify.authorizationManager.refreshTokens(
             onlyIfExpired: false, tolerance: 120
@@ -584,10 +584,15 @@ extension SpotifyAPIAuthorizationCodeFlowAuthorizationTests {
     func denyAuthorizationRequest() throws {
         #if canImport(WebKit)
         
-        try XCTSkipIf(
-            spotifyDCCookieValue == nil,
-            "Cannot test \(#function) without 'SPOTIFY_DC' environment variable."
-        )
+        let cannotTestMessage = """
+        Cannot test \(#function) without 'SPOTIFY_DC' environment variable.
+        """
+        
+        #if compiler(>=5.2)
+        try XCTSkipIf(spotifyDCCookieValue == nil, cannotTestMessage)
+        #else
+        _ = try XCTUnwrap(spotifyDCCookieValue, cannotTestMessage)
+        #endif
 
         encodeDecode(Self.spotify.authorizationManager, areEqual: ==)
 

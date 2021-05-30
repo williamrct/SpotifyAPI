@@ -12,7 +12,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
     ]
 
     func testCodingCurrentSpotifyUser() {
-        
+        #if SWIFT_TOOLS_5_3
         let user = SpotifyUser.sampleCurrentUserProfile
         encodeDecode(user, areEqual: ==)
         
@@ -38,12 +38,10 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images, [])
         XCTAssertEqual(user.product, "premium")
-
-
+        #endif
     }
     
     func testCodingOtherUserProfile() throws {
-        
         let user = try JSONDecoder().decode(
             SpotifyUser.self,
             from: Self.aprilUserProfileData
@@ -76,7 +74,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
             image.url,
             URL(string: "https://i.scdn.co/image/ab6775700000ee853b4c739f38aae7aef8620d89")!
         )
-
+        
     }
     
     static let aprilUserProfileData = """

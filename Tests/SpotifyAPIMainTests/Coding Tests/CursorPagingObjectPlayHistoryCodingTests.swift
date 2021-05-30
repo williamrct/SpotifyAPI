@@ -8,7 +8,7 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
     
     
     func testCoding() throws {
-        
+        #if SWIFT_TOOLS_5_3
         let playHistory = CursorPagingObject.sampleRecentlyPlayed
         try encodeDecode(playHistory, areEqual: { lhs, rhs in
             for x in [playHistory, lhs, rhs] {
@@ -18,7 +18,7 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
             XCTAssertEqual(playHistory, rhs)
             return lhs == rhs
         })
-
+        #endif
     }
     
     func checkPlayHistory(
@@ -41,7 +41,14 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
         
 
         let items = playHistory.items
+        #if compiler(>=5.2)
         try XCTSkipIf(items.count != 45)
+        #else
+        guard items.count == 45 else {
+            XCTFail("items.count should be 45: \(items.count)")
+            return
+        }
+        #endif
         
         // MARK: First Track
         do {
