@@ -13,15 +13,16 @@ import Foundation
  It has two properties:
  
  * `message`: A short description of the cause of the error.
- * `statusCode`: The HTTP status code that is also returned in the response header.
+ * `statusCode`: The HTTP status code that is also returned in the response
+   header.
  
  The [status Codes][2]:
  
- * **400: Bad Request** - The request could not be understood by the server due to
-   malformed syntax. The message body will contain more information
+ * **400: Bad Request** - The request could not be understood by the server due
+   to malformed syntax. The message body will contain more information
  * **401: Unauthorized** - The request requires user authentication or, if the
-   request included authorization credentials, authorization has been refused for
-   those credentials.
+   request included authorization credentials, authorization has been refused
+   for those credentials.
  * **403: Forbidden** - The server understood the request, but is refusing to
    fulfill it.
  * **404: Not Found** -  The requested resource could not be found. This error
@@ -31,8 +32,8 @@ import Foundation
  * **502: Bad Gateway** - The server was acting as a gateway or proxy and
    received an invalid response from the upstream server.
  * **503: Service Unavailable** - The server is currently unable to handle the
-   request due to a temporary condition which will be alleviated after some delay.
-   You can choose to resend the request again.
+   request due to a temporary condition which will be alleviated after some
+   delay. You can choose to resend the request again.
  
  
  
@@ -49,22 +50,22 @@ public struct SpotifyError: LocalizedError, Hashable {
      
      The [status Codes][1]:
      
-     * **400: Bad Request** - The request could not be understood by the server due to
-       malformed syntax. The message body will contain more information
-     * **401: Unauthorized** - The request requires user authentication or, if the
-       request included authorization credentials, authorization has been refused for
-       those credentials.
-     * **403: Forbidden** - The server understood the request, but is refusing to
-       fulfill it.
-     * **404: Not Found** -  The requested resource could not be found. This error
-       can be due to a temporary or permanent condition.
-     * **500: Internal Server Error.** You should never receive this error because
-       our clever coders catch them all.
+     * **400: Bad Request** - The request could not be understood by the server
+       due to malformed syntax. The message body will contain more information
+     * **401: Unauthorized** - The request requires user authentication or, if
+       the request included authorization credentials, authorization has been
+       refused for those credentials.
+     * **403: Forbidden** - The server understood the request, but is refusing
+       to fulfill it.
+     * **404: Not Found** -  The requested resource could not be found. This
+       error can be due to a temporary or permanent condition.
+     * **500: Internal Server Error.** You should never receive this error
+       because our clever coders catch them all.
      * **502: Bad Gateway** - The server was acting as a gateway or proxy and
        received an invalid response from the upstream server.
-     * **503: Service Unavailable** - The server is currently unable to handle the
-       request due to a temporary condition which will be alleviated after some delay.
-       You can choose to resend the request again.
+     * **503: Service Unavailable** - The server is currently unable to handle
+       the request due to a temporary condition which will be alleviated after
+       some delay. You can choose to resend the request again.
     
      [1]: https://developer.spotify.com/documentation/web-api/#response-status-codes
      */
@@ -82,17 +83,17 @@ extension SpotifyError: Codable {
     /// :nodoc:
     public init(from decoder: Decoder) throws {
         
-        let topLevelContainer = try decoder.container(
-            keyedBy: TopLevelCodingKeys.self
+        let container = try decoder.container(
+            keyedBy: CodingKeys.self
         )
 
-        let container = try topLevelContainer.nestedContainer(
-            keyedBy: CodingKeys.self, forKey: .error
+        let errorContainer = try container.nestedContainer(
+            keyedBy: CodingKeys.Error.self, forKey: .error
         )
-        self.message = try container.decode(
+        self.message = try errorContainer.decode(
             String.self, forKey: .message
         )
-        self.statusCode = try container.decode(
+        self.statusCode = try errorContainer.decode(
             Int.self, forKey: .statusCode
         )
         
@@ -100,27 +101,24 @@ extension SpotifyError: Codable {
     
     /// :nodoc:
     public func encode(to encoder: Encoder) throws {
-        var topLevelContainer = encoder.container(
-            keyedBy: TopLevelCodingKeys.self
+        var container = encoder.container(
+            keyedBy: CodingKeys.self
         )
-        var container = topLevelContainer.nestedContainer(
-            keyedBy: CodingKeys.self, forKey: .error
+        var errorContainer = container.nestedContainer(
+            keyedBy: CodingKeys.Error.self, forKey: .error
         )
             
-        try container.encode(self.message, forKey: .message)
-        try container.encode(self.statusCode, forKey: .statusCode)
+        try errorContainer.encode(self.message, forKey: .message)
+        try errorContainer.encode(self.statusCode, forKey: .statusCode)
         
     }
     
-    /// :nodoc:
-    public enum TopLevelCodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case error
-    }
-    
-    /// :nodoc:
-    public enum CodingKeys: String, CodingKey {
-        case message
-        case statusCode = "status"
+        enum Error: String, CodingKey {
+            case message
+            case statusCode = "status"
+        }
     }
     
 }

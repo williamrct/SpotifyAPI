@@ -17,16 +17,15 @@ public extension SpotifyAPI {
     // MARK: Utilities
     
     /**
-     Retrieves the data linked to by an href and decodes it
-     into `responseType`.
-     
-     An href is a URL provided in many of the responses from
-     the Spotify web API which links to addtional data instead of
-     including it in the current response in order to limit the size.
-     
-     Always prefer using a different method whenever possible because
-     this method adds the additional complexity of determining the
-     appropriate `ResponseType`.
+     Retrieves the data linked to by an href and decodes it into `responseType`.
+
+     An href is a URL provided in many of the responses from the Spotify web API
+     which links to additional data instead of including it in the current
+     response in order to limit the size.
+
+     Always prefer using a different method whenever possible because this
+     method adds the additional complexity of determining the appropriate
+     `ResponseType`.
      
      - Parameters:
        - href: The full URL to a Spotify web API endpoint.
@@ -34,67 +33,47 @@ public extension SpotifyAPI {
      - Returns: The data decoded into `responseType`.
      */
     func getFromHref<ResponseType: Decodable>(
-        _ href: String,
+        _ href: URL,
         responseType: ResponseType.Type
     ) -> AnyPublisher<ResponseType, Error> {
         
-        do {
-            
-            guard let url = URL(string: href, sortQueryItems: true) else {
-                throw SpotifyLocalError.other(
-                    #"couldn't convert href to URL: "\#(href)""#
-                )
-            }
-            
-            return self.refreshTokensAndEnsureAuthorized(for: [])
-                .flatMap { accessToken -> AnyPublisher<ResponseType, Error> in
-                    
-                    self.apiRequestLogger.trace(
-                        #"GET request to href: "\#(url)""#
-                    )
-                    
-                    var request = URLRequest(url: url)
-                    request.allHTTPHeaderFields =
-                            Headers.bearerAuthorization(accessToken)
-
-                    return self.networkAdaptor(request)
-                        .castToURLResponse()
-                        .decodeSpotifyObject(ResponseType.self)
-
-                }
-                .eraseToAnyPublisher()
-        
-        } catch {
-            return error.anyFailingPublisher()
-        }
+        return self.apiRequest(
+            url: href,
+            queryItems: [:],
+            httpMethod: "GET",
+            makeHeaders: Headers.bearerAuthorization(_:),
+            bodyData: nil,
+            requiredScopes: []
+        )
+        .decodeSpotifyObject(ResponseType.self)
         
     }
 
     /**
      Retrieves additional pages of results from a `Paginated` type.
-     
-     This method is also available as a combine operator of the same name
-     for all publishers where `Output`: `Paginated`.
-     
+
+     This method is also available as a combine operator of the same name for
+     all publishers where `Output`: `Paginated`.
+
      Compare with `SpotifyAPI.extendPagesConcurrently(_:maxExtraPages:)`.
 
-     Each time an additional page is received, its `next` property is used
-     to retrieve the next page of results, and so on, until `next` is `nil`
-     or `maxExtraPages` is reached. This means that the next page will not
-     be requested until the previous one is received and that the pages
-     will always be returned in order.
-     
+     Each time an additional page is received, its `next` property is used to
+     retrieve the next page of results, and so on, until `next` is `nil` or
+     `maxExtraPages` is reached. This means that the next page will not be
+     requested until the previous one is received and that the pages will always
+     be returned in order.
+
      See [Working with Paginated Results][1].
 
      - Parameters:
-       - page: A `Paginated` type; that is, a type that contains
-             a link for retrieving the next page of results.
-       - maxExtraPages: The maximum number of additional pages to retrieve.
-             For example, to just get the next page, use `1`. Leave as
-             `nil` (default) to retrieve all pages of results.
-     - Returns: A publisher that immediately republishes the page
-           that was passed in, as well as additional pages that are
-           returned by the Spotify web API.
+       - page: A `Paginated` type; that is, a type that contains a link for
+             retrieving the next page of results.
+       - maxExtraPages: The maximum number of additional pages to retrieve. For
+             example, to just get the next page, use `1`. Leave as `nil`
+             (default) to retrieve all pages of results.
+     - Returns: A publisher that immediately republishes the page that was
+           passed in, as well as additional pages that are returned by the
+           Spotify web API.
      
      [1]: https://github.com/Peter-Schorn/SpotifyAPI/wiki/Working-with-Paginated-Results
      */
@@ -158,22 +137,20 @@ public extension SpotifyAPI {
     // Publishers.MergeMany is not implemented in OpenCombine yet :(
     #if canImport(Combine)
     /**
-     Retrieves additional pages of results from a paging object
-     *concurrently*.
+     Retrieves additional pages of results from a paging object *concurrently*.
      
-     This method is also available as a combine operator of the same
-     name for all publishers where the output is a paging object.
-     
+     This method is also available as a combine operator of the same name for
+     all publishers where the output is a paging object.
+
      Compare with `SpotifyAPI.extendPages(_:maxExtraPages:)`.
-     
-     This method immediately republishes the page of results that
-     were passed in and then requests additional pages *concurrently*.
-     This method has better performance than
-     `SpotifyAPI.extendPages(_:maxExtraPages:)`, which must wait for
-     the previous page to be received before requesting the next page.
-     **However, the order in which the pages are received is**
-     **unpredictable.** If you need to wait all pages to be received
-     before processing them, then always use this method.
+
+     This method immediately republishes the page of results that were passed in
+     and then requests additional pages *concurrently*. This method has better
+     performance than `SpotifyAPI.extendPages(_:maxExtraPages:)`, which must
+     wait for the previous page to be received before requesting the next page.
+     **However, the order in which the pages are received is unpredictable.** If
+     you need to wait for all pages to be received before processing them, then
+     always use this method.
      
      See [Working with Paginated Results][1].
 
@@ -181,12 +158,12 @@ public extension SpotifyAPI {
 
      - Parameters:
        - page: A paging object.
-       - maxExtraPages: The maximum number of additional pages to retrieve.
-             For example, to just get the next page, use `1`. Leave as
-             `nil` (default) to retrieve all pages of results.
-     - Returns: A publisher that immediately republishes the `page`
-           that was passed in, as well as additional pages that are
-           returned by the Spotify web API.
+       - maxExtraPages: The maximum number of additional pages to retrieve. For
+             example, to just get the next page, use `1`. Leave as `nil`
+             (default) to retrieve all pages of results.
+     - Returns: A publisher that immediately republishes the `page` that was
+           passed in, as well as additional pages that are returned by the
+           Spotify web API.
      
      [1]: https://github.com/Peter-Schorn/SpotifyAPI/wiki/Working-with-Paginated-Results
      */
@@ -195,8 +172,10 @@ public extension SpotifyAPI {
         maxExtraPages: Int? = nil
     ) -> AnyPublisher<Page, Error> {
         
-        guard var hrefComponents = URLComponents(string: page.href) else {
-            return SpotifyLocalError.other(
+        guard var hrefComponents = URLComponents(
+            url: page.href, resolvingAgainstBaseURL: false
+        ) else {
+            return SpotifyGeneralError.other(
                 #"couldn't create URLComponents from href "\#(page.href)""#
             )
             .anyFailingPublisher()
@@ -253,7 +232,7 @@ public extension SpotifyAPI {
             pageHrefComponents.queryItems!.append(
                 URLQueryItem(name: "offset", value: "\(offset)")
             )
-            guard let pageHref = pageHrefComponents.string else {
+            guard let pageHref = pageHrefComponents.url else {
                 self.logger.error(
                     #"couldn't create URL for page from "\#(pageHrefComponents)""#
                 )

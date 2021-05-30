@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -36,7 +34,7 @@ extension SpotifyAPIBrowseTests {
                 XCTAssertEqual(category.id, "party")
                 XCTAssertEqual(
                     category.href,
-                    "https://api.spotify.com/v1/browse/categories/party"
+                    URL(string: "https://api.spotify.com/v1/browse/categories/party")!
                 )
                 
 //                #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI)
@@ -170,7 +168,7 @@ extension SpotifyAPIBrowseTests {
     
     func newAlbumReleases() {
         
-        func recieveNewAlbumReleases(_ albumReleases: NewAlbumReleases) {
+        func receiveNewAlbumReleases(_ albumReleases: NewAlbumReleases) {
             encodeDecode(albumReleases)
             let albums = albumReleases.albums
             XCTAssertEqual(albums.limit, 5)
@@ -189,7 +187,7 @@ extension SpotifyAPIBrowseTests {
             .XCTAssertNoFailure()
             .sink(
                 receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: recieveNewAlbumReleases(_:)
+                receiveValue: receiveNewAlbumReleases(_:)
             )
             .store(in: &Self.cancellables)
         
@@ -199,8 +197,6 @@ extension SpotifyAPIBrowseTests {
     
     func recommendations() {
         
-        var receivedGenres: [String]? = nil
-
         func createTrackAttributesFromGenres(
             _ genres: [String]
         ) -> TrackAttributes {
@@ -239,7 +235,7 @@ extension SpotifyAPIBrowseTests {
             }) {
                 XCTAssertEqual(
                     theBeatles.href,
-                    "https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2"
+                    URL(string: "https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2")!
                 )
             }
             else {
@@ -251,7 +247,7 @@ extension SpotifyAPIBrowseTests {
             }) {
                 XCTAssertEqual(
                     crumb.href,
-                    "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B"
+                    URL(string: "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B")!
                 )
             }
             else {
@@ -270,7 +266,7 @@ extension SpotifyAPIBrowseTests {
             }) {
                 XCTAssertEqual(
                     fearless.href,
-                    "https://api.spotify.com/v1/tracks/7AalBKBoLDR4UmRYRJpdbj"
+                    URL(string: "https://api.spotify.com/v1/tracks/7AalBKBoLDR4UmRYRJpdbj")!
                 )
             }
             else {
@@ -289,7 +285,7 @@ extension SpotifyAPIBrowseTests {
                 XCTAssertNil(genre.href)
             }
             
-            let seedGenresIds = seedGenres.map({ $0.id })
+            let seedGenresIds = seedGenres.map(\.id)
             for genre in receivedGenres {
                 XCTAssert(
                     seedGenresIds.contains(genre),
@@ -299,17 +295,29 @@ extension SpotifyAPIBrowseTests {
             
         }
         
-        Self.spotify.authorizationManager.setExpirationDate(to: Date())
-        
-        var authChangeCount = 0
+        let authorizationManagerDidChangeExpectation = XCTestExpectation(
+            description: "authorizationManagerDidChange"
+        )
+        let internalQueue = DispatchQueue(label: "internal")
         var cancellables: Set<AnyCancellable> = []
-        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
-            authChangeCount += 1
-        })
-        .store(in: &cancellables)
 
+        var didChangeCount = 0
+        Self.spotify.authorizationManagerDidChange
+            .receive(on: internalQueue)
+            .sink(receiveValue: {
+                didChangeCount += 1
+                internalQueue.asyncAfter(deadline: .now() + 2) {
+                    authorizationManagerDidChangeExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
+        
         let expectation = XCTestExpectation(description: "testRecommendations")
         
+        var receivedGenres: [String]? = nil
+        
+        Self.spotify.authorizationManager.setExpirationDate(to: Date())
+
         Self.spotify.recommendationGenres()
             .XCTAssertNoFailure()
             .map(createTrackAttributesFromGenres(_:))
@@ -327,11 +335,19 @@ extension SpotifyAPIBrowseTests {
             )
             .store(in: &Self.cancellables)
         
-        self.wait(for: [expectation], timeout: 120)
-        XCTAssertEqual(
-            authChangeCount, 1,
-            "authorizationManagerDidChange should emit exactly once"
+        self.wait(
+            for: [
+                expectation,
+                authorizationManagerDidChangeExpectation
+            ],
+            timeout: 120
         )
+        internalQueue.sync {
+            XCTAssertEqual(
+                didChangeCount, 1,
+                "authorizationManagerDidChange should emit exactly once"
+            )
+        }
             
         
     }

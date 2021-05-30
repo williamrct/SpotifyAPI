@@ -28,8 +28,8 @@ public enum AlbumType: String, CaseIterable, Codable, Hashable {
     /**
      Creates a new instance with the specified raw value.
      
-     - Parameter rawValue: The raw value for an album type.
-           **It is case-insensitive**.
+     - Parameter rawValue: The raw value for an album type. **It is**
+           **case-insensitive**.
      */
     @inlinable
     public init?(rawValue: String) {
@@ -46,8 +46,3 @@ public enum AlbumType: String, CaseIterable, Codable, Hashable {
     }
     
 }
-
-/// This type has ben renamed to `AlbumType`.
-/// :nodoc:
-@available(*, deprecated, renamed: "AlbumType")
-public typealias AlbumGroup = AlbumType

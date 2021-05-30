@@ -1,6 +1,6 @@
 import Foundation
 
-public extension URLComponents {
+extension URLComponents {
 
     init(
         scheme: String?,
@@ -75,18 +75,28 @@ public extension URLComponents {
         }
         
     }
+    
+}
+
+public extension URLComponents {
 
     /// A dictionary of the query items in the URL.
     var queryItemsDict: [String: String] {
-
-        return self.queryItems?.reduce(into: [:]) { dict, query in
-            dict[query.name] = query.value
-        } ?? [:]
+        get {
+            return self.queryItems?.reduce(into: [:]) { dict, query in
+                dict[query.name] = query.value
+            } ?? [:]
+        }
+        set {
+            self.queryItems = newValue.map { key, value in
+                URLQueryItem(name: key, value: value)
+            }
+        }
     }
     
 
-    /// Returns a new URL with the trailing slash in the path component
-    /// removed if it exists.
+    /// Returns a new URL with the trailing slash in the path component removed
+    /// if it exists.
     func removingTrailingSlashInPath() -> URLComponents {
         var copy = self
         copy.removeTrailingSlashInPath()
@@ -97,13 +107,8 @@ public extension URLComponents {
     /// Removes the trailing slash in the path component, if it exists.
     mutating func removeTrailingSlashInPath() {
         if self.path.hasSuffix("/") {
-            let lastCharacterIndex = self.path.index(
-                before: self.path.endIndex
-            )
-            self.path.replaceSubrange(
-                lastCharacterIndex...lastCharacterIndex,
-                with: ""
-            )
+            let index = self.path.index(before: self.path.endIndex)
+            self.path.remove(at: index)
         }
     }
 

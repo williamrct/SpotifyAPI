@@ -11,46 +11,16 @@ public struct SpotifyAPILogHandler: LogHandler {
     private static var handlerIsInitialized = false
     
     private static let initializeHandlerDispatchQueue = DispatchQueue(
-        label: "SpotifyAPILogHandler.initializeHandler"
+        label: "SpotifyAPI.SpotifyAPILogHandler.initializeHandler"
     )
     
-    /**
-     Prevents this type from becoming the logging backend.
-     
-     This method allows you to provide your own global logging backend,
-     as only a single one can be configured per process.
-
-     This method *must* be called before a call to
-     `SpotifyAPILogHandler.bootstrap()` is made, otherwise calling this
-     method has no effect. Because `SpotifyAPILogHandler.bootstrap()` is
-     called automatically when you create an instance of `SpotifyAPI`,
-     **this method should be called before an instance of** `SpotifyAPI`
-     **is created.**
-     
-     # Thread Safety
-     
-     This method is thread-safe.
-     */
-    public static func disable() {
-        Self.initializeHandlerDispatchQueue.sync {
-            Self.handlerIsInitialized = true
-        }
-    }
-
     /**
      Calls `LoggingSystem.bootstrap(_:)` and configures this type as the logging
      backend. The default log level is `info`.
     
-     If `SpotifyAPILogHandler.disable()` has been called, then
-     `LoggingSystem.bootstrap(_:)` will *not* be called and this method will
-     have no effect.
-
-     This method is automatically called when an instance of `SpotifyAPI`, the
-     central class in this library, is created or decoded from JSON data.
-     
      This method should only be called once. Calling it additional times is
      safe, but has no effect.
-     
+
      # Thread Safety
      
      This method is thread-safe.
@@ -75,7 +45,7 @@ public struct SpotifyAPILogHandler: LogHandler {
     public var metadata: Logger.Metadata
 
     /**
-     Creates the logging backend.
+     Creates a logger.
      
      - Parameters:
        - label: A label for the logger.
@@ -134,15 +104,15 @@ public extension Logger {
     
 
     /**
-     Construct a `Logger` given a `label` identifying the creator of the `Logger`
-     or a non-standard `LogHandler`.
+     Construct a `Logger` given a `label` identifying the creator of the
+     `Logger` or a non-standard `LogHandler`.
           
      The `label` should identify the creator of the `Logger`. This can be an
      application, a sub-system, or even a datatype. This initializer provides an
-     escape hatch in case the global default logging backend implementation
-     (set up using `LoggingSystem.bootstrap`) is not appropriate for this
-     particular logger.
-
+     escape hatch in case the global default logging backend implementation (set
+     up using `LoggingSystem.bootstrap`) is not appropriate for this particular
+     logger.
+     
      - parameters:
        - label: An identifier for the creator of a `Logger`.
        - level: The log level for the logger.

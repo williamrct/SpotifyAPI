@@ -9,45 +9,63 @@ import OpenCombineFoundation
 #endif
 import SpotifyWebAPI
 
+// MARK: Client
 public extension SpotifyAPI where AuthorizationManager == AuthorizationCodeFlowPKCEManager {
     
     /// A shared instance used for testing purposes.
     static let sharedTest = SpotifyAPI(
         authorizationManager: AuthorizationCodeFlowPKCEManager(
-            clientId: spotifyCredentials.clientId,
-            clientSecret: spotifyCredentials.clientSecret
+            clientId: spotifyCredentials.clientId
         )
     )
     
-    static let sharedTestNetworkAdaptor = SpotifyAPI(
-        authorizationManager: AuthorizationCodeFlowPKCEManager(
-            clientId: spotifyCredentials.clientId,
-            clientSecret: spotifyCredentials.clientSecret,
-            networkAdaptor: NetworkAdaptorManager.shared.networkAdaptor(request:)
-        ),
-        networkAdaptor: NetworkAdaptorManager.shared.networkAdaptor(request:)
+}
+
+// MARK: Proxy
+public extension SpotifyAPI where
+    AuthorizationManager == AuthorizationCodeFlowPKCEBackendManager<AuthorizationCodeFlowPKCEProxyBackend>
+{
+
+    /// A shared instance used for testing purposes.
+    static let sharedTest = SpotifyAPI(
+        authorizationManager: AuthorizationCodeFlowPKCEBackendManager(
+            backend: AuthorizationCodeFlowPKCEProxyBackend(
+                clientId: spotifyCredentials.clientId,
+                tokensURL: authorizationCodeFlowPKCETokensURL,
+                tokenRefreshURL: authorizationCodeFlowPKCERefreshTokensURL,
+                decodeServerError: VaporServerError.decodeFromNetworkResponse(data:response:)
+            )
+        )
     )
     
+}
+
+
+public extension AuthorizationCodeFlowPKCEBackendManager {
+    
+    
     /// Authorizes the application. You should probably use
-    /// `authorizeAndWaitForTokens(scopes:showDialog:)` instead,
-    /// which blocks the thread until the application is authorized.
+    /// `authorizeAndWaitForTokens(scopes:showDialog:)` instead, which blocks
+    /// the thread until the application is authorized.
     ///
     /// Returns early if the application is already authorized.
     func testAuthorize(
-        scopes: Set<Scope>
+        scopes: Set<Scope> = Scope.allCases
     ) -> AnyPublisher<Void, Error> {
     
-        if self.authorizationManager.isAuthorized(for: scopes) {
+        if self.isAuthorized(for: scopes) {
             return Empty().eraseToAnyPublisher()
         }
         
-        let codeVerifier = String.randomURLSafe(length: 128)
-        let codeChallenge = codeVerifier.makeCodeChallenge()
-        let state = Bool.random() ? String.randomURLSafe(length: 128) : nil
-//        let state = "~" + String.randomURLSafe(length: 125)
+        let codeVerifier = String.randomURLSafe(
+            length: Int.random(in: 43...128)
+        )
+        let codeChallenge = String.makeCodeChallenge(codeVerifier: codeVerifier)
+        let state = Bool.random() ? String.randomURLSafe(
+            length: Int.random(in: 32...128)
+        ) : nil
         
-        
-        guard let authorizationURL = self.authorizationManager.makeAuthorizationURL(
+        guard let authorizationURL = self.makeAuthorizationURL(
             redirectURI: localHostURL,
             codeChallenge: codeChallenge,
             state: state,
@@ -65,7 +83,7 @@ public extension SpotifyAPI where AuthorizationManager == AuthorizationCodeFlowP
             fatalError("couldn't get redirectURLWithQuery")
         }
         
-        return self.authorizationManager.requestAccessAndRefreshTokens(
+        return self.requestAccessAndRefreshTokens(
             redirectURIWithQuery: redirectURLWithQuery,
             codeVerifier: codeVerifier,
             state: state
@@ -74,14 +92,14 @@ public extension SpotifyAPI where AuthorizationManager == AuthorizationCodeFlowP
         
     }
     
-    /// Blocks the thread until the application has been authorized
-    /// and the refresh and access tokens have been retrieved.
-    /// Returns early if the application is already authorized.
+    /// Blocks the thread until the application has been authorized and the
+    /// refresh and access tokens have been retrieved. Returns early if the
+    /// application is already authorized.
     func authorizeAndWaitForTokens(
-        scopes: Set<Scope>
+        scopes: Set<Scope> = Scope.allCases, showDialog: Bool = false
     ) {
         
-        if self.authorizationManager.isAuthorized(for: scopes) {
+        if self.isAuthorized(for: scopes) {
             return
         }
         
@@ -101,7 +119,7 @@ public extension SpotifyAPI where AuthorizationManager == AuthorizationCodeFlowP
             }
         })
         
-        _ = cancellable  // supress warnings
+        _ = cancellable  // suppress warnings
         
         semaphore.wait()
         

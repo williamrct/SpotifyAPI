@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -21,8 +19,8 @@ extension SpotifyAPISearchTests {
         
         func validateError(_ error: Error) {
             print("\n\n\(error)\n\n")
-            guard let localError = error as? SpotifyLocalError else {
-                XCTFail("should've recieved SpotifyLocalError: \(error)")
+            guard let localError = error as? SpotifyGeneralError else {
+                XCTFail("should've received SpotifyGeneralError: \(error)")
                 return
             }
             
@@ -93,8 +91,7 @@ extension SpotifyAPISearchTests {
             XCTAssertEqual(shows.limit, 2)
             XCTAssertNotNil(shows.previous)
             
-            let scopes = Self.spotify.authorizationManager.scopes?.map({ $0.rawValue })
-                    ?? []
+            let scopes = Self.spotify.authorizationManager.scopes.map(\.rawValue)
             print("authorized scopes: \(scopes)")
 //            if !(Self.spotify.authorizationManager is ClientCredentialsFlowManager) {
 //                for show in shows.items {
@@ -183,9 +180,6 @@ extension SpotifyAPISearchTests {
     
     func specificTrackSearch() {
 
-        let trackName =
-            "Sgt. Pepper's Lonely Hearts Club Band - Reprise / Remastered 2009"
-
         func receiveResults(_ results: SearchResult) {
             
             encodeDecode(results)
@@ -197,7 +191,7 @@ extension SpotifyAPISearchTests {
             XCTAssertNil(results.shows)
             
             guard let tracks = results.tracks?.items else {
-                XCTFail("should've recieved tracks")
+                XCTFail("should've received tracks")
                 return
             }
             
@@ -220,6 +214,9 @@ extension SpotifyAPISearchTests {
             description: "testSpecificTrackSearch"
         )
         
+        let trackName =
+            "Sgt. Pepper's Lonely Hearts Club Band - Reprise / Remastered 2009"
+
         Self.spotify.search(
             query: trackName,
             categories: [.track],
@@ -249,7 +246,7 @@ extension SpotifyAPISearchTests {
             XCTAssertNil(results.shows)
             
             guard let albums = results.albums?.items else {
-                XCTFail("should've recieved albums")
+                XCTFail("should've received albums")
                 return
             }
             

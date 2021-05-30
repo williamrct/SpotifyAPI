@@ -5,8 +5,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 import SpotifyWebAPI
 import SpotifyExampleContent
@@ -28,12 +26,12 @@ private class READMEExamplesCompilationTests {
         
         let spotify = SpotifyAPI(
             authorizationManager: AuthorizationCodeFlowPKCEManager(
-                clientId: "Your Client Id", clientSecret: "Your Client Secret"
+                clientId: "Your Client Id"
             )
         )
         
         let codeVerifier = String.randomURLSafe(length: 128)
-        let codeChallenge = codeVerifier.makeCodeChallenge()
+        let codeChallenge = String.makeCodeChallenge(codeVerifier: codeVerifier)
         let state = String.randomURLSafe(length: 128)
         
         let authorizationURL = spotify.authorizationManager.makeAuthorizationURL(

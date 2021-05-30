@@ -5,7 +5,7 @@ import SpotifyWebAPI
 
 extension Bundle {
    
-    func decodeJson<T: Decodable>(
+    func decodeJSON<T: Decodable>(
         forResource name: String,
         extension: String = "json",
         type: T.Type
@@ -52,11 +52,11 @@ extension Bundle {
  
  Templates:
  
- static let <#name#> = Bundle.module.decodeJson(
+ static let <#name#> = Bundle.module.decodeJSON(
      forResource: "<#name#>", type: Self.self
  )!
  
- static let <#name#> = Bundle.module.decodeJson(
+ static let <#name#> = Bundle.module.decodeJSON(
      forResource: "<#name#>",
      type: Self.self
  )!

@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -16,7 +14,7 @@ import SpotifyExampleContent
 protocol SpotifyAPIPersonalizationTests: SpotifyAPITests { }
 
 extension SpotifyAPIPersonalizationTests where
-    AuthorizationManager: SpotifyScopeAuthorizationManager
+    AuthorizationManager: _InternalSpotifyScopeAuthorizationManager
 {
     
     // MARK: Artists

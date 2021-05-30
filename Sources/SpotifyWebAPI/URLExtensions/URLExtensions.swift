@@ -33,8 +33,8 @@ public extension URL {
 
     }
 
-    /// Returns a new URL with the query items removed.
-    /// If the URL has fragments, they will be removed too.
+    /// Returns a new URL with the query items removed. If the URL has
+    /// fragments, they will be removed too.
     func removingQueryItems() -> URL {
         var components = self.components!
         components.query = nil
@@ -42,14 +42,14 @@ public extension URL {
         return components.url!
     }
 
-    /// Removes the query items from the URL.
-    /// If the URL has fragments, they will be removed too.
+    /// Removes the query items from the URL. If the URL has fragments, they
+    /// will be removed too.
     mutating func removeQueryItems() {
         self = self.removingQueryItems()
     }
 
-    /// Returns a new URL with the trailing slash in the path component
-    /// removed if it exists.
+    /// Returns a new URL with the trailing slash in the path component removed
+    /// if it exists.
     func removingTrailingSlashInPath() -> URL {
         return self.components!.removingTrailingSlashInPath().url!
         
@@ -66,9 +66,7 @@ public extension URL {
     }
 
     /// A dictionary of the query items in the URL. See also `queryItems`.
-    var queryItemsDict: [String: String]
-    {
-
+    var queryItemsDict: [String: String] {
         return self.queryItems.reduce(into: [:]) { dict, query in
             dict[query.name] = query.value
         }
@@ -81,7 +79,9 @@ public extension URL {
         )
     }
 
-    // MARK: Initializers
+}
+
+extension URL {
     
     init?(
         string: String,

@@ -5,7 +5,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
 #endif
 
 
@@ -21,11 +20,10 @@ public extension SpotifyAPI {
      No scopes are required for this endpoint.
      
      The `country`, `email`, `product`, `allowsExplicitContent`, and
-     `explicitContentSettingIsLocked` properties of `SpotifyUser`
-     will always be `nil` even if the URI of the current user is provided
-     and the application is authorized for the `userReadPrivate` and
-     `userReadEmail` scopes. You must use `currentUserProfile()` to retrieve
-     these properties.
+     `explicitContentSettingIsLocked` properties of `SpotifyUser` will always be
+     `nil` even if the URI of the current user is provided and the application
+     is authorized for the `userReadPrivate` and `userReadEmail` scopes. You
+     must use `currentUserProfile()` to retrieve these properties.
      
      Read more at the [Spotify web API reference][1].
      
@@ -61,7 +59,7 @@ public extension SpotifyAPI {
 public extension SpotifyAPI where
     AuthorizationManager: SpotifyScopeAuthorizationManager
 {
-    // MARK: User Profle (Requires Authorization Scopes)
+    // MARK: User Profile (Requires Authorization Scopes)
     
     /**
      Get the profile of the current user.
@@ -70,12 +68,12 @@ public extension SpotifyAPI where
      
      The access token must have been issued on behalf of a user.
 
-     The `allowsExplicitContent`, `explicitContentSettingIsLocked`,
-     `country`, and `product` properties of `SpotifyUser` require
-     the `userReadPrivate` scope.
-     
+     The `allowsExplicitContent`, `explicitContentSettingIsLocked`, `country`,
+     and `product` properties of `SpotifyUser` require the `userReadPrivate`
+     scope.
+
      `SpotifyUser.email` requires the `userReadEmail` scope.
-     
+
      If the application is not authorized for these scopes, then these
      properties will be `nil`.
      

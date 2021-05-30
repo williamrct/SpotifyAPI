@@ -11,21 +11,21 @@ public struct TrackLink: SpotifyURIConvertible, Hashable {
     /**
      Known [external urls][1] for this track.
 
-     - key: The type of the URL, for example:
-           "spotify" - The [Spotify URL][2] for the object.
+     - key: The type of the URL, for example: "spotify" - The [Spotify URL][2]
+           for the object.
      - value: An external, public URL to the object.
 
      [1]: https://developer.spotify.com/documentation/web-api/reference/#object-externalurlobject
      [2]: https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids
      */
-    public let externalURLs: [String: String]?
+    public let externalURLs: [String: URL]?
     
     /**
      A link to the Spotify web API endpoint providing the full track object.
      
      Use `SpotifyAPI.getFromHref(_:responseType:)` to retrieve the results.
      */
-    public let href: String
+    public let href: URL
     
     /// The [Spotify URI][1] for the track.
     ///
@@ -47,11 +47,11 @@ public struct TrackLink: SpotifyURIConvertible, Hashable {
      
      - Parameters:
        - externalURLs: Known [external urls][3] for this artist.
-             - key: The type of the URL, for example:
-                   "spotify" - The [Spotify URL][4] for the object.
+             - key: The type of the URL, for example: "spotify" - The [Spotify
+                   URL][4] for the object.
              - value: An external, public URL to the object.
-       - href: A link to the Spotify web API endpoint providing the full
-             track object.
+       - href: A link to the Spotify web API endpoint providing the full track
+             object.
        - uri: The [Spotify URI][4] for the track.
        - id: The [Spotify ID][4] for the track.
      
@@ -61,8 +61,8 @@ public struct TrackLink: SpotifyURIConvertible, Hashable {
      [4]: https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids
      */
     public init(
-        externalURLs: [String: String]? = nil,
-        href: String,
+        externalURLs: [String: URL]? = nil,
+        href: URL,
         uri: String,
         id: String
     ) {
@@ -77,8 +77,7 @@ public struct TrackLink: SpotifyURIConvertible, Hashable {
 
 extension TrackLink: Codable {
     
-    /// :nodoc:
-    public enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case externalURLs = "external_urls"
         case href
         case uri

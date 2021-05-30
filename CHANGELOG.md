@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 5-29-2021
+
+### Proxy Server
+
+* Three new authorization managers have been added: `AuthorizationCodeFlowBackendManager`, `AuthorizationCodeFlowPKCEBackendManager`, and `ClientCredentialsFlowBackendManager`. `AuthorizationCodeFlowManager`, `AuthorizationCodeFlowPKCEManager`, and `ClientCredentialsFlowManager` have been refactored to inherit from these classes, respectively. The former three classes are generic over a backend. This backend can handle the process of retrieving the authorization information either directly from Spotify or via a custom backend server that makes requests to Spotify on behalf of your frontend app. This allows you to store sensitive credentials, such as your client id and client secret securely on your backend server, thereby preventing them from being exposed directly in your frontend app.
+* Three new protocols have been added:
+    * `AuthorizationCodeFlowBackend`. Conforming types: `AuthorizationCodeFlowClientBackend` and `AuthorizationCodeFlowProxyBackend`.
+    * `AuthorizationCodeFlowPKCEBackend`. Conforming types: `AuthorizationCodeFlowPKCEClientBackend` and `AuthorizationCodeFlowPKCEProxyBackend`.
+    * `ClientCredentialsFlowBackend`. Conforming types: `ClientCredentialsFlowClientBackend` and `ClientCredentialsFlowProxyBackend`.
+
+### Other
+
+* Removed the `networkAdaptor` property from the authorization managers. If you need to use a custom networking client, then create a type that conforms to one of the backend protocols in `Sources/SpotifyWebAPI/Authorization/Backends/AuthorizationBackends.swift` based on which authorization method you are using.
+
+- `SpotifyAPILogHandler` is no longer automatically bootstrapped when an instance of `SpotifyAPI` is created. You now must call its `bootstrap` method manually. This allows you to select a different logging backend, if needed.
+- Removed `clientSecret` from `AuthorizationCodeFlowPKCEManager` because it is not needed.
+- `SpotifyAuthenticationError.errorDescription` is now optional because it can be missing in the JSON payload in rare cases.
+- Removed all deprecated symbols.
+- Publisher extensions where the output is `URLResponse` are now extensions where the output is `HTTPURLResponse`. Other methods that returned `URLResponse`, such as `SpotifyAPI.filteredPlaylist(_:filters:additionalTypes:market:)`, now also return `HTTPURLResponse`.
+- Refactored `ContextOption` and `OffsetOption` as nested types under `PlaybackRequest` (`Context` and `Offset`).
+- Added `type` property to `Playlist`.
+- Changed the type of properties in the object model that represent URLs from String to URL. `SpotifyAPI.getFromHref(_:responseType)` now accepts a URL as well instead of a string.
+- `String.makeCodeChallenge()` is now a static method that accepts the coder verifier as a parameter: `String.makeCodeChallenge(codeVerifier:)`.
+- Removed the + and += operators from `Dictionary`.
+- The custom `URLComponents` and `URL` initializers are now internal.
+- The `scopes` properties of `AuthInfo` and the authorization managers are non-optional. Instead, the lack of scopes is represented by an empty set.
+- Renamed `SpotifyLocalError` to `SpotifyGeneralError`.
+- Renamed `SpotifyLocalError.httpError(HTTPURLResponse:Data)` to `SpotifyLocalError.httpError(Data:HTTPURLResponse)`
+- Renamed `SpotifyAPI.removeAllOccurencesFromPlaylist(_:of:snapshotId:)` to `SpotifyAPI.removeAllOccurrencesFromPlaylist(_:of:snapshotId:)`.
+- Renamed `SpotifyAPI.removeSpecificOccurencesFromPlaylist(_:of:)` to `SpotifyAPI.removeSpecificOccurrencesFromPlaylist(_:of:)`.
+- Renamed `SpotifyDecodingError.dataDumpfolder` to `dataDumpFolder`.
+
+## [1.6.1] - 2021-4-26
+
+### Fixed
+
+* Fixed a bug that caused a compilation error in Swift 5.4. See [here](https://forums.swift.org/t/invalid-redeclaration-of-synthesized-implementation-for-protocol-requirement-allcases/47715/3).
+
+## [1.6.0] - 2021-4-20
+
+### Added
+
+* Added `SpotifyLocalError.httpError(HTTPURLResponse, Data)`. This error is returned when the status code of the response from the server is in the 4xx or 5xx range and the response body could not be decoded into any of the other errors types (`SpotifyAuthenticationError`, `SpotifyError`, `SpotifyPlayerError`). 
+
+### Changed
+
+* A request will be automatically retried up to three times if it returns a `SpotifyLocalError.httpError` with a status code of 500, 502, 503, or 504.
+* When decoding the data from a request into a Swift type, the data will *first* be decoded into an error object if the status code is in the 4xx or 5xx range.
+
 ## [1.5.1] - 2021-4-15
 
 ### Added

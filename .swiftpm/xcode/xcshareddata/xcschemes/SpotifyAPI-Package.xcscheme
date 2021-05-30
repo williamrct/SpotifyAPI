@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1200"
+   LastUpgradeVersion = "1250"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -76,6 +76,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SpotifyAPIMainTests"
+               BuildableName = "SpotifyAPIMainTests"
+               BlueprintName = "SpotifyAPIMainTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -88,7 +102,11 @@
             reference = "container:Tests/SpotifyAPIMainTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:Tests/SpotifyAPIProxyServer.xctestplan">
+         </TestPlanReference>
       </TestPlans>
+<<<<<<< HEAD
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -101,6 +119,8 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+=======
+>>>>>>> master
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -115,7 +135,7 @@
       allowLocationSimulation = "YES">
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "spotify_credentials_path"
+            key = "SPOTIFY_CREDENTIALS_PATH"
             value = "path/to/file"
             isEnabled = "NO">
          </EnvironmentVariable>

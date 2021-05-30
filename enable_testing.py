@@ -4,6 +4,16 @@ use_test = sys.argv[1].lower()
 
 project_directory = os.path.dirname(__file__)
 
+# ensure the working directory is the SpotifyAPI package
+package_file = os.path.join(project_directory, "Package.swift")
+if not os.path.exists(package_file):
+    print(
+        "Expected to find Package.swift file in the working direcory. "
+        "The working directory must be the root directory of the SpotifyAPI "
+        f"package: {project_directory}"
+    )
+    exit(1)
+
 use_test_flag = "#if TEST"
 dont_use_test_flag = "#if !TEST"
 
@@ -23,7 +33,6 @@ tests_directory = os.path.join(project_directory, "Tests")
 # in the Sources and Tests directory, and the package.swift file
 swift_files: [str] = []
 
-package_file = os.path.join(project_directory, "Package.swift")
 swift_files.append(package_file)
 package_swift_5_1_file = os.path.join(project_directory, "Package@swift-5.1.swift")
 swift_files.append(package_swift_5_1_file)
@@ -41,11 +50,11 @@ pattern = rf"^(\s*){flags[0]}\s*$"
 replacement = rf"\1{flags[1]}"
 
 for file in swift_files:
-    # print(file)
-    with open(file) as f:
+    with open(file, encoding='utf-8') as f:
         text = f.read()
     new_text = re.sub(pattern, replacement, text, flags=re.MULTILINE)
-    with open(file, "w") as f:
+    with open(file, "w", encoding='utf-8') as f:
         f.write(new_text)
+
 
 

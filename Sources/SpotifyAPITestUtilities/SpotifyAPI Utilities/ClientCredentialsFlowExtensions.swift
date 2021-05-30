@@ -8,6 +8,7 @@ import OpenCombineFoundation
 #endif
 import SpotifyWebAPI
 
+// MARK: Client
 public extension SpotifyAPI where AuthorizationManager == ClientCredentialsFlowManager {
     
     /// A shared instance used for testing purposes.
@@ -18,25 +19,37 @@ public extension SpotifyAPI where AuthorizationManager == ClientCredentialsFlowM
         )
     )
     
-    static let sharedTestNetworkAdaptor = SpotifyAPI(
-        authorizationManager: ClientCredentialsFlowManager(
-            clientId: spotifyCredentials.clientId,
-            clientSecret: spotifyCredentials.clientSecret,
-            networkAdaptor: NetworkAdaptorManager.shared.networkAdaptor(request:)
-        ),
-        networkAdaptor: NetworkAdaptorManager.shared.networkAdaptor(request:)
+}
+
+// MARK: Proxy
+public extension SpotifyAPI where
+    AuthorizationManager == ClientCredentialsFlowBackendManager<ClientCredentialsFlowProxyBackend>
+ {
+ 
+    /// A shared instance used for testing purposes.
+    static let sharedTest = SpotifyAPI(
+        authorizationManager: ClientCredentialsFlowBackendManager(
+            backend: ClientCredentialsFlowProxyBackend(
+                tokensURL: clientCredentialsFlowTokensURL,
+                decodeServerError: VaporServerError.decodeFromNetworkResponse(data:response:)
+            )
+        )
     )
     
-    /// Calls `authorizationManager.authorize()` and blocks
-    /// until the publisher finishes.
-    /// Returns early if the application is already authorized.
+}
+
+public extension ClientCredentialsFlowBackendManager {
+    
+    
+    /// Calls `authorizationManager.authorize()` and blocks until the publisher
+    /// finishes. Returns early if the application is already authorized.
     func waitUntilAuthorized() {
         
-        if self.authorizationManager.isAuthorized() { return }
+        if self.isAuthorized() { return }
         
         let semaphore = DispatchSemaphore(value: 0)
         
-        let cancellable = self.authorizationManager.authorize()
+        let cancellable = self.authorize()
             .sink(receiveCompletion: { completion in
                 switch completion {
                     case .finished:
@@ -48,7 +61,7 @@ public extension SpotifyAPI where AuthorizationManager == ClientCredentialsFlowM
                 }
             })
         
-        _ = cancellable  // supress warnings
+        _ = cancellable  // suppress warnings
         
         semaphore.wait()
 

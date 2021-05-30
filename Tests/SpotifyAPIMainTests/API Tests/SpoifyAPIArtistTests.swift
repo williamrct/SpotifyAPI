@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -28,7 +26,7 @@ extension SpotifyAPIArtistTests {
         XCTAssertEqual(artist.id, "0k17h0D3J5VfsdmQ1iZtE9")
         XCTAssertEqual(
             artist.href,
-            "https://api.spotify.com/v1/artists/0k17h0D3J5VfsdmQ1iZtE9"
+            URL(string: "https://api.spotify.com/v1/artists/0k17h0D3J5VfsdmQ1iZtE9")!
         )
         if let popularity = artist.popularity {
             XCTAssert((0...100).contains(popularity), "\(popularity)")
@@ -53,7 +51,7 @@ extension SpotifyAPIArtistTests {
         if let externalURLs = artist.externalURLs {
             XCTAssertEqual(
                 externalURLs["spotify"],
-                "https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9",
+                URL(string: "https://open.spotify.com/artist/0k17h0D3J5VfsdmQ1iZtE9")!,
                 "\(externalURLs)"
             )
         }
@@ -78,16 +76,12 @@ extension SpotifyAPIArtistTests {
         for (i, image) in images.enumerated() {
             XCTAssertNotNil(image.height)
             XCTAssertNotNil(image.width)
-            guard let url = URL(string: image.url) else {
-                XCTFail("couldn't convert to URL: '\(image.url)'")
-                continue
-            }
             let imageExpectation = XCTestExpectation(
                 description: "loadImage \(i)"
             )
             imageExpectations.append(imageExpectation)
             
-            assertURLExists(url)
+            assertURLExists(image.url)
                 .sink(receiveCompletion: { _ in
                     imageExpectation.fulfill()
                 })
@@ -109,9 +103,9 @@ extension SpotifyAPIArtistTests {
         XCTAssertNil(albums.previous)
         XCTAssertEqual(
             albums.href,
-            "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B" +
+            URL(string: "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B" +
             "/albums?offset=0&limit=35&include_groups=album,single," +
-            "compilation,appears_on&market=US"
+            "compilation,appears_on&market=US")!
         )
         
         for album in albums.items {
@@ -511,15 +505,25 @@ extension SpotifyAPIArtistTests {
             description: "testArtistAlbumsSingles"
         )
         
+        let authorizationManagerDidChangeExpectation = XCTestExpectation(
+            description: "authorizationManagerDidChange"
+        )
+        let internalQueue = DispatchQueue(label: "internal")
+
+        var didChangeCount = 0
+        var cancellables: Set<AnyCancellable> = []
+        Self.spotify.authorizationManagerDidChange
+            .receive(on: internalQueue)
+            .sink(receiveValue: {
+                didChangeCount += 1
+                internalQueue.asyncAfter(deadline: .now() + 2) {
+                    authorizationManagerDidChangeExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
+        
         Self.spotify.authorizationManager.setExpirationDate(to: Date())
 
-        var authChangeCount = 0
-        var cancellables: Set<AnyCancellable> = []
-        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
-            authChangeCount += 1
-        })
-        .store(in: &cancellables)
-        
         Self.spotify.artistAlbums(
             URIs.Artists.ledZeppelin,
             groups: [.single],
@@ -534,10 +538,17 @@ extension SpotifyAPIArtistTests {
         .store(in: &Self.cancellables)
 
         self.wait(for: [expectation], timeout: 60)
-        XCTAssertEqual(
-            authChangeCount, 1,
-            "authorizationManagerDidChange should emit exactly once"
+        self.wait(
+            for: [authorizationManagerDidChangeExpectation],
+            timeout: 5
         )
+
+        internalQueue.sync {
+            XCTAssertEqual(
+                didChangeCount, 1,
+                "authorizationManagerDidChange should emit exactly once"
+            )
+        }
         
     }
     
@@ -547,6 +558,14 @@ extension SpotifyAPIArtistTests {
             description: "testArtistTopTracks"
         )
         
+        Self.spotify.authorizationManager.setExpirationDate(to: Date())
+        var authChangeCount = 0
+        var cancellables: Set<AnyCancellable> = []
+        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
+            authChangeCount += 1
+        })
+        .store(in: &cancellables)
+
         Self.spotify.artistTopTracks(
             URIs.Artists.theBeatles, country: "US"
         )
@@ -571,6 +590,10 @@ extension SpotifyAPIArtistTests {
         .store(in: &Self.cancellables)
         
         self.wait(for: [expectation], timeout: 60)
+        XCTAssertEqual(
+            authChangeCount, 1,
+            "authorizationManagerDidChange should emit exactly once"
+        )
         
     }
     
@@ -609,7 +632,7 @@ extension SpotifyAPIArtistTests {
 // MARK: Authorization and setup methods
 
 extension SpotifyAPIArtistTests where
-    AuthorizationManager: SpotifyScopeAuthorizationManager
+    AuthorizationManager: _InternalSpotifyScopeAuthorizationManager
 {
 
     /// Authorize for zero scopes because none are required for the artist
@@ -621,7 +644,17 @@ extension SpotifyAPIArtistTests where
         XCTAssertFalse(
             Self.spotify.authorizationManager.isAuthorized(for: [])
         )
-        Self.authorizeAndWaitForTokens(scopes: [])
+        let randomScope = Scope.allCases.randomElement()!
+        XCTAssertFalse(
+            Self.spotify.authorizationManager.isAuthorized(
+                for: [randomScope]
+            ),
+            "should not be authorized for \(randomScope.rawValue): " +
+            "\(Self.spotify.authorizationManager)"
+        )
+        Self.spotify.authorizationManager.authorizeAndWaitForTokens(
+            scopes: [], showDialog: false
+        )
 
     }
     
@@ -630,20 +663,27 @@ extension SpotifyAPIArtistTests where
     }
 
     func _setup() {
-//        XCTAssertEqual(
-//            Self.spotify.authorizationManager.scopes ?? [], []
-//        )
-//        XCTAssertTrue(
-//            Self.spotify.authorizationManager.isAuthorized(for: [])
-//        )
-//        XCTAssertFalse(
-//            Self.spotify.authorizationManager.isAuthorized(
-//                for: [Scope.allCases.randomElement()!]
-//            )
-//        )
+        // XCTAssertEqual(
+        //     Self.spotify.authorizationManager.scopes, [],
+        //     "authorizationManager should contain zero scopes: " +
+        //     "\(Self.spotify.authorizationManager)"
+        // )
+        // XCTAssertTrue(
+        //     Self.spotify.authorizationManager.isAuthorized(for: []),
+        //     "should be authorized for zero scopes: " +
+        //     "\(Self.spotify.authorizationManager)"
+        // )
+        // let randomScope = Scope.allCases.randomElement()!
+        // XCTAssertFalse(
+        //     Self.spotify.authorizationManager.isAuthorized(for: [randomScope]),
+        //     "should not be authorized for \(randomScope.rawValue): " +
+        //     "\(Self.spotify.authorizationManager)"
+        // )
     }
     
 }
+
+// MARK: - Client -
 
 final class SpotifyAPIClientCredentialsFlowArtistTests:
     SpotifyAPIClientCredentialsFlowTests, SpotifyAPIArtistTests
@@ -738,6 +778,152 @@ final class SpotifyAPIAuthorizationCodeFlowArtistTests:
 
 final class SpotifyAPIAuthorizationCodeFlowPKCEArtistTests:
         SpotifyAPIAuthorizationCodeFlowPKCETests, SpotifyAPIArtistTests
+{
+
+    static let allTests = [
+        ("testArtist", testArtist),
+        ("testArtists", testArtists),
+        ("testArtistAlbums", testArtistAlbums),
+        (
+            "testArtistAlbumsExtendSinglePageSerial",
+            testArtistAlbumsExtendSinglePageSerial
+        ),
+        (
+            "testArtistAlbumsExtendSinglePageConcurrent",
+            testArtistAlbumsExtendSinglePageConcurrent
+        ),
+        ("testArtistAlbumsSingles", testArtistAlbumsSingles),
+        ("testArtistTopTracks", testArtistTopTracks),
+        ("testRelatedArtists", testRelatedArtists)
+        
+    ]
+    
+    /// Authorize for zero scopes because none are required for the artist
+    /// endpoints. The super implementation authorizes for all scopes.
+    override class func setupAuthorization(
+        scopes: Set<Scope> = Scope.allCases
+    ) {
+        Self._setupAuthorization()
+    }
+
+    override class func tearDown() {
+        Self._tearDown()
+    }
+
+    override func setUp() {
+        self._setup()
+    }
+    
+    func testArtist() { artist() }
+    func testArtists() { artists() }
+    func testArtistAlbums() { artistAlbums() }
+    func testArtistAlbumsExtendSinglePageSerial() {
+        artistAlbumsExtendSinglePageSerial()
+    }
+    func testArtistAlbumsExtendSinglePageConcurrent() {
+        artistAlbumsExtendSinglePageConcurrent()
+    }
+    func testArtistAlbumsSingles() { artistAlbumsSingles() }
+    func testArtistTopTracks() { artistTopTracks() }
+    func testRelatedArtists() { relatedArtists() }
+    
+}
+
+// MARK: - Proxy -
+
+final class SpotifyAPIClientCredentialsFlowProxyArtistTests:
+    SpotifyAPIClientCredentialsFlowProxyTests, SpotifyAPIArtistTests
+{
+
+    static let allTests = [
+        ("testArtist", testArtist),
+        ("testArtists", testArtists),
+        ("testArtistAlbums", testArtistAlbums),
+        (
+            "testArtistAlbumsExtendSinglePageSerial",
+            testArtistAlbumsExtendSinglePageSerial
+        ),
+        (
+            "testArtistAlbumsExtendSinglePageConcurrent",
+            testArtistAlbumsExtendSinglePageConcurrent
+        ),
+        ("testArtistAlbumsSingles", testArtistAlbumsSingles),
+        ("testArtistTopTracks", testArtistTopTracks),
+        ("testRelatedArtists", testRelatedArtists)
+        
+    ]
+    
+    func testArtist() { artist() }
+    func testArtists() { artists() }
+    func testArtistAlbums() { artistAlbums() }
+    func testArtistAlbumsExtendSinglePageSerial() {
+        artistAlbumsExtendSinglePageSerial()
+    }
+    func testArtistAlbumsExtendSinglePageConcurrent() {
+        artistAlbumsExtendSinglePageConcurrent()
+    }
+    func testArtistAlbumsSingles() { artistAlbumsSingles() }
+    func testArtistTopTracks() { artistTopTracks() }
+    func testRelatedArtists() { relatedArtists() }
+    
+}
+
+final class SpotifyAPIAuthorizationCodeFlowProxyArtistTests:
+        SpotifyAPIAuthorizationCodeFlowProxyTests, SpotifyAPIArtistTests
+{
+
+    static let allTests = [
+        ("testArtist", testArtist),
+        ("testArtists", testArtists),
+        ("testArtistAlbums", testArtistAlbums),
+        (
+            "testArtistAlbumsExtendSinglePageSerial",
+            testArtistAlbumsExtendSinglePageSerial
+        ),
+        (
+            "testArtistAlbumsExtendSinglePageConcurrent",
+            testArtistAlbumsExtendSinglePageConcurrent
+        ),
+        ("testArtistAlbumsSingles", testArtistAlbumsSingles),
+        ("testArtistTopTracks", testArtistTopTracks),
+        ("testRelatedArtists", testRelatedArtists)
+        
+    ]
+    
+    /// Authorize for zero scopes because none are required for the artist
+    /// endpoints. The super implementation authorizes for all scopes.
+    override class func setupAuthorization(
+        scopes: Set<Scope> = Scope.allCases,
+        showDialog: Bool = true
+    ) {
+        Self._setupAuthorization()
+    }
+
+    override class func tearDown() {
+        Self._tearDown()
+    }
+
+    override func setUp() {
+        self._setup()
+    }
+    
+    func testArtist() { artist() }
+    func testArtists() { artists() }
+    func testArtistAlbums() { artistAlbums() }
+    func testArtistAlbumsExtendSinglePageSerial() {
+        artistAlbumsExtendSinglePageSerial()
+    }
+    func testArtistAlbumsExtendSinglePageConcurrent() {
+        artistAlbumsExtendSinglePageConcurrent()
+    }
+    func testArtistAlbumsSingles() { artistAlbumsSingles() }
+    func testArtistTopTracks() { artistTopTracks() }
+    func testRelatedArtists() { relatedArtists() }
+    
+}
+
+final class SpotifyAPIAuthorizationCodeFlowPKCEProxyArtistTests:
+        SpotifyAPIAuthorizationCodeFlowPKCEProxyTests, SpotifyAPIArtistTests
 {
 
     static let allTests = [

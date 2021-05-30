@@ -12,7 +12,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
     ]
 
     func testCodingCurrentSpotifyUser() {
-        #if SWIFT_TOOLS_5_3
+        
         let user = SpotifyUser.sampleCurrentUserProfile
         encodeDecode(user, areEqual: ==)
         
@@ -23,20 +23,22 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.explicitContentSettingIsLocked, false)
         XCTAssertEqual(
             user.externalURLs,
-            ["spotify": "https://open.spotify.com/user/petervschorn"]
+            [
+                "spotify": URL(string: "https://open.spotify.com/user/petervschorn")!
+            ]
         )
         XCTAssertEqual(user.followers?.total, 2)
         XCTAssertNil(user.followers?.href)
         XCTAssertEqual(
             user.href,
-            "https://api.spotify.com/v1/users/petervschorn"
+            URL(string: "https://api.spotify.com/v1/users/petervschorn")!
         )
         XCTAssertEqual(user.id, "petervschorn")
         XCTAssertEqual(user.uri, "spotify:user:petervschorn")
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images, [])
         XCTAssertEqual(user.product, "premium")
-        #endif
+
 
     }
     
@@ -53,27 +55,26 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.displayName, "April")
         XCTAssertEqual(
             user.externalURLs,
-            ["spotify": "https://open.spotify.com/user/p8gjjfbirm8ucyt82ycfi9zuu"]
+            [
+                "spotify": URL(string: "https://open.spotify.com/user/p8gjjfbirm8ucyt82ycfi9zuu")!
+            ]
         )
         XCTAssertEqual(user.followers?.total, 14)
         XCTAssertNil(user.followers?.href)
         XCTAssertEqual(
             user.href,
-            "https://api.spotify.com/v1/users/p8gjjfbirm8ucyt82ycfi9zuu"
+            URL(string: "https://api.spotify.com/v1/users/p8gjjfbirm8ucyt82ycfi9zuu")!
         )
         XCTAssertEqual(user.id, "p8gjjfbirm8ucyt82ycfi9zuu")
         XCTAssertEqual(user.uri, "spotify:user:p8gjjfbirm8ucyt82ycfi9zuu")
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images?.count, 1)
-        guard let image = user.images?.first else {
-            XCTFail("images should not be empty")
-            return
-        }
+        let image = try XCTUnwrap(user.images?.first)
         XCTAssertNil(image.height)
         XCTAssertNil(image.width)
         XCTAssertEqual(
             image.url,
-            "https://i.scdn.co/image/ab6775700000ee853b4c739f38aae7aef8620d89"
+            URL(string: "https://i.scdn.co/image/ab6775700000ee853b4c739f38aae7aef8620d89")!
         )
 
     }

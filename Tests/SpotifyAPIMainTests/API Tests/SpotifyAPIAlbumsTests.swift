@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -40,7 +38,7 @@ extension SpotifyAPIAlbumsTests {
         
         XCTAssertEqual(
             album.href,
-            "https://api.spotify.com/v1/albums/3vukTUpiENDHDoYTVrwqtz"
+            URL(string: "https://api.spotify.com/v1/albums/3vukTUpiENDHDoYTVrwqtz")!
         )
 
         if let releaseDate = album.releaseDate {
@@ -68,7 +66,7 @@ extension SpotifyAPIAlbumsTests {
         if let externalURLs = album.externalURLs {
             XCTAssertEqual(
                 externalURLs["spotify"],
-                "https://open.spotify.com/album/3vukTUpiENDHDoYTVrwqtz",
+                URL(string: "https://open.spotify.com/album/3vukTUpiENDHDoYTVrwqtz")!,
                 "\(externalURLs)"
             )
         }
@@ -91,7 +89,7 @@ extension SpotifyAPIAlbumsTests {
         if let artist = album.artists?.first {
             XCTAssertEqual(
                 artist.href,
-                "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B"
+                URL(string: "https://api.spotify.com/v1/artists/4kSGbjWGxTchKpIxXPJv0B")!
             )
             XCTAssertEqual(artist.uri, "spotify:artist:4kSGbjWGxTchKpIxXPJv0B")
             XCTAssertEqual(artist.id, "4kSGbjWGxTchKpIxXPJv0B")
@@ -99,7 +97,7 @@ extension SpotifyAPIAlbumsTests {
             if let externalURLs = artist.externalURLs {
                 XCTAssertEqual(
                     externalURLs["spotify"],
-                    "https://open.spotify.com/artist/4kSGbjWGxTchKpIxXPJv0B",
+                    URL(string: "https://open.spotify.com/artist/4kSGbjWGxTchKpIxXPJv0B")!,
                     "\(externalURLs)"
                 )
             }
@@ -154,16 +152,12 @@ extension SpotifyAPIAlbumsTests {
             for (i, image) in images.enumerated() {
                 XCTAssertNotNil(image.height)
                 XCTAssertNotNil(image.width)
-                guard let url = URL(string: image.url) else {
-                    XCTFail("couldn't convert to URL: '\(image.url)'")
-                    continue
-                }
                 let imageExpectation = XCTestExpectation(
                     description: "loadImage \(i)"
                 )
                 imageExpectations.append(imageExpectation)
                 
-                assertURLExists(url)
+                assertURLExists(image.url)
                     .sink(receiveCompletion: { _ in
                         imageExpectation.fulfill()
                     })
@@ -182,17 +176,27 @@ extension SpotifyAPIAlbumsTests {
     
     func albumJinx() {
         
-        Self.spotify.authorizationManager.setExpirationDate(to: Date())
-        
-        var authChangeCount = 0
+        let authorizationManagerDidChangeExpectation = XCTestExpectation(
+            description: "authorizationManagerDidChange"
+        )
+        let internalQueue = DispatchQueue(label: "internal")
+
+        var didChangeCount = 0
         var cancellables: Set<AnyCancellable> = []
-        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
-            authChangeCount += 1
-        })
-        .store(in: &cancellables)
+        Self.spotify.authorizationManagerDidChange
+            .receive(on: internalQueue)
+            .sink(receiveValue: {
+                didChangeCount += 1
+                internalQueue.asyncAfter(deadline: .now() + 2) {
+                    authorizationManagerDidChangeExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
 
         let expectation = XCTestExpectation(description: "testAlbum")
         
+        Self.spotify.authorizationManager.setExpirationDate(to: Date())
+
         Self.spotify.album(URIs.Albums.jinx)
             .XCTAssertNoFailure()
             .receiveOnMain()
@@ -202,11 +206,19 @@ extension SpotifyAPIAlbumsTests {
             )
             .store(in: &Self.cancellables)
         
-        self.wait(for: [expectation], timeout: 60)
-        XCTAssertEqual(
-            authChangeCount, 1,
-            "authorizationManagerDidChange should emit exactly once"
+        self.wait(
+            for: [
+                expectation,
+                authorizationManagerDidChangeExpectation
+            ],
+            timeout: 60
         )
+        internalQueue.sync {
+            XCTAssertEqual(
+                didChangeCount, 1,
+                "authorizationManagerDidChange should emit exactly once"
+            )
+        }
         
     }
    
@@ -340,7 +352,7 @@ extension SpotifyAPIAlbumsTests {
                     receiveAlbumTracksPage3CalledCount += 1
                 }
                 guard let previous = albumTracks.previous else {
-                    return SpotifyLocalError.other(
+                    return SpotifyGeneralError.other(
                         "third page of results should have prevous href"
                     )
                     .anyFailingPublisher()
@@ -388,7 +400,7 @@ extension SpotifyAPIAlbumsTests {
                 if currentPage == 1 {
                     XCTAssertEqual(
                         albumTracks.offset, 0,
-                        "first page should be recieved first"
+                        "first page should be received first"
                     )
                     XCTAssertEqual(receivedPages, 1)
                     currentPage = 2
@@ -400,7 +412,7 @@ extension SpotifyAPIAlbumsTests {
                 else if currentPage == 2 {
                     XCTAssertEqual(
                         albumTracks.offset, 50,
-                        "second page should be recieved second"
+                        "second page should be received second"
                     )
                     XCTAssertEqual(receivedPages, 2)
                     currentPage = 3
@@ -412,7 +424,7 @@ extension SpotifyAPIAlbumsTests {
                 else if currentPage == 3 {
                     XCTAssertEqual(
                         albumTracks.offset, 100,
-                        "third page should be recieved third"
+                        "third page should be received third"
                     )
                     XCTAssertEqual(receivedPages, 3)
                     currentPage = nil
@@ -447,7 +459,7 @@ extension SpotifyAPIAlbumsTests {
                     if currentPageHref == 1 {
                         XCTAssertEqual(
                             albumTracks.offset, 0,
-                            "first page should be recieved first"
+                            "first page should be received first"
                         )
                         XCTAssertEqual(receivedPagesHref, 1)
                         currentPageHref = 2
@@ -459,7 +471,7 @@ extension SpotifyAPIAlbumsTests {
                     else if currentPageHref == 2 {
                         XCTAssertEqual(
                             albumTracks.offset, 50,
-                            "second page should be recieved second"
+                            "second page should be received second"
                         )
                         XCTAssertEqual(receivedPagesHref, 2)
                         currentPageHref = 3
@@ -471,7 +483,7 @@ extension SpotifyAPIAlbumsTests {
                     else if currentPageHref == 3 {
                         XCTAssertEqual(
                             albumTracks.offset, 100,
-                            "third page should be recieved third"
+                            "third page should be received third"
                         )
                         XCTAssertEqual(receivedPagesHref, 3)
                         currentPageHref = nil
@@ -752,8 +764,7 @@ extension SpotifyAPIAlbumsTests {
         XCTAssertNotNil(page.next)
         XCTAssertEqual(page.offset, 0)
         
-        XCTAssertNotNil(URL(string: page.href))
-        XCTAssertNotNil(page.next.map(URL.init(string:)))
+        XCTAssertNotNil(page.next)
         
         let tracks = page.items
         self.checkTracksPage1(tracks)
@@ -772,11 +783,10 @@ extension SpotifyAPIAlbumsTests {
         XCTAssertEqual(page.limit, 50)
         XCTAssertEqual(page.total, 125)
         XCTAssertNotNil(page.next)
-        XCTAssertNotNil(page.next.map(URL.init(string:)))
+        XCTAssertNotNil(page.next)
         XCTAssertNotNil(page.previous)
-        XCTAssertNotNil(page.previous.map(URL.init(string:)))
+        XCTAssertNotNil(page.previous)
         XCTAssertEqual(page.offset, 50)
-        XCTAssertNotNil(URL(string: page.href))
         
         let tracks = page.items
         self.checkTracksPage2(tracks)
@@ -795,10 +805,9 @@ extension SpotifyAPIAlbumsTests {
         XCTAssertEqual(page.limit, 50)
         XCTAssertEqual(page.total, 125)
         XCTAssertNotNil(page.previous)
-        XCTAssertNotNil(page.previous.map(URL.init(string:)))
+        XCTAssertNotNil(page.previous)
         XCTAssertNil(page.next)
         XCTAssertEqual(page.offset, 100)
-        XCTAssertNotNil(URL(string: page.href))
         
         
         let tracks = page.items
@@ -1024,7 +1033,6 @@ final class SpotifyAPIAuthorizationCodeFlowAlbumsTests:
 
 }
 
-
 final class SpotifyAPIAuthorizationCodeFlowPKCEAlbumsTests:
         SpotifyAPIAuthorizationCodeFlowPKCETests, SpotifyAPIAlbumsTests
 {
@@ -1059,4 +1067,3 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEAlbumsTests:
     }
 
 }
-

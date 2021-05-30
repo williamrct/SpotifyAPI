@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -66,10 +64,15 @@ extension SpotifyAPIFollowTests {
 }
 
 extension SpotifyAPIFollowTests where
-    AuthorizationManager: SpotifyScopeAuthorizationManager
+    AuthorizationManager: _InternalSpotifyScopeAuthorizationManager
 {
 
     func followedArtists() {
+        
+        DistributedLock.follow.lock()
+        defer {
+            DistributedLock.follow.unlock()
+        }
         
         let expectation = XCTestExpectation(
             description: "followedArtists"
@@ -86,12 +89,12 @@ extension SpotifyAPIFollowTests where
         .flatMap { arists -> AnyPublisher<CursorPagingObject<Artist>, Error> in
             allFollowedArtists = arists.items
             guard allFollowedArtists.count >= 3 else {
-                return SpotifyLocalError.other(
+                return XCTSkip(
                     "test requires the user to follow at least 3 artists"
                 )
                 .anyFailingPublisher()
             }
-            let artistURIs = allFollowedArtists.map({ $0.uri })
+            let artistURIs = allFollowedArtists.map(\.uri)
             let thirdFromLastArtist = artistURIs[
                 allFollowedArtists.count - 3
             ]
@@ -107,7 +110,7 @@ extension SpotifyAPIFollowTests where
                 let artists = artistsPagingObject.items
                 guard artists.count >= 2 else {
                     XCTFail(
-                        "should recieve at least two artists: \(artists.count)"
+                        "should receive at least two artists: \(artists.count)"
                     )
                     return
                 }
@@ -130,6 +133,11 @@ extension SpotifyAPIFollowTests where
     }
 
     func followArtists() {
+
+        DistributedLock.follow.lock()
+        defer {
+            DistributedLock.follow.unlock()
+        }
 
         let expectation = XCTestExpectation(
             description: "testFollowArtists"
@@ -223,14 +231,30 @@ extension SpotifyAPIFollowTests where
 
     func followUsers() {
 
-        Self.spotify.authorizationManager.setExpirationDate(to: Date())
-        var authChangeCount = 0
-        var cancellables: Set<AnyCancellable> = []
-        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
-            authChangeCount += 1
-        })
-        .store(in: &cancellables)
+        DistributedLock.follow.lock()
+        defer {
+            DistributedLock.follow.unlock()
+        }
 
+        let authorizationManagerDidChangeExpectation = XCTestExpectation(
+            description: "authorizationManagerDidChange"
+        )
+        let internalQueue = DispatchQueue(label: "internal")
+
+        var didChangeCount = 0
+        var cancellables: Set<AnyCancellable> = []
+        Self.spotify.authorizationManagerDidChange
+            .receive(on: internalQueue)
+            .sink(receiveValue: {
+                didChangeCount += 1
+                internalQueue.asyncAfter(deadline: .now() + 2) {
+                    authorizationManagerDidChangeExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
+
+        Self.spotify.authorizationManager.setExpirationDate(to: Date())
+        
         let expectation = XCTestExpectation(
             description: "testFollowUsers"
         )
@@ -290,16 +314,28 @@ extension SpotifyAPIFollowTests where
             )
             .store(in: &Self.cancellables)
 
-        self.wait(for: [expectation, emptyExpectation], timeout: 300)
-        XCTAssertEqual(
-            authChangeCount, 1,
-            "authorizationManagerDidChange should emit exactly once"
+        self.wait(for: [expectation], timeout: 300)
+        self.wait(
+            for: [authorizationManagerDidChangeExpectation],
+            timeout: 5
         )
+       
+        internalQueue.sync {
+            XCTAssertEqual(
+                didChangeCount, 1,
+                "authorizationManagerDidChange should emit exactly once"
+            )
+        }
         XCTAssertTrue(receivedValueFromEmpty)
 
     }
 
     func followPlaylist() {
+
+        DistributedLock.follow.lock()
+        defer {
+            DistributedLock.follow.unlock()
+        }
 
         let expectation = XCTestExpectation(
             description: "testFollowPlaylist"
@@ -320,7 +356,7 @@ extension SpotifyAPIFollowTests where
             .receiveOnMain(delay: 1)
             .flatMap { () -> AnyPublisher<[Bool], Error> in
                 guard let user = currentUserURI else {
-                    return SpotifyLocalError.other("user URI was nil")
+                    return SpotifyGeneralError.other("user URI was nil")
                         .anyFailingPublisher()
                 }
                 return Self.spotify.usersFollowPlaylist(
@@ -340,7 +376,7 @@ extension SpotifyAPIFollowTests where
             .receiveOnMain(delay: 1)
             .flatMap { () -> AnyPublisher<[Bool], Error> in
                 guard let user = currentUserURI else {
-                    return SpotifyLocalError.other("user URI was nil")
+                    return SpotifyGeneralError.other("user URI was nil")
                         .anyFailingPublisher()
                 }
                 return Self.spotify.usersFollowPlaylist(
@@ -362,6 +398,8 @@ extension SpotifyAPIFollowTests where
     }
 
 }
+
+// MARK: - Client -
 
 final class SpotifyAPIClientCredentialsFlowFollowTests:
     SpotifyAPIClientCredentialsFlowTests, SpotifyAPIFollowTests
@@ -397,6 +435,61 @@ final class SpotifyAPIAuthorizationCodeFlowFollowTests:
 
 final class SpotifyAPIAuthorizationCodeFlowPKCEFollowTests:
     SpotifyAPIAuthorizationCodeFlowPKCETests, SpotifyAPIFollowTests
+{
+
+    static let allTests = [
+        ("testUsersFollowPlaylist", testUsersFollowPlaylist),
+        ("testFollowedArtists", testFollowedArtists),
+        ("testFollowArtists", testFollowArtists),
+        ("testFollowUsers", testFollowUsers),
+        ("testFollowPlaylist", testFollowPlaylist)
+    ]
+
+    func testUsersFollowPlaylist() { usersFollowPlaylist() }
+    func testFollowedArtists() { followedArtists() }
+    func testFollowArtists() { followArtists() }
+    func testFollowUsers() { followUsers() }
+    func testFollowPlaylist() { followPlaylist() }
+
+}
+
+// MARK: - Proxy -
+
+final class SpotifyAPIClientCredentialsFlowProxyFollowTests:
+    SpotifyAPIClientCredentialsFlowProxyTests, SpotifyAPIFollowTests
+{
+
+    static let allTests = [
+        ("testUsersFollowPlaylist", testUsersFollowPlaylist)
+    ]
+
+    func testUsersFollowPlaylist() { usersFollowPlaylist() }
+
+}
+
+
+final class SpotifyAPIAuthorizationCodeFlowProxyFollowTests:
+    SpotifyAPIAuthorizationCodeFlowProxyTests, SpotifyAPIFollowTests
+{
+
+    static let allTests = [
+        ("testUsersFollowPlaylist", testUsersFollowPlaylist),
+        ("testFollowedArtists", testFollowedArtists),
+        ("testFollowArtists", testFollowArtists),
+        ("testFollowUsers", testFollowUsers),
+        ("testFollowPlaylist", testFollowPlaylist)
+    ]
+
+    func testUsersFollowPlaylist() { usersFollowPlaylist() }
+    func testFollowedArtists() { followedArtists() }
+    func testFollowArtists() { followArtists() }
+    func testFollowUsers() { followUsers() }
+    func testFollowPlaylist() { followPlaylist() }
+
+}
+
+final class SpotifyAPIAuthorizationCodeFlowPKCEProxyFollowTests:
+    SpotifyAPIAuthorizationCodeFlowPKCEProxyTests, SpotifyAPIFollowTests
 {
 
     static let allTests = [

@@ -25,11 +25,13 @@ Read the full [documentation][1] and check out [this example iOS app][14] and th
 * **[Saving Authorization Information to Persistent Storage](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Saving-authorization-information-to-persistent-storage.)**
 * **[Using the Player Endpoints](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Using-the-Player-Endpoints)**
 * [**Working with Paginated Results**](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Working-with-Paginated-Results)
+* [**Using a Backend Server to Retrieve the Authorization Information**](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Using-a-Backend-Server-to-Retrieve-the-Authorization-Information)
 * **[Debugging](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Debugging)**
 * **[Running the Unit Tests](https://github.com/Peter-Schorn/SpotifyAPI/wiki/Running-the-Unit-Tests)**
 
 ## Supported Platforms
 
+* Swift 5.3+ (for Swift 5.1 and 5.2 support, use the [`swift-tools-5-1`](https://github.com/Peter-Schorn/SpotifyAPI/tree/swift-tools-5-1) branch)
 * iOS 13+
 * macOS 10.15+
 * tvOS 13+
@@ -65,23 +67,22 @@ import SpotifyWebAPI
 
 let spotify = SpotifyAPI(
     authorizationManager: AuthorizationCodeFlowPKCEManager(
-        clientId: "Your Client Id", clientSecret: "Your Client Secret"
+        clientId: "Your Client Id"
     )
 )
 ```
-
 
 Before each authentication request your app should generate a code verifier and a code challenge. The code verifier is a cryptographically random string between 43 and 128 characters in length. It can contain letters, digits, underscores, periods, hyphens, and tildes.
 
 In order to generate the code challenge, your app should hash the code verifier using the SHA256 algorithm. Then, [base64url][19] encode the hash that you generated. **Do not include any** `=` **padding characters** (percent-encoded or not).
 
-You can use `String.randomURLSafe(length:using:)` or `String.randomURLSafe(length:)` to generate the code verifier. You can use the `String.makeCodeChallenge()` instance method to create the code challenge from the code verifier. 
+You can use `String.randomURLSafe(length:using:)` or `String.randomURLSafe(length:)` to generate the code verifier. You can use the `String.makeCodeChallenge(codeVerifier:)` instance method to create the code challenge from the code verifier. 
 
 For example:
 
 ```swift
 let codeVerifier = String.randomURLSafe(length: 128)
-let codeChallenge = codeVerifier.makeCodeChallenge()
+let codeChallenge = String.makeCodeChallenge(codeVerifier: codeVerifier)
 
 // optional, but strongly recommended
 let state = String.randomURLSafe(length: 128)

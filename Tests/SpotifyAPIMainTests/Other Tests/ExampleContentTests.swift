@@ -10,7 +10,7 @@ final class ExampleContentTests: SpotifyAPITestCase {
     
     var sink = ""
     
-    static var allTests = [
+    static let allTests = [
         ("testAlbums", testAlbums),
         ("testArtists", testArtists),
         ("testAadioAnalysis", testAadioAnalysis),
@@ -27,9 +27,7 @@ final class ExampleContentTests: SpotifyAPITestCase {
     ]
     
     func testAlbums() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(Album.abbeyRoad)
-        
         XCTAssertEqual(Album.abbeyRoad.name, "Abbey Road (Remastered)")
         encodeDecode(Album.darkSideOfTheMoon)
         XCTAssertEqual(
@@ -44,11 +42,9 @@ final class ExampleContentTests: SpotifyAPITestCase {
         XCTAssertEqual(Album.meddle.name, "Meddle")
         encodeDecode(Album.skiptracing)
         XCTAssertEqual(Album.skiptracing.name, "Skiptracing")
-        #endif
     }
 
     func testArtists() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(Artist.crumb, areEqual: ==)
         XCTAssertEqual(Artist.crumb.name, "Crumb")
         encodeDecode(Artist.levitationRoom, areEqual: ==)
@@ -61,31 +57,23 @@ final class ExampleContentTests: SpotifyAPITestCase {
         XCTAssertEqual(Artist.skinshape.name, "Skinshape")
         encodeDecode(Artist.theBeatles, areEqual: ==)
         XCTAssertEqual(Artist.theBeatles.name, "The Beatles")
-        #endif
     }
     
     func testAadioAnalysis() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(AudioAnalysis.anyColourYouLike)
-        #endif
     }
     
     func testAudioFeatures() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(AudioFeatures.fearless)
-        #endif
     }
     
     func testBrowse() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(PagingObject.sampleCategoryPlaylists, areEqual: ==)
         encodeDecode(FeaturedPlaylists.sampleFeaturedPlaylists, areEqual: ==)
         encodeDecode(SpotifyCategory.sampleCategories, areEqual: ==)
-        #endif
     }
     
     func testEpisodes() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(Episode.seanCarroll111)
         XCTAssertEqual(
             Episode.seanCarroll111.name,
@@ -111,24 +99,18 @@ final class ExampleContentTests: SpotifyAPITestCase {
             Episode.samHarris215.name,
             "#215 — August 21, 2020"
         )
-        #endif
     }
     
     func testLibrary() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(PagingObject.sampleCurrentUserSavedAlbums)
-        #endif
     }
     
     func testPlayer() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(CursorPagingObject.sampleRecentlyPlayed)
         encodeDecode(CurrentlyPlayingContext.sampleCurrentPlayback)
-        #endif
     }
     
     func testPlaylists() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(PagingObject.thisIsJimiHendrix, areEqual: ==)
         encodeDecode(PagingObject.thisIsPinkFloyd, areEqual: ==)
         encodeDecode(PagingObject.thisIsMacDeMarco, areEqual: ==)
@@ -186,11 +168,10 @@ final class ExampleContentTests: SpotifyAPITestCase {
             Playlist.menITrust.name,
             "Men I Trust"
         )
-        #endif
+        
     }
     
     func testPlaylistItems() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(PlaylistItem.samHarris216)
          XCTAssertEqual(
             PlaylistItem.samHarris216.name,
@@ -226,17 +207,13 @@ final class ExampleContentTests: SpotifyAPITestCase {
             PlaylistItem.killshot.name,
             "Killshot"
         )
-        #endif
     }
     
     func testSearch() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(SearchResult.queryCrumb)
-        #endif
     }
     
     func testShows() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(Show.seanCarroll)
         XCTAssertEqual(
             Show.seanCarroll.name,
@@ -246,11 +223,9 @@ final class ExampleContentTests: SpotifyAPITestCase {
         XCTAssertEqual(Show.samHarris.name, "Making Sense with Sam Harris")
         encodeDecode(Show.joeRogan)
         XCTAssertEqual(Show.joeRogan.name, "The Joe Rogan Experience")
-        #endif
     }
 
     func testTracks() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(Track.because)
         XCTAssertEqual(Track.because.name, "Because - Remastered 2009")
         encodeDecode(Track.comeTogether)
@@ -268,16 +243,13 @@ final class ExampleContentTests: SpotifyAPITestCase {
         encodeDecode(Track.time)
         XCTAssertEqual(Track.time.name, "Time")
         encodeDecode(PagingObject.jinxTracks)
-        #endif
     }
  
     func testUserProfile() {
-        #if SWIFT_TOOLS_5_3
         encodeDecode(SpotifyUser.sampleCurrentUserProfile, areEqual: ==)
-        #endif
     }
 
-    // print(<#type#>.<#property#>, to: &sink)
     // XCTAssertEqual(Playlist.<#name#>.name, "<#name#>")
     
 }
+

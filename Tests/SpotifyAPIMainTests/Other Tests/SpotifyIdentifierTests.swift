@@ -5,8 +5,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 import XCTest
 import SpotifyWebAPI
@@ -17,7 +15,7 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
 
     static var cancellables: Set<AnyCancellable> = []
 
-    static var allTests = [
+    static let allTests = [
         ("testTrackURIs", testTrackURIs),
         ("testArtistURIs", testArtistURIs),
         ("testAlbumURIs", testAlbumURIs),
@@ -260,7 +258,7 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
             "should receive error indicating that URI must start with 'spotify:'"
         ) { error in
         
-            if let error = error as? SpotifyLocalError,
+            if let error = error as? SpotifyGeneralError,
                    case .identifierParsingError(let message) = error {
                 XCTAssertTrue(
                     message.hasSuffix("URI must start with 'spotify:'")
@@ -278,13 +276,13 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
             "should receive error indicating that 'song' is not an id category"
         ) { error in
         
-            if let error = error as? SpotifyLocalError,
+            if let error = error as? SpotifyGeneralError,
                    case .identifierParsingError(let message) = error {
                 XCTAssertTrue(
                     message.hasSuffix(
                         """
                         : id category must be one of the following: \
-                        \(IDCategory.allCases.map({ $0.rawValue })), \
+                        \(IDCategory.allCases.map(\.rawValue)), \
                         but received 'song'
                         """
                     )
@@ -302,7 +300,7 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
             "should receive identifier parsing error"
         ) { error in
 
-            if let error = error as? SpotifyLocalError,
+            if let error = error as? SpotifyGeneralError,
                    case .identifierParsingError(let message) = error {
                 XCTAssertEqual(
                     message,

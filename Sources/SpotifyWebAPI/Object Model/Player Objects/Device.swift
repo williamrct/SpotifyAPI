@@ -16,8 +16,8 @@ public struct Device: Hashable {
     /// Whether the device is currently in a private session.
     public let isPrivateSession: Bool
     
-    /// Whether controlling this device is restricted.
-    /// If `true`, then no web API commands will be accepted by this device.
+    /// Whether controlling this device is restricted. If `true`, then no web
+    /// API commands will be accepted by this device.
     public let isRestricted: Bool
     
     /// The name of the device.
@@ -38,7 +38,7 @@ public struct Device: Hashable {
        - isPrivateSession: Whether the device is currently in a private session.
        - isRestricted: Whether controlling this device is restricted. If `true`,
              then no web API commands will be accepted by this device.
-       - name:  The name of the device.
+       - name: The name of the device.
        - type: The type of the device.
        - volumePercent: The current volume in percent (0 to 100).
      */
@@ -64,8 +64,7 @@ public struct Device: Hashable {
 
 extension Device: Codable {
     
-    /// :nodoc:
-    public enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case id
         case isActive = "is_active"
         case isPrivateSession = "is_private_session"

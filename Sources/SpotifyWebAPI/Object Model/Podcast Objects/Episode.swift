@@ -12,12 +12,12 @@ public struct Episode: Hashable, SpotifyURIConvertible {
     public let name: String
     
     /// The show on which the episode belongs (simplified version).
+    ///
     /// Only available for the full version.
     public let show: Show?
     
-    /// A URL to a 30 second preview (MP3 format) of the episode,
-    /// if available.
-    public let audioPreviewURL: String?
+    /// A URL to a 30 second preview (MP3 format) of the episode, if available.
+    public let audioPreviewURL: URL?
     
     /// A description of the episode.
     public let description: String
@@ -33,11 +33,11 @@ public struct Episode: Hashable, SpotifyURIConvertible {
     /// The episode length in milliseconds.
     public let durationMS: Int
 
-    /// Whether or not the episode has explicit content.
-    /// `false` if unknown.
+    /// Whether or not the episode has explicit content. `false` if unknown.
     public let isExplicit: Bool
 
     /// The date the episode was first released.
+    ///
     /// See also `releaseDatePrecision`.
     public let releaseDate: Date?
     
@@ -60,36 +60,35 @@ public struct Episode: Hashable, SpotifyURIConvertible {
      Use `SpotifyAPI.getFromHref(_:responseType:)`, passing in `Episode` as the
      response type to retrieve the results.
      */
-    public let href: String
+    public let href: URL
        
-    /// `true` if the episode is playable in the given market.
-    /// Else, `false`.
+    /// `true` if the episode is playable in the given market. Else, `false`.
     public let isPlayable: Bool
 
     /**
      Known [external urls][1] for this episode.
 
-     - key: The type of the URL, for example:
-           "spotify" - The [Spotify URL][2] for the object.
+     - key: The type of the URL, for example: "spotify" - The [Spotify URL][2]
+           for the object.
      - value: An external, public URL to the object.
 
      [1]: https://developer.spotify.com/documentation/web-api/reference/#object-externalurlobject
      [2]: https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids
      */
-    public let externalURLs: [String: String]?
+    public let externalURLs: [String: URL]?
     
-    /// `true` if the episode is hosted outside of Spotify's CDN
-    /// (content delivery network). Else, `false`.
+    /// `true` if the episode is hosted outside of Spotify's CDN (content
+    /// delivery network). Else, `false`.
     public let isExternallyHosted: Bool
     
-    /// A list of the languages used in the episode,
-    /// identified by their [ISO 639][1] code.
+    /// A list of the languages used in the episode, identified by their [ISO
+    /// 639][1] code.
     ///
     /// [1]: https://en.wikipedia.org/wiki/ISO_639
     public let languages: [String]
     
-    /// The precision with which `releaseDate` is known:
-    /// "year", "month", or "day".
+    /// The precision with which `releaseDate` is known: "year", "month", or
+    /// "day".
     public let releaseDatePrecision: String?
  
     /// The object type. Always `episode`.
@@ -104,8 +103,8 @@ public struct Episode: Hashable, SpotifyURIConvertible {
        - audioPreviewURL: A URL to a 30 second preview (MP3 format) of the
              episode.
        - description: A description of the episode.
-       - resumePoint: The user’s most recent position in the episode.
-             Set if the supplied access token is a user token and has the
+       - resumePoint: The user’s most recent position in the episode. Set if the
+             supplied access token is a user token and has the
              `userReadPlaybackPosition` scope.
        - durationMS: The episode length in milliseconds.
        - isExplicit: Whether or not the episode has explicit content.
@@ -113,20 +112,20 @@ public struct Episode: Hashable, SpotifyURIConvertible {
        - uri: The [Spotify URI][2] for the episode.
        - id: The [Spotify ID][2] for the episode.
        - images: The cover art for the episode in various sizes.
-       - href: A link to the Spotify web API endpoint providing the full
-             episode object.
+       - href: A link to the Spotify web API endpoint providing the full episode
+             object.
        - isPlayable: `true` if the episode is playable in the given market.
-             Else, `false`.
+            Else, `false`.
        - externalURLs: Known [external urls][3] for this artist.
-             - key: The type of the URL, for example:
-                   "spotify" - The [Spotify URL][2] for the object.
+             - key: The type of the URL, for example: "spotify" - The [Spotify
+                   URL][2] for the object.
              - value: An external, public URL to the object.
        - isExternallyHosted: `true` if the episode is hosted outside of
              Spotify's CDN (content delivery network). Else, `false`.
-       - languages: A list of the languages used in the episode,
-             identified by their [ISO 639][4] code.
-       - releaseDatePrecision: The precision with which `releaseDate` is
-             known: "year", "month", or "day".
+       - languages: A list of the languages used in the episode, identified by
+             their [ISO 639][4] code.
+       - releaseDatePrecision: The precision with which `releaseDate` is known:
+             "year", "month", or "day".
      
      [1]:https://developer.spotify.com/documentation/web-api/reference/#object-episodeobject
      [2]: https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids
@@ -136,7 +135,7 @@ public struct Episode: Hashable, SpotifyURIConvertible {
     public init(
         name: String,
         show: Show? = nil,
-        audioPreviewURL: String? = nil,
+        audioPreviewURL: URL? = nil,
         description: String,
         resumePoint: ResumePoint? = nil,
         durationMS: Int,
@@ -145,9 +144,9 @@ public struct Episode: Hashable, SpotifyURIConvertible {
         uri: String,
         id: String,
         images: [SpotifyImage]? = nil,
-        href: String,
+        href: URL,
         isPlayable: Bool,
-        externalURLs: [String: String]? = nil,
+        externalURLs: [String: URL]? = nil,
         isExternallyHosted: Bool,
         languages: [String],
         releaseDatePrecision: String? = nil
@@ -188,7 +187,7 @@ extension Episode: Codable {
             Show.self, forKey: .show
         )
         self.audioPreviewURL = try container.decodeIfPresent(
-            String.self, forKey: .audioPreviewURL
+            URL.self, forKey: .audioPreviewURL
         )
         self.description = try container.decode(
             String.self, forKey: .description
@@ -204,8 +203,7 @@ extension Episode: Codable {
         )
         
         // MARK: Decode Release Date
-        // this is the only property that needs to be decoded
-        // in a custom manner
+        // this is the only property that needs to be decoded in a custom manner
         self.releaseDate = try container.decodeSpotifyDateIfPresent(
             forKey: .releaseDate
         )
@@ -224,13 +222,13 @@ extension Episode: Codable {
         )
         
         self.href = try container.decode(
-            String.self, forKey: .href
+            URL.self, forKey: .href
         )
         self.isPlayable = try container.decode(
             Bool.self, forKey: .isPlayable
         )
         self.externalURLs = try container.decodeIfPresent(
-            [String: String].self, forKey: .externalURLs
+            [String: URL].self, forKey: .externalURLs
         )
         self.isExternallyHosted = try container.decode(
             Bool.self, forKey: .isExternallyHosted
@@ -319,8 +317,7 @@ extension Episode: Codable {
         
     }
     
-    /// :nodoc:
-    public enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case name
         case show
         case audioPreviewURL = "audio_preview_url"

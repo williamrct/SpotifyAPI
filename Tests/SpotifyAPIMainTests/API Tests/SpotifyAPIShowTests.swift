@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -33,7 +31,7 @@ extension SpotifyAPIShowTests {
         XCTAssertEqual(show.mediaType, "audio")
         XCTAssertEqual(
             show.href,
-            "https://api.spotify.com/v1/shows/622lvLwp8CVu6dvCsYAJhN"
+            URL(string: "https://api.spotify.com/v1/shows/622lvLwp8CVu6dvCsYAJhN")!
         )
         if let totalEpisodes = show.totalEpisodes {
             XCTAssert(totalEpisodes >= 122, "total: \(totalEpisodes)")
@@ -45,7 +43,7 @@ extension SpotifyAPIShowTests {
         if let externalURLs = show.externalURLs {
             XCTAssertEqual(
                 externalURLs["spotify"],
-                "https://open.spotify.com/show/622lvLwp8CVu6dvCsYAJhN",
+                URL(string: "https://open.spotify.com/show/622lvLwp8CVu6dvCsYAJhN")!,
                 "\(externalURLs)"
             )
         }
@@ -75,16 +73,12 @@ extension SpotifyAPIShowTests {
             for (i, image) in images.enumerated() {
                 XCTAssertNotNil(image.height)
                 XCTAssertNotNil(image.width)
-                guard let url = URL(string: image.url) else {
-                    XCTFail("couldn't convert to URL: '\(image.url)'")
-                    continue
-                }
                 let imageExpectation = XCTestExpectation(
                     description: "loadImage \(i)"
                 )
                 imageExpectations.append(imageExpectation)
                 
-                assertURLExists(url)
+                assertURLExists(image.url)
                     .sink(receiveCompletion: { _ in
                         imageExpectation.fulfill()
                     })
@@ -181,7 +175,10 @@ extension SpotifyAPIShowTests {
             XCTAssertEqual(joeRogan.type, .show)
             XCTAssertEqual(joeRogan.uri, "spotify:show:4rOoJ6Egrf8K2IrywzwOMk")
             XCTAssertEqual(joeRogan.id, "4rOoJ6Egrf8K2IrywzwOMk")
-            XCTAssertEqual(joeRogan.href, "https://api.spotify.com/v1/shows/4rOoJ6Egrf8K2IrywzwOMk")
+            XCTAssertEqual(
+                joeRogan.href,
+                URL(string: "https://api.spotify.com/v1/shows/4rOoJ6Egrf8K2IrywzwOMk")!
+            )
             XCTAssert(joeRogan.languages.contains("en-US"), "\(joeRogan.languages)")
             XCTAssertFalse(joeRogan.isExternallyHosted)
             XCTAssertEqual(joeRogan.mediaType, "mixed")
@@ -193,7 +190,7 @@ extension SpotifyAPIShowTests {
             if let externalURLs = joeRogan.externalURLs {
                 XCTAssertEqual(
                     externalURLs["spotify"],
-                    "https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk",
+                    URL(string: "https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk")!,
                     "\(externalURLs)"
                 )
             }
@@ -230,25 +227,25 @@ extension SpotifyAPIShowTests {
             encodeDecode(show)
             XCTAssertEqual(
                 show.href,
-                "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=10&limit=30&market=US"
+                URL(string: "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=10&limit=30&market=US")!
             )
             XCTAssertEqual(show.limit, 30)
             XCTAssertEqual(show.offset, 10)
             XCTAssert(show.total >= 143, "\(show.total)")
             XCTAssertEqual(
                 show.next,
-                "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=40&limit=30&market=US"
+                URL(string: "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=40&limit=30&market=US")!
             )
             XCTAssertEqual(
                 show.previous,
-                "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=0&limit=30&market=US"
+                URL(string: "https://api.spotify.com/v1/shows/4eDCVvVXJVwKCa0QfNbuXA/episodes?offset=0&limit=30&market=US")!
             )
             
 
             if let episode1 = show.items.first {
                 // MARK: Check Images for First Episode.
                 if let images = episode1.images {
-                    #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI)
+                    #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
                     var imageExpectations: [XCTestExpectation] = []
                     for (i, image) in images.enumerated() {
                         let expectation = XCTestExpectation(
@@ -313,8 +310,6 @@ extension SpotifyAPIShowTests {
         
         #if canImport(Combine)
 
-        var receivedPageIndices: Set<Int> = []
-
         func receiveShowEpisodes(_ episodes: PagingObject<Episode>) {
             // the index of the last item in the page
 //            let lastItemIndex = episodes.offset + episodes.items.count - 1
@@ -344,6 +339,8 @@ extension SpotifyAPIShowTests {
             }
 
         }
+
+        var receivedPageIndices: Set<Int> = []
 
         let expectation = XCTestExpectation(
             description: "showEpisodesExtendPagesConcurrent"

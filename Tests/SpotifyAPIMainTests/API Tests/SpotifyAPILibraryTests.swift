@@ -6,8 +6,6 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 @testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
@@ -16,7 +14,7 @@ import SpotifyExampleContent
 protocol SpotifyAPILibraryTests: SpotifyAPITests { }
 
 extension SpotifyAPILibraryTests where
-    AuthorizationManager: SpotifyScopeAuthorizationManager
+    AuthorizationManager: _InternalSpotifyScopeAuthorizationManager
 {
     
     func saveAlbums() {
@@ -48,13 +46,13 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedAlbumsArray)
                 
                 let allAlbums = savedAlbumsArray
-                    .flatMap({ $0.items })
+                    .flatMap(\.items)
                 for album in allAlbums {
                     XCTAssertEqual(album.type, .album)
                 }
                 
                 let albumURIs = allAlbums
-                    .compactMap({ $0.item.uri })
+                    .compactMap(\.item.uri)
                 for album in albumURIs {
                     XCTAssertFalse(fullAlbums.contains(album))
                 }
@@ -82,7 +80,7 @@ extension SpotifyAPILibraryTests where
                 for album in savedAlbums {
                     XCTAssertEqual(album.type, .album)
                 }
-                let albumURIs = savedAlbums.compactMap({ $0.item.uri })
+                let albumURIs = savedAlbums.compactMap(\.item.uri)
                 for album in partialAlbums {
                     XCTAssert(albumURIs.contains(album))
                 }
@@ -149,13 +147,13 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedAlbumsArray)
                     
                     let allAlbums = savedAlbumsArray
-                        .flatMap({ $0.items })
+                        .flatMap(\.items)
                     for album in allAlbums {
                         XCTAssertEqual(album.type, .album)
                     }
                     
                     let albumURIs = allAlbums
-                        .compactMap({ $0.item.uri })
+                        .compactMap(\.item.uri)
                     for album in albumURIs {
                         XCTAssertFalse(fullAlbums.contains(album))
                     }
@@ -195,13 +193,13 @@ extension SpotifyAPILibraryTests where
             .flatMap { savedTracksArray -> AnyPublisher<Void, Error> in
                 encodeDecode(savedTracksArray)
                 let allTracks = savedTracksArray
-                    .flatMap({ $0.items })
+                    .flatMap(\.items)
                 for track in allTracks {
                     XCTAssertEqual(track.type, .track)
                 }
 
                 let trackURIs = allTracks
-                    .compactMap({ $0.item.uri })
+                    .compactMap(\.item.uri)
                 for track in trackURIs {
                     XCTAssertFalse(fullTracks.contains(track))
                 }
@@ -229,7 +227,7 @@ extension SpotifyAPILibraryTests where
                 for track in savedTracks {
                     XCTAssertEqual(track.type, .track)
                 }
-                let trackURIs = savedTracks.compactMap({ $0.item.uri })
+                let trackURIs = savedTracks.compactMap(\.item.uri)
                 for track in partialTracks {
                     XCTAssert(trackURIs.contains(track))
                 }
@@ -295,13 +293,13 @@ extension SpotifyAPILibraryTests where
                 receiveValue: { savedTracksArray in
                     encodeDecode(savedTracksArray)
                     let allTracks = savedTracksArray
-                        .flatMap({ $0.items })
+                        .flatMap(\.items)
                     for track in allTracks {
                         XCTAssertEqual(track.type, .track)
                     }
 
                     let trackURIs = allTracks
-                        .compactMap({ $0.item.uri })
+                        .compactMap(\.item.uri)
                     for track in trackURIs {
                         XCTAssertFalse(fullTracks.contains(track))
                     }
@@ -342,13 +340,13 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedEpisodesArray)
                 
                 let allEpisodes = savedEpisodesArray
-                    .flatMap({ $0.items })
+                    .flatMap(\.items)
                 for episode in allEpisodes {
                     XCTAssertEqual(episode.type, .episode)
                 }
                 
                 let episodeURIs = allEpisodes
-                    .map({ $0.item.uri })
+                    .map(\.item.uri)
                 for episode in episodeURIs {
                     XCTAssertFalse(fullEpisodes.contains(episode))
                 }
@@ -376,7 +374,7 @@ extension SpotifyAPILibraryTests where
                 for episode in savedEpisodes {
                     XCTAssertEqual(episode.type, .episode)
                 }
-                let episodeURIs = savedEpisodes.map({ $0.item.uri })
+                let episodeURIs = savedEpisodes.map(\.item.uri)
                 for episode in partialEpisodes {
                     XCTAssert(episodeURIs.contains(episode))
                 }
@@ -451,13 +449,13 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedEpisodesArray)
                     
                     let allEpisodes = savedEpisodesArray
-                        .flatMap({ $0.items })
+                        .flatMap(\.items)
                     for episode in allEpisodes {
                         XCTAssertEqual(episode.type, .episode)
                     }
                     
                     let episodeURIs = allEpisodes
-                        .map({ $0.item.uri })
+                        .map(\.item.uri)
                     for episode in episodeURIs {
                         XCTAssertFalse(fullEpisodes.contains(episode))
                     }
@@ -498,13 +496,13 @@ extension SpotifyAPILibraryTests where
                 encodeDecode(savedShowsArray)
                 
                 let allShows = savedShowsArray
-                    .flatMap({ $0.items })
+                    .flatMap(\.items)
                 for show in allShows {
                     XCTAssertEqual(show.type, .show)
                 }
                 
                 let showURIs = allShows
-                    .map({ $0.item.uri })
+                    .map(\.item.uri)
                 for show in showURIs {
                     XCTAssertFalse(fullShows.contains(show))
                 }
@@ -532,7 +530,7 @@ extension SpotifyAPILibraryTests where
                 for show in savedShows {
                     XCTAssertEqual(show.type, .show)
                 }
-                let showURIs = savedShows.map({ $0.item.uri })
+                let showURIs = savedShows.map(\.item.uri)
                 for show in partialShows {
                     XCTAssert(showURIs.contains(show))
                 }
@@ -607,13 +605,13 @@ extension SpotifyAPILibraryTests where
                     encodeDecode(savedShowsArray)
                     
                     let allShows = savedShowsArray
-                        .flatMap({ $0.items })
+                        .flatMap(\.items)
                     for show in allShows {
                         XCTAssertEqual(show.type, .show)
                     }
                     
                     let showURIs = allShows
-                        .map({ $0.item.uri })
+                        .map(\.item.uri)
                     for show in showURIs {
                         XCTAssertFalse(fullShows.contains(show))
                     }
@@ -623,6 +621,14 @@ extension SpotifyAPILibraryTests where
 
         self.wait(for: [expectation], timeout: 300)
             
+    }
+    
+    func _setUp() {
+        DistributedLock.library.lock()
+    }
+    
+    func _tearDown() {
+        DistributedLock.library.unlock()
     }
     
 }
@@ -642,6 +648,14 @@ final class SpotifyAPIAuthorizationCodeFlowLibraryTests:
     func testSaveTracks() { saveTracks() }
     func testSaveEpisodes() { saveEpisodes() }
     func testSaveShows() { saveShows() }
+    
+    override func setUp() {
+        self._setUp()
+    }
+    
+    override func tearDown() {
+        self._tearDown()
+    }
 
 }
 
@@ -660,6 +674,14 @@ final class SpotifyAPIAuthorizationCodeFlowPKCELibraryTests:
     func testSaveTracks() { saveTracks() }
     func testSaveEpisodes() { saveEpisodes() }
     func testSaveShows() { saveShows() }
+
+    override func setUp() {
+        self._setUp()
+    }
+    
+    override func tearDown() {
+        self._tearDown()
+    }
 
 }
 

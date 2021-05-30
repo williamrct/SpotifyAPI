@@ -1,48 +1,56 @@
 import Foundation
 
 /**
- The authorization info that Spotify returns during the authorization
+ The authorization information that Spotify returns during the authorization
  process.
 
  This is used in various different contexts, including:
  
- * When decoding the respose after requesting the access and refresh tokens
+ * When decoding the response after requesting the access and refresh tokens
  * When decoding the response after refreshing the tokens
- * As a wrapper for decoding and encoding the authorization information.
+ * As a wrapper for decoding and encoding the authorization managers.
  
- Because of its diverse uses, all of its properties are optional,
- which means that it will never fail to decode itself from data,
- so be careful about swallowing errors.
+ Because of its diverse uses, all of its properties are optional, which means
+ that it will never fail to decode itself from data, so be careful about
+ swallowing errors.
  
  Includes the following properties:
  
- * `accessToken`: used in all of the requests to the Spotify web API
-   for authorization.
+ * `accessToken`: used in all of the requests to the Spotify web API for
+   authorization.
  * `refreshToken`: Used to refresh the access token.
  * `expirationDate`: The expiration date of the access token.
  * `scopes`: The scopes that have been authorized for the access token.
  
  */
-struct AuthInfo: Hashable {
+public struct AuthInfo: Hashable {
     
-    /// The access token used in all of the requests
-    /// to the Spotify web API.
-    let accessToken: String?
+    /// The access token used in all of the requests to the Spotify web API.
+    public let accessToken: String?
     
     /// Used to refresh the access token.
-    let refreshToken: String?
+    public let refreshToken: String?
     
     /// The expiration date of the access token.
-    let expirationDate: Date?
+    public let expirationDate: Date?
     
     /// The scopes that have been authorized for the access token.
-    let scopes: Set<Scope>?
+    public let scopes: Set<Scope>
 
-    init(
+    /**
+     Creates an instance that holds the authorization information.
+
+     - Parameters:
+       - accessToken: The access token.
+       - refreshToken: The refresh token.
+       - expirationDate: The expiration date.
+       - scopes: The authorization Scopes.
+     */
+    public init(
         accessToken: String?,
         refreshToken: String?,
         expirationDate: Date?,
-        scopes: Set<Scope>?
+        scopes: Set<Scope>
     ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
@@ -54,7 +62,7 @@ struct AuthInfo: Hashable {
 
 extension AuthInfo: Codable {
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         
         let container = try decoder.container(
             keyedBy: CodingKeys.self
@@ -69,12 +77,11 @@ extension AuthInfo: Codable {
         )
         self.scopes = try container.decodeSpotifyScopesIfPresent(
             forKey: .scopes
-        )
+        ) ?? []
         
-        // If the json data was retrieved directly from the Spotify API,
-        // then the expiration date will be an integer representing
-        // the number of seconds after the current date
-        // that the access token expires.
+        // If the JSON data was retrieved directly from the Spotify web API,
+        // then the expiration date will be an integer representing the number
+        // of seconds after the current date that the access token expires.
         if let expirationDate = try container
                 .decodeDateFromExpiresInSecondsIfPresent(
             forKey: .expiresInSeconds
@@ -83,13 +90,12 @@ extension AuthInfo: Codable {
         }
 
         /*
-         If the json data was retrieved from elsewhere,
-         such as persistent storage, then the expiration date
-         will be stored in ISO 8601 format as
+         If the JSON data was retrieved from elsewhere, such as persistent
+         storage, then the expiration date will be stored in ISO 8601 format as
          Coordinated Universal Time (UTC) with a zero offset:
-         "YYYY-MM-DD'T'HH:mm:SSZ". this is how Spotify formats timestamps,
-         so the expiration date is formatted this way for consistency.
-         see https://developer.spotify.com/documentation/web-api/#timestamps
+         "YYYY-MM-DD'T'HH:mm:SSZ". This is how Spotify formats timestamps, so
+         the expiration date is formatted this way for consistency. See
+         https://developer.spotify.com/documentation/web-api/#timestamps
          */
         else {
             self.expirationDate = try container.decodeSpotifyTimestampIfPresent(
@@ -99,7 +105,7 @@ extension AuthInfo: Codable {
         
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         
         var container = encoder.container(
             keyedBy: CodingKeys.self
@@ -120,12 +126,14 @@ extension AuthInfo: Codable {
         
     }
     
-    enum CodingKeys: String, CodingKey {
+    /// :nodoc:
+    public enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
         case expirationDate = "expiration_date"
         case expiresInSeconds = "expires_in"
         case scopes = "scope"
+		case backend = "backend"
         case clientId = "client_id"
         case clientSecret = "client_secret"
     }
@@ -136,23 +144,17 @@ extension AuthInfo: Codable {
 
 extension AuthInfo: CustomStringConvertible {
     
-    var description: String {
+    public var description: String {
         
         let expirationDateString = expirationDate?
-                .description(with: .autoupdatingCurrent)
-                ?? "nil"
-        
-        var scopeString = "nil"
-        if let scopes = scopes {
-            scopeString = "\(scopes.map({ $0.rawValue }))"
-        }
+                .description(with: .current) ?? "nil"
         
         return """
             AuthInfo(
-                access token: "\(accessToken ?? "nil")"
-                scopes: \(scopeString)
+                access token: \(self.accessToken.quotedOrNil())
+                scopes: \(self.scopes.map(\.rawValue))
                 expiration date: \(expirationDateString)
-                refresh token: "\(refreshToken ?? "nil")"
+                refresh token: \(self.refreshToken.quotedOrNil())
             )
             """
     }
@@ -163,8 +165,7 @@ extension AuthInfo: CustomStringConvertible {
 
 extension AuthInfo {
     
-    /// Creates an instance with random values.
-    /// Only use for tests.
+    /// Creates an instance with random values. Only use for tests.
     static func withRandomValues() -> Self {
         return Self(
             accessToken: UUID().uuidString,
@@ -179,7 +180,7 @@ extension AuthInfo {
 
 extension AuthInfo: ApproximatelyEquatable {
     
-    func isApproximatelyEqual(to other: AuthInfo) -> Bool {
+    public func isApproximatelyEqual(to other: AuthInfo) -> Bool {
         return self.accessToken == other.accessToken &&
             self.refreshToken == other.refreshToken &&
             self.scopes == other.scopes &&

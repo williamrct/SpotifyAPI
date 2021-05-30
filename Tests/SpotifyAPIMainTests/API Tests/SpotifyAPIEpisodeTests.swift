@@ -5,11 +5,9 @@ import Combine
 import OpenCombine
 import OpenCombineDispatch
 import OpenCombineFoundation
-
-
 #endif
 import XCTest
-import SpotifyWebAPI
+@testable import SpotifyWebAPI
 import SpotifyAPITestUtilities
 import SpotifyExampleContent
 
@@ -39,7 +37,7 @@ extension SpotifyAPIEpisodeTests {
         XCTAssertFalse(episode.isExplicit)
         XCTAssertEqual(
             episode.href,
-            "https://api.spotify.com/v1/episodes/3OEdPEYB69pfXoBrhvQYeC"
+            URL(string: "https://api.spotify.com/v1/episodes/3OEdPEYB69pfXoBrhvQYeC")!
         )
         XCTAssertEqual(episode.id, "3OEdPEYB69pfXoBrhvQYeC")
         XCTAssertFalse(episode.isExternallyHosted)
@@ -52,7 +50,7 @@ extension SpotifyAPIEpisodeTests {
         if let externalURLs = episode.externalURLs {
             XCTAssertEqual(
                 externalURLs["spotify"],
-                "https://open.spotify.com/episode/3OEdPEYB69pfXoBrhvQYeC",
+                URL(string: "https://open.spotify.com/episode/3OEdPEYB69pfXoBrhvQYeC")!,
                 "\(externalURLs)"
             )
         }
@@ -74,7 +72,7 @@ extension SpotifyAPIEpisodeTests {
         
         // MARK: Check Images
         if let images = episode.images {
-            #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI)
+            #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
             let (imageExpectations, cancellables) = XCTAssertImagesExist(
                 images
             )
@@ -96,6 +94,7 @@ extension SpotifyAPIEpisodeTests {
         ) {
             XCTAssertNotNil(
                 episode.resumePoint,
+                "episode resume point was nil: " +
                 "\(type(of: Self.spotify.authorizationManager))"
             )
         }
@@ -130,7 +129,7 @@ extension SpotifyAPIEpisodeTests {
         XCTAssertFalse(show.isExplicit)
         XCTAssertEqual(
             show.href,
-            "https://api.spotify.com/v1/shows/5rgumWEx4FsqIY8e1wJNAk"
+            URL(string: "https://api.spotify.com/v1/shows/5rgumWEx4FsqIY8e1wJNAk")!
         )
         XCTAssertEqual(show.id, "5rgumWEx4FsqIY8e1wJNAk")
         XCTAssertFalse(show.isExternallyHosted)
@@ -150,7 +149,7 @@ extension SpotifyAPIEpisodeTests {
             XCTFail("images should not be nil")
             return
         }
-        #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI)
+        #if (canImport(AppKit) || canImport(UIKit)) && canImport(SwiftUI) && !targetEnvironment(macCatalyst)
         let (expectations, cancellables) = XCTAssertImagesExist(images)
         
         Self.cancellables.formUnion(cancellables)
@@ -242,7 +241,7 @@ extension SpotifyAPIEpisodeTests {
                     joeRogan1531.description,
                     """
                     Miley Cyrus is a singer-songwriter, actress, and record \
-                    producer. http://mileyl.ink/midnightsky 
+                    producer. http://mileyl.ink/midnightsky
                     """
                 )
                 XCTAssertEqual(joeRogan1531.name, "#1531 - Miley Cyrus")
@@ -271,15 +270,25 @@ extension SpotifyAPIEpisodeTests {
             }
             
         }
-        
-        Self.spotify.authorizationManager.setExpirationDate(to: Date())
-        
-        var authChangeCount = 0
+
+        let authorizationManagerDidChangeExpectation = XCTestExpectation(
+            description: "authorizationManagerDidChange"
+        )
+        let internalQueue = DispatchQueue(label: "internal")
+
+        var didChangeCount = 0
         var cancellables: Set<AnyCancellable> = []
-        Self.spotify.authorizationManagerDidChange.sink(receiveValue: {
-            authChangeCount += 1
-        })
-        .store(in: &cancellables)
+        Self.spotify.authorizationManagerDidChange
+            .receive(on: internalQueue)
+            .sink(receiveValue: {
+                didChangeCount += 1
+                internalQueue.asyncAfter(deadline: .now() + 2) {
+                    authorizationManagerDidChangeExpectation.fulfill()
+                }
+            })
+            .store(in: &cancellables)
+
+        Self.spotify.authorizationManager.setExpirationDate(to: Date())
 
         let expectation = XCTestExpectation(description: "testEpisode")
         
@@ -296,11 +305,19 @@ extension SpotifyAPIEpisodeTests {
             )
             .store(in: &Self.cancellables)
         
-        self.wait(for: [expectation], timeout: 120)
-        XCTAssertEqual(
-            authChangeCount, 1,
-            "authorizationManagerDidChange should emit exactly once"
+        self.wait(
+            for: [
+                expectation,
+                authorizationManagerDidChangeExpectation
+            ],
+            timeout: 120
         )
+        internalQueue.sync {
+            XCTAssertEqual(
+                didChangeCount, 1,
+                "authorizationManagerDidChange should emit exactly once"
+            )
+        }
 
     }
     
