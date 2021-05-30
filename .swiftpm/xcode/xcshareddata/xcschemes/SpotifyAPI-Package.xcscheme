@@ -106,21 +106,6 @@
             reference = "container:Tests/SpotifyAPIProxyServer.xctestplan">
          </TestPlanReference>
       </TestPlans>
-<<<<<<< HEAD
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SpotifyAPIMainTests"
-               BuildableName = "SpotifyAPIMainTests"
-               BlueprintName = "SpotifyAPIMainTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
-=======
->>>>>>> master
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
