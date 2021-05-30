@@ -172,14 +172,14 @@ extension SpotifyGeneralError: CustomStringConvertible {
             case .insufficientScope(let required, let authorized):
                 return """
                     \(Self.self).insufficientScope(required: \
-                    \(required.map(\.rawValue)), authorized: \
-                    \(authorized.map(\.rawValue)))
+                    \(required.map({ $0.rawValue })), authorized: \
+                    \(authorized.map({ $0.rawValue })))
                     """
             case .invalidIdCategory(let expected, let received):
                 return """
                     \(Self.self).invalidIdCategory(expected: \
-                    \(expected.map(\.rawValue)), received: \
-                    \(received.map(\.rawValue)))
+                    \(expected.map({ $0.rawValue })), received: \
+                    \(received.map({ $0.rawValue })))
                     """
             case .topLevelKeyNotFound(let key, let dict):
                 // Prevent the description of `dict` from containing

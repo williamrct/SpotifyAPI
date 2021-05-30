@@ -91,7 +91,7 @@ extension SpotifyAPISearchTests {
             XCTAssertEqual(shows.limit, 2)
             XCTAssertNotNil(shows.previous)
             
-            let scopes = Self.spotify.authorizationManager.scopes.map(\.rawValue)
+            let scopes = Self.spotify.authorizationManager.scopes.map({ $0.rawValue })
             print("authorized scopes: \(scopes)")
 //            if !(Self.spotify.authorizationManager is ClientCredentialsFlowManager) {
 //                for show in shows.items {

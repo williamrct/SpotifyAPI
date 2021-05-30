@@ -152,7 +152,7 @@ extension AuthInfo: CustomStringConvertible {
         return """
             AuthInfo(
                 access token: \(self.accessToken.quotedOrNil())
-                scopes: \(self.scopes.map(\.rawValue))
+                scopes: \(self.scopes.map({ $0.rawValue }))
                 expiration date: \(expirationDateString)
                 refresh token: \(self.refreshToken.quotedOrNil())
             )

@@ -282,7 +282,7 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
                     message.hasSuffix(
                         """
                         : id category must be one of the following: \
-                        \(IDCategory.allCases.map(\.rawValue)), \
+                        \(IDCategory.allCases.map({ $0.rawValue })), \
                         but received 'song'
                         """
                     )

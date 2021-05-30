@@ -221,7 +221,7 @@ public class AuthorizationCodeFlowBackendManager<Backend: AuthorizationCodeFlowB
             return """
                 AuthorizationCodeFlowBackendManager(
                     access token: \(self._accessToken.quotedOrNil())
-                    scopes: \(self._scopes.map(\.rawValue))
+                    scopes: \(self._scopes.map({ $0.rawValue }))
                     expiration date: \(expirationDateString)
                     refresh token: \(self._refreshToken.quotedOrNil())
                     backend: \("\(self.backend)".indented(tabEquivalents: 1))

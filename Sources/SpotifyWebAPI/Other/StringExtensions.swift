@@ -176,8 +176,6 @@ public extension String {
         // Convert the array of bytes into data.
         let bytes = Data(hash)
         
-        fatalError()
-        
         #else
         
         let bytes = sha256Hash(data: data)
