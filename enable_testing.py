@@ -8,7 +8,7 @@ project_directory = os.path.dirname(__file__)
 package_file = os.path.join(project_directory, "Package.swift")
 if not os.path.exists(package_file):
     print(
-        "Expected to find Package.swift file in the working direcory. "
+        "Expected to find Package.swift file in the working directory. "
         "The working directory must be the root directory of the SpotifyAPI "
         f"package: {project_directory}"
     )
@@ -29,13 +29,19 @@ print(f"will replace {flags[0]} with {flags[1]} in {project_directory}")
 sources_directory = os.path.join(project_directory, "Sources")
 tests_directory = os.path.join(project_directory, "Tests")
 
-# the full paths to all of the swift source code files
-# in the Sources and Tests directory, and the package.swift file
+# the full paths to all of the swift source code files in the Sources and Tests
+# directory, and the package.swift file
 swift_files: [str] = []
 
 swift_files.append(package_file)
-package_swift_5_1_file = os.path.join(project_directory, "Package@swift-5.1.swift")
+package_swift_5_1_file = os.path.join(
+    project_directory, "Package@swift-5.1.swift"
+)
 swift_files.append(package_swift_5_1_file)
+package_swift_5_2_file = os.path.join(
+    project_directory, "Package@swift-5.2.swift"
+)
+swift_files.append(package_swift_5_2_file)
 
 # search for all swift source code files
 for directory in (sources_directory, tests_directory):

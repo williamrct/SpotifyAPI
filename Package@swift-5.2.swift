@@ -27,7 +27,7 @@ var packageDependencies: [Package.Dependency] {
         )
     ]
 
-    #if !TEST
+    #if TEST
     dependencies += [
         .package(
 //            name: "Swifter",
@@ -66,7 +66,7 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
 
-    #if !TEST
+    #if TEST
     dependencies += [
         .product(name: "Swifter", package: "Swifter")
 //        .product(name: "Vapor", package: "vapor"),

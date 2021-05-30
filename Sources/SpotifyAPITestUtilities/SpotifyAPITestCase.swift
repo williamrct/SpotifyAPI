@@ -142,14 +142,14 @@ open class SpotifyAPITestCase: XCTestCase {
         if Bool.random() {
             print(
                 "URLSession._defaultNetworkAdaptor = " +
-                    "URLSession.__defaultNetworkAdaptor"
+                "URLSession.__defaultNetworkAdaptor"
             )
             URLSession._defaultNetworkAdaptor = URLSession.__defaultNetworkAdaptor
         }
         else {
             print(
                 "URLSession._defaultNetworkAdaptor = NetworkAdaptorManager" +
-                    ".shared.networkAdaptor(request:)"
+                ".shared.networkAdaptor(request:)"
             )
             URLSession._defaultNetworkAdaptor = NetworkAdaptorManager
                 .shared.networkAdaptor(request:)

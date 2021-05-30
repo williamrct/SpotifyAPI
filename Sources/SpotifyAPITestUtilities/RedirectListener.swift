@@ -18,9 +18,9 @@ public struct RedirectListener {
      Creates a listener that listens for redirects to the specified URL.
      
      - Parameters:
-     - host: The host of the URL.
-     - port: The port of the URL.
-     - pathComponents: The path components of the URL.
+       - host: The host of the URL.
+       - port: The port of the URL.
+       - pathComponents: The path components of the URL.
      */
     public init(
         host: String = "localhost",
@@ -58,7 +58,7 @@ public struct RedirectListener {
      starts.
      
      - Parameter receiveURL: A closure that is called when the server receives
-     the URL.
+           the URL.
      */
     public mutating func start(
         receiveURL: @escaping (URL) -> Void
@@ -99,7 +99,7 @@ public struct RedirectListener {
                 urlComponents.path = request.url.path
             }
             urlComponents.query = request.url.query
-            //            print("\n\nrequest.url.query: '\(request.url.query ?? "nil")'\n\n")
+            // print("\n\nrequest.url.query: '\(request.url.query ?? "nil")'\n\n")
             let url = urlComponents.url!
             receiveURL(url)
             return "received redirect"

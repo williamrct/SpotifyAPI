@@ -117,7 +117,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
     
     var redirectURIWithQuery: URL? = nil
     
-    var redirectListener = RedirectListener()
+    var redirectListener = RedirectListener(url: localHostURL)
     
     let dispatchGroup = DispatchGroup()
     

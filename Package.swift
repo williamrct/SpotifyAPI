@@ -130,10 +130,10 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
 
     #if TEST
     dependencies += [
-       .product(name: "Vapor", package: "vapor"),
-       .product(name: "NIOHTTP1", package: "swift-nio"),
-       .product(name: "NIO", package: "swift-nio"),
-       .product(name: "AsyncHTTPClient", package: "async-http-client")
+        .product(name: "Vapor", package: "vapor"),
+        .product(name: "NIOHTTP1", package: "swift-nio"),
+        .product(name: "NIO", package: "swift-nio"),
+        .product(name: "AsyncHTTPClient", package: "async-http-client")
     ]
     #endif
 
