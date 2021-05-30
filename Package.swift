@@ -54,7 +54,7 @@ let package = Package(
         // MARK: Test Targets
 
         .testTarget(
-            name: "SpotifyWebAPIMainTests",
+            name: "SpotifyAPIMainTests",
             dependencies: [
                 "SpotifyWebAPI",
                 "SpotifyExampleContent",

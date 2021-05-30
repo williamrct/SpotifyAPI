@@ -36,20 +36,6 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SpotifyWebAPIMainTests"
-               BuildableName = "SpotifyWebAPIMainTests"
-               BlueprintName = "SpotifyWebAPIMainTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
@@ -99,7 +85,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tests/SpotifyWebAPIMainTestPlan.xctestplan"
+            reference = "container:Tests/SpotifyAPIMainTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -108,9 +94,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SpotifyWebAPIMainTests"
-               BuildableName = "SpotifyWebAPIMainTests"
-               BlueprintName = "SpotifyWebAPIMainTests"
+               BlueprintIdentifier = "SpotifyAPIMainTests"
+               BuildableName = "SpotifyAPIMainTests"
+               BlueprintName = "SpotifyAPIMainTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

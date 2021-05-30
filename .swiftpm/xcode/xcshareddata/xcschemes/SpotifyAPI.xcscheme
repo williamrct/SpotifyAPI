@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1200"
+   LastUpgradeVersion = "1250"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -44,13 +44,13 @@
       allowLocationSimulation = "YES">
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "SPOTIFY_DATA_DUMP_FOLDER"
-            value = "path/to/folder"
+            key = "SPOTIFY_CREDENTIALS_PATH"
+            value = "path/to/file"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "spotify_credentials_path"
-            value = "path/to/file"
+            key = "SPOTIFY_DATA_DUMP_FOLDER"
+            value = "path/to/folder"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
