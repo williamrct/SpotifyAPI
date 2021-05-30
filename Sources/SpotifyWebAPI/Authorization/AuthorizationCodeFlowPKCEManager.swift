@@ -801,4 +801,27 @@ public final class AuthorizationCodeFlowPKCEManager:
         }
     }
     
+    /**
+     Returns a copy of self.
+     
+     Copies the following properties:
+     * `clientId`
+     * `accessToken`
+     * `refreshToken`
+     * `expirationDate`
+     * `scopes`
+     */
+    public override func makeCopy() -> AuthorizationCodeFlowPKCEManager {
+        let copy = Self(
+            backend: self.backend
+        )
+        return self.updateAuthInfoQueue.sync {
+            copy._accessToken = self._accessToken
+            copy._refreshToken = self._refreshToken
+            copy._expirationDate = self._expirationDate
+            copy._scopes = self._scopes
+            return copy
+        }
+    }
+    
 }

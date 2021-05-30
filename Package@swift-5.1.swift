@@ -29,12 +29,12 @@ var packageDependencies: [Package.Dependency] {
     
     #if TEST
     dependencies += [
-        .package(
-            // name: "vapor",
-            url: "https://github.com/vapor/vapor.git",
-            // from: "4.45.3"
-            .branch("3")
-        ),
+        // .package(
+        //     // name: "vapor",
+        //     url: "https://github.com/vapor/vapor.git",
+        //     // from: "4.45.3"
+        //     // .branch("3")
+        // ),
         .package(
             // name: "swift-nio",
             url: "https://github.com/apple/swift-nio.git",
@@ -78,7 +78,8 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
 let package = Package(
     name: "SpotifyAPI",
     platforms: [
-        .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
+        // .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
+        .macOS(.v10_10), .iOS(.v9), .tvOS(.v9), .watchOS(.v2)
     ],
     products: [
         .library(
