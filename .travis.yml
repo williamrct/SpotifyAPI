@@ -1,0 +1,7 @@
+language: swift
+os: osx
+osx_image:
+- xcode11
+- xcode11.4
+script:
+    xcodebuild -scheme "SpotifyAPI-Package" build

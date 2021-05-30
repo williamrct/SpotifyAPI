@@ -1,5 +1,9 @@
 import Foundation
+#if canImport(Crypto)
 import Crypto
+#else
+import CommonCrypto
+#endif
 
 public extension String {
     
@@ -164,11 +168,21 @@ public extension String {
         
         let data = codeVerifier.data(using: .utf8)!
         
+        #if canImport(Crypto)
+
         // The hash is an array of bytes (UInt8).
         let hash = SHA256.hash(data: data)
         
         // Convert the array of bytes into data.
         let bytes = Data(hash)
+        
+        fatalError()
+        
+        #else
+        
+        let bytes = sha256Hash(data: data)
+        
+        #endif
 
         // Base-64 URL-encode the bytes.
         return bytes.base64URLEncodedString()
@@ -176,3 +190,15 @@ public extension String {
     }
     
 }
+
+#if !canImport(Crypto)
+
+private func sha256Hash(data : Data) -> Data {
+    var hash = Array<UInt8>(repeating: 0,  count: Int(CC_SHA256_DIGEST_LENGTH))
+    data.withUnsafeBytes {
+        _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &hash)
+    }
+    return Data(hash)
+}
+
+#endif

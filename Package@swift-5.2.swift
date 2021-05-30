@@ -3,60 +3,56 @@
 import PackageDescription
 
 var packageDependencies: [Package.Dependency] {
-
+    
     var dependencies: [Package.Dependency] = [
         .package(
-//            name: "RegularExpressions",
+            // name: "RegularExpressions",
             url: "https://github.com/Peter-Schorn/RegularExpressions.git",
             "2.0.7"..<"3.0.0"
         ),
         .package(
-//            name: "swift-log",
+            // name: "swift-log",
             url: "https://github.com/apple/swift-log.git",
             from: "1.4.0"
         ),
         .package(
-//            name: "OpenCombine",
+            // name: "OpenCombine",
             url: "https://github.com/OpenCombine/OpenCombine.git",
             from: "0.11.0"
-        ),
-        .package(
-//            name: "swift-crypto",
-            url: "https://github.com/apple/swift-crypto.git",
-            from: "1.1.3"
         )
+        // .package(
+        //     // name: "swift-crypto",
+        //     url: "https://github.com/apple/swift-crypto.git",
+        //     from: "1.1.3"
+        // )
     ]
-
+    
     #if TEST
     dependencies += [
         .package(
-//            name: "Swifter",
-            url: "https://github.com/httpswift/swifter.git",
-            from: "1.5.0"
+            name: "vapor",
+            url: "https://github.com/vapor/vapor.git",
+            // from: "4.45.3"
+            .branch("3")
+        ),
+        .package(
+            // name: "swift-nio",
+            url: "https://github.com/apple/swift-nio.git",
+            from: "2.27.0"
+        ),
+        .package(
+            // name: "async-http-client",
+            url: "https://github.com/swift-server/async-http-client.git",
+            from: "1.2.5"
         )
-//        .package(
-////            name: "vapor",
-//            url: "https://github.com/vapor/vapor.git",
-//            from: "4.41.9"
-//        ),
-//        .package(
-////            name: "swift-nio",
-//            url: "https://github.com/apple/swift-nio.git",
-//            from: "2.27.0"
-//        ),
-//        .package(
-////            name: "async-http-client",
-//            url: "https://github.com/swift-server/async-http-client.git",
-//            from: "1.2.5"
-//        )
     ]
     #endif
-
+    
     return dependencies
 }
 
 var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
-
+    
     var dependencies: [Target.Dependency] = [
         "SpotifyWebAPI",
         "SpotifyExampleContent",
@@ -65,19 +61,18 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
         .product(name: "OpenCombineDispatch", package: "OpenCombine"),
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
-
+    
     #if TEST
     dependencies += [
-        .product(name: "Swifter", package: "Swifter")
-//        .product(name: "Vapor", package: "vapor"),
-//        .product(name: "NIOHTTP1", package: "swift-nio"),
-//        .product(name: "NIO", package: "swift-nio"),
-//        .product(name: "AsyncHTTPClient", package: "async-http-client")
+        .product(name: "Vapor", package: "vapor"),
+        .product(name: "NIOHTTP1", package: "swift-nio"),
+        .product(name: "NIO", package: "swift-nio"),
+        .product(name: "AsyncHTTPClient", package: "async-http-client")
     ]
     #endif
-
+    
     return dependencies
-
+    
 }
 
 let package = Package(
@@ -102,7 +97,7 @@ let package = Package(
             dependencies: [
                 .product(name: "RegularExpressions", package: "RegularExpressions"),
                 .product(name: "Logging", package: "swift-log"),
-                .product(name: "Crypto", package: "swift-crypto"),
+                // .product(name: "Crypto", package: "swift-crypto"),
                 .product(name: "OpenCombine", package: "OpenCombine"),
                 .product(name: "OpenCombineDispatch", package: "OpenCombine"),
                 .product(name: "OpenCombineFoundation", package: "OpenCombine")
@@ -120,7 +115,7 @@ let package = Package(
         .target(
             name: "SpotifyAPITestUtilities",
             dependencies: spotifyAPITestUtilitiesDependencies
-//            exclude: ["README.md"]
+            // exclude: ["README.md"]
         ),
         
         // MARK: Test Targets
