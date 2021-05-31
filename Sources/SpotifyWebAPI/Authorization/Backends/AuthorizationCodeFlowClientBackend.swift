@@ -134,7 +134,7 @@ public struct AuthorizationCodeFlowClientBackend: AuthorizationCodeFlowBackend {
         
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowClientBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)" \
             (URL for requesting access and refresh tokens); body:
@@ -196,7 +196,7 @@ public struct AuthorizationCodeFlowClientBackend: AuthorizationCodeFlowBackend {
         
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowClientBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)" \
             (URL for refreshing access token); body:

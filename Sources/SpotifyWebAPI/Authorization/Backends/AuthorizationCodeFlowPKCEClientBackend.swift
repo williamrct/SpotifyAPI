@@ -119,7 +119,7 @@ public struct AuthorizationCodeFlowPKCEClientBackend: AuthorizationCodeFlowPKCEB
         
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowPKCEClientBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)" \
             (URL for requesting access and refresh tokens); body:
@@ -179,7 +179,7 @@ public struct AuthorizationCodeFlowPKCEClientBackend: AuthorizationCodeFlowPKCEB
         
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowPKCEClientBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)" \
             (URL for refreshing access token); body:

@@ -129,7 +129,7 @@ public extension URIsWithPositionsContainer {
      */
     static func chunked(
         urisWithSinglePosition: [(uri: SpotifyURIConvertible, position: Int)]
-    ) -> [Self] {
+        ) -> [URIsWithPositionsContainer] {
      
         if urisWithSinglePosition.isEmpty { return [] }
         
@@ -166,7 +166,7 @@ public extension URIsWithPositionsContainer {
         // )
         
         let containers = chunks.map { chunk in
-            Self(urisWithSinglePosition: chunk)
+            URIsWithPositionsContainer(urisWithSinglePosition: chunk)
         }
         
         // print("\(currentTime()) created \(containers.count) chunks")

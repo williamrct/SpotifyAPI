@@ -237,7 +237,7 @@ public struct AuthorizationCodeFlowPKCEProxyBackend: AuthorizationCodeFlowPKCEBa
         .formURLEncoded()
 
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
-        Self.logger.trace(
+        AuthorizationCodeFlowPKCEProxyBackend.logger.trace(
             """
             POST request to "\(self.tokensURL)" \
             (URL for requesting access and refresh tokens); body:
@@ -324,7 +324,7 @@ public struct AuthorizationCodeFlowPKCEProxyBackend: AuthorizationCodeFlowPKCEBa
                 
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowPKCEProxyBackend.logger.trace(
             """
             POST request to "\(self.tokenRefreshURL)" \
             (URL for refreshing access token); body:
@@ -371,7 +371,10 @@ extension AuthorizationCodeFlowPKCEProxyBackend: CustomStringConvertible {
 
 extension AuthorizationCodeFlowPKCEProxyBackend: Hashable {
     
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: AuthorizationCodeFlowPKCEProxyBackend,
+        rhs: AuthorizationCodeFlowPKCEProxyBackend
+    ) -> Bool {
         return lhs.clientId == rhs.clientId &&
             lhs.tokensURL == rhs.tokensURL &&
             lhs.tokenRefreshURL == rhs.tokenRefreshURL

@@ -144,7 +144,7 @@ extension Numeric where Magnitude: FloatingPoint {
         absoluteTolerance: Magnitude,
         relativeTolerance: Magnitude = 0
     ) -> Bool {
-        self.isApproximatelyEqual(
+        return self.isApproximatelyEqual(
             to: other,
             absoluteTolerance: absoluteTolerance,
             relativeTolerance: relativeTolerance,

@@ -58,7 +58,7 @@ extension NewAlbumReleases: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: NewAlbumReleases) -> Bool {
      
         return self.message == other.message &&
                 self.albums.isApproximatelyEqual(to: other.albums)

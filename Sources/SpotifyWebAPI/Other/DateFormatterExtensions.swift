@@ -81,17 +81,19 @@ public struct SpotifyTimestampFormatter  {
     }()
     
     public func date(from string: String) -> Date? {
-        if let date = Self.secondsFormatter.date(from: string) {
+        if let date = SpotifyTimestampFormatter.secondsFormatter
+                .date(from: string) {
             return date
         }
-        if let date = Self.millisecondsFormatter.date(from: string) {
+        if let date = SpotifyTimestampFormatter.millisecondsFormatter
+                .date(from: string) {
             return date
         }
         return nil
     }
     
     public func string(from date: Date) -> String {
-        return Self.secondsFormatter.string(from: date)
+        return SpotifyTimestampFormatter.secondsFormatter.string(from: date)
     }
     
 }

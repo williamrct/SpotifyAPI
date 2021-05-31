@@ -35,27 +35,27 @@ open class SpotifyAPIClientCredentialsFlowTests:
             "setup debugging and authorization for " +
             "SpotifyAPIClientCredentialsFlowTests"
         )
-        Self.spotify.setupDebugging()
-        Self.fuzzSpotify()
-        Self.setupAuthorization()
+        spotify.setupDebugging()
+        fuzzSpotify()
+        setupAuthorization()
     }
 
     open class func setupAuthorization() {
-        Self.spotify.authorizationManager.waitUntilAuthorized()
+        spotify.authorizationManager.waitUntilAuthorized()
     }
     
     open class func fuzzSpotify() {
 
-        encodeDecode(Self.spotify, areEqual: { lhs, rhs in
+        encodeDecode(spotify, areEqual: { lhs, rhs in
             lhs.authorizationManager == rhs.authorizationManager
         })
         do {
-            let encoded = try JSONEncoder().encode(Self.spotify)
+            let encoded = try JSONEncoder().encode(spotify)
             let decoded = try JSONDecoder().decode(
                 SpotifyAPI<ClientCredentialsFlowManager>.self,
                 from: encoded
             )
-            Self.spotify = decoded
+            spotify = decoded
         
         } catch {
             fatalError("\(error)")
@@ -85,9 +85,9 @@ open class SpotifyAPIAuthorizationCodeFlowTests:
             "setup debugging and authorization for " +
             "SpotifyAPIAuthorizationCodeFlowTests"
         )
-        Self.spotify.setupDebugging()
-        Self.fuzzSpotify()
-        Self.setupAuthorization()
+        spotify.setupDebugging()
+        fuzzSpotify()
+        setupAuthorization()
     }
 
     open class func setupAuthorization(
@@ -95,23 +95,23 @@ open class SpotifyAPIAuthorizationCodeFlowTests:
         showDialog: Bool = false
     ) {
 
-        Self.spotify.authorizationManager.authorizeAndWaitForTokens(
+        spotify.authorizationManager.authorizeAndWaitForTokens(
             scopes: scopes, showDialog: showDialog
         )
     }
     
     open class func fuzzSpotify() {
         
-        encodeDecode(Self.spotify, areEqual: { lhs, rhs in
+        encodeDecode(spotify, areEqual: { lhs, rhs in
             lhs.authorizationManager == rhs.authorizationManager
         })
         do {
-            let encoded = try JSONEncoder().encode(Self.spotify)
+            let encoded = try JSONEncoder().encode(spotify)
             let decoded = try JSONDecoder().decode(
                 SpotifyAPI<AuthorizationCodeFlowManager>.self,
                 from: encoded
             )
-            Self.spotify = decoded
+            spotify = decoded
         
         } catch {
             fatalError("\(error)")
@@ -141,31 +141,31 @@ open class SpotifyAPIAuthorizationCodeFlowPKCETests:
             "setup debugging and authorization for " +
             "SpotifyAPIAuthorizationCodeFlowPKCETests"
         )
-        Self.spotify.setupDebugging()
-        Self.fuzzSpotify()
-        Self.setupAuthorization()
+        spotify.setupDebugging()
+        fuzzSpotify()
+        setupAuthorization()
     }
 
     open class func setupAuthorization(
         scopes: Set<Scope> = Scope.allCases
     ) {
-        Self.spotify.authorizationManager.authorizeAndWaitForTokens(
+        spotify.authorizationManager.authorizeAndWaitForTokens(
             scopes: scopes
         )
     }
     
     open class func fuzzSpotify() {
         
-        encodeDecode(Self.spotify, areEqual: { lhs, rhs in
+        encodeDecode(spotify, areEqual: { lhs, rhs in
             lhs.authorizationManager == rhs.authorizationManager
         })
         do {
-            let encoded = try JSONEncoder().encode(Self.spotify)
+            let encoded = try JSONEncoder().encode(spotify)
             let decoded = try JSONDecoder().decode(
                 SpotifyAPI<AuthorizationCodeFlowPKCEManager>.self,
                 from: encoded
             )
-            Self.spotify = decoded
+            spotify = decoded
         
         } catch {
             fatalError("\(error)")

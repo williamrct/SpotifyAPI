@@ -50,7 +50,7 @@ extension String: SpotifyURIConvertible {
     /// Returns `self`, with the assumption that it represents a [Spotify
     /// URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).
     @inlinable @inline(__always)
-    public var uri: Self { self }
+    public var uri: String { return self }
 
 }
 
@@ -60,6 +60,6 @@ extension Substring: SpotifyURIConvertible {
     /// represents a [Spotify
     /// URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).
     @inlinable @inline(__always)
-    public var uri: String { String(self) }
+    public var uri: String { return String(self) }
 
 }

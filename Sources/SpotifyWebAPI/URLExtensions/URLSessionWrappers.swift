@@ -31,7 +31,7 @@ extension URLSession {
         request: URLRequest
     ) -> AnyPublisher<(data: Data, response: HTTPURLResponse), Error> {
         
-        return Self._defaultNetworkAdaptor(request)
+        return URLSession._defaultNetworkAdaptor(request)
 
     }
 

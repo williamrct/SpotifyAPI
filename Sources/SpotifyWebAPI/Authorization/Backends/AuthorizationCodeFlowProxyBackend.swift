@@ -235,7 +235,7 @@ public struct AuthorizationCodeFlowProxyBackend: AuthorizationCodeFlowBackend {
         .formURLEncoded()
 
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
-        Self.logger.trace(
+        AuthorizationCodeFlowProxyBackend.logger.trace(
             """
             POST request to "\(self.tokensURL)" \
             (URL for requesting access and refresh tokens); body:
@@ -323,7 +323,7 @@ public struct AuthorizationCodeFlowProxyBackend: AuthorizationCodeFlowBackend {
 				
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
         
-        Self.logger.trace(
+        AuthorizationCodeFlowProxyBackend.logger.trace(
             """
             POST request to "\(self.tokenRefreshURL)" \
             (URL for refreshing access token); body:
@@ -370,7 +370,10 @@ extension AuthorizationCodeFlowProxyBackend: CustomStringConvertible {
 
 extension AuthorizationCodeFlowProxyBackend: Hashable {
     
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: AuthorizationCodeFlowProxyBackend,
+        rhs: AuthorizationCodeFlowProxyBackend
+    ) -> Bool {
         return lhs.clientId == rhs.clientId &&
                 lhs.tokensURL == rhs.tokensURL &&
                 lhs.tokenRefreshURL == rhs.tokenRefreshURL

@@ -41,8 +41,10 @@ public enum TimeReference: Codable, Hashable {
 
      - Parameter date: A date.
      */
-    public static func before(_ date: Date) -> Self {
-        return Self.before(Self.asMillisecondsString(date: date))
+    public static func before(date: Date) -> TimeReference {
+        return TimeReference.before(
+            TimeReference.asMillisecondsString(date: date)
+        )
     }
     
     /**
@@ -53,8 +55,10 @@ public enum TimeReference: Codable, Hashable {
 
      - Parameter date: A date.
      */
-    public static func after(_ date: Date) -> Self {
-        return Self.after(Self.asMillisecondsString(date: date))
+    public static func after(date: Date) -> TimeReference {
+        return TimeReference.after(
+            TimeReference.asMillisecondsString(date: date)
+        )
     }
     
     /// Converts the date to an *integer* representing the number of
@@ -147,7 +151,7 @@ extension TimeReference: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: TimeReference) -> Bool {
         
         let timestamp: String
         let otherTimestamp: String

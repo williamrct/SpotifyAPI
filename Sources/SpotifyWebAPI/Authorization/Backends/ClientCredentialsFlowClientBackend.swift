@@ -109,7 +109,7 @@ public struct ClientCredentialsFlowClientBackend: ClientCredentialsFlowBackend {
 
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
     
-        Self.logger.trace(
+        ClientCredentialsFlowClientBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)"; body:
             \(bodyString)

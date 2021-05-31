@@ -268,7 +268,7 @@ extension SpotifyAPI: CustomStringConvertible {
                 .indented(tabEquivalents: 1)
         
         return """
-            \(Self.self)(
+            \(SpotifyAPI<AuthorizationManager>.self)(
                 authorizationManager: \(authManagerDescription)
             )
             """
@@ -349,7 +349,9 @@ extension SpotifyAPI {
         
         spotifyDecodeLogger.logLevel = .warning
         
-        self.logger.trace("\(Self.self): did setup debugging")
+        self.logger.trace(
+            "\(SpotifyAPI<AuthorizationManager>.self): did setup debugging"
+        )
         
     }
     

@@ -318,7 +318,7 @@ extension Track: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: Track) -> Bool {
         
         return self.name == other.name &&
                 self.artists == other.artists &&

@@ -107,7 +107,10 @@ extension PlaybackRequest.Context: Hashable {
     }
     
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: PlaybackRequest.Context,
+        rhs: PlaybackRequest.Context
+    ) -> Bool {
         switch (lhs, rhs) {
             case (.contextURI(let lhsContext), .contextURI(let rhsContext)):
                 return lhsContext.uri == rhsContext.uri

@@ -97,7 +97,7 @@ extension PlayHistory: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: PlayHistory) -> Bool {
         
         return self.context == other.context &&
                 self.playedAt.isApproximatelyEqual(to: other.playedAt) &&

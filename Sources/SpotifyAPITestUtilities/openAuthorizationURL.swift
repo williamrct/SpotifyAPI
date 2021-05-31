@@ -12,7 +12,7 @@ import UIKit
 import FoundationNetworking
 #endif
 
-#if canImport(WebKit)
+#if canImport(WebKit) && compiler(>=5.3)
 
 /**
  Opens the authorization URL in a headless browser and then clicks either the
@@ -68,12 +68,13 @@ public func openAuthorizationURLAndWaitForRedirect(
         return redirectURIWithQuery
     }
     print("couldn't get redirect URI from headless browser authorizer")
+    
     return openAuthorizationURLAndWaitForRedirectNonHeadless(authorizationURL)
     
 }
 
 
-#else  // MARK: Cannot import WebKit
+#else  // MARK: Cannot import WebKit or compiler < 5.3
 
 /**
  Opens the authorization URL and waits for the user to login and copy and paste

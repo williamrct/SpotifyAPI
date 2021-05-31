@@ -57,7 +57,7 @@ public enum Headers {
         _ accessToken: String
     ) -> [String: String] {
         return bearerAuthorization(accessToken).merging(
-            Self.contentTypeJSON,
+            Headers.contentTypeJSON,
             uniquingKeysWith: { lhs, rhs in lhs }
         )
     }

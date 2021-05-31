@@ -222,7 +222,7 @@ extension CurrentlyPlayingContext: Codable {
                     if let action = PlaybackActions(rawValue: item.key) {
                         return action
                     }
-                    Self.logger.error(
+                    CurrentlyPlayingContext.logger.error(
                         """
                         unexpected PlaybackAction: '\(item.key)'; \
                         must be one of the following: \
@@ -312,7 +312,7 @@ extension CurrentlyPlayingContext: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: CurrentlyPlayingContext) -> Bool {
 
         return self.device == other.device &&
                 self.repeatState == other.repeatState &&

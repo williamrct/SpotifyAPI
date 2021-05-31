@@ -16,7 +16,7 @@ private class Keychain {
     }
 
     func remove(_ key: String) throws {
-        throw SpotifyGeneralError.other("unreachable")
+        fatalError("not implemented")
     }
 
     init(service: String) {

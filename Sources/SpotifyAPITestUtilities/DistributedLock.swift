@@ -11,7 +11,7 @@ class NSDistributedLock {
 
     func unlock() { }
 
-    var lockDate: Date { Date() }
+    var lockDate: Date { return Date() }
 
 }
 
@@ -22,13 +22,13 @@ public struct DistributedLock {
     /// Releases all distributed locks by deleting the files that they are
     /// associated with.
     public static func releaseAllLocks() {
-        if Self.allLocks.isEmpty {
+        if DistributedLock.allLocks.isEmpty {
             return
         }
         
         print("RELEASING ALL LOCKS")
         
-        for lock in Self.allLocks {
+        for lock in DistributedLock.allLocks {
             guard let path = lock.path else {
                 continue
             }
@@ -53,7 +53,7 @@ public struct DistributedLock {
         
     }
     
-    private static var allLocks: [Self] = []
+    private static var allLocks: [DistributedLock] = []
     
     private static let lockDirectory: String? = {
         return ProcessInfo.processInfo.environment["SPOTIFY_LOCK_DIRECTORY"]
@@ -61,12 +61,12 @@ public struct DistributedLock {
 
     // MARK: - Locks -
     
-    public static let general = Self(name: "general")
-    public static let player = Self(name: "player")
-    public static let library = Self(name: "library")
-    public static let follow = Self(name: "follow")
-    public static let rateLimitedError = Self(name: "rateLimitedError")
-    public static let redirectListener = Self(name: "redirectListener")
+    public static let general = DistributedLock(name: "general")
+    public static let player = DistributedLock(name: "player")
+    public static let library = DistributedLock(name: "library")
+    public static let follow = DistributedLock(name: "follow")
+    public static let rateLimitedError = DistributedLock(name: "rateLimitedError")
+    public static let redirectListener = DistributedLock(name: "redirectListener")
 
     // MARK: - Instance Members -
 
@@ -86,11 +86,11 @@ public struct DistributedLock {
         self.name = name
         self.queue = DispatchQueue(label: "DistributedLock.\(name)")
         
-        if let lockDirectory = Self.lockDirectory {
+        if let lockDirectory = DistributedLock.lockDirectory {
             let path = "\(lockDirectory)/\(name)"
             self.path = path
             self._lock = NSDistributedLock(path: path)
-            Self.allLocks.append(self)
+            DistributedLock.allLocks.append(self)
         }
         else {
             self.path = nil

@@ -143,7 +143,7 @@ extension PlaylistItemContainer: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: PlaylistItemContainer) -> Bool {
         
         return self.addedAt.isApproximatelyEqual(to: other.addedAt) &&
                 self.isLocal == other.isLocal &&

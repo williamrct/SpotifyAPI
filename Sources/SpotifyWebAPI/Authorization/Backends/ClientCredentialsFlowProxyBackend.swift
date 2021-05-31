@@ -161,7 +161,7 @@ public struct ClientCredentialsFlowProxyBackend: ClientCredentialsFlowBackend {
             .formURLEncoded()
         
         let bodyString = String(data: body, encoding: .utf8) ?? "nil"
-        Self.logger.trace(
+        ClientCredentialsFlowProxyBackend.logger.trace(
             """
             POST request to "\(Endpoints.getTokens)"; body:
             \(bodyString)
@@ -206,7 +206,10 @@ extension ClientCredentialsFlowProxyBackend: CustomStringConvertible {
 
 extension ClientCredentialsFlowProxyBackend: Hashable {
     
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: ClientCredentialsFlowProxyBackend,
+        rhs: ClientCredentialsFlowProxyBackend
+    ) -> Bool {
         return lhs.tokensURL == rhs.tokensURL
     }
     

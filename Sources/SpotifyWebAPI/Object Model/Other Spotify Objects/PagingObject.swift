@@ -229,7 +229,10 @@ extension PagingObject: Hashable {
     }
     
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: PagingObject<Item>,
+        rhs: PagingObject<Item>
+    ) -> Bool {
         return lhs.href == rhs.href &&
                 lhs.items == rhs.items &&
                 lhs.limit == rhs.limit &&
@@ -243,7 +246,7 @@ extension PagingObject: Hashable {
 
 extension PagingObject: ApproximatelyEquatable where Item: ApproximatelyEquatable {
     
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: PagingObject<Item>) -> Bool {
         
         return self.href == other.href &&
                 self.limit == other.limit &&

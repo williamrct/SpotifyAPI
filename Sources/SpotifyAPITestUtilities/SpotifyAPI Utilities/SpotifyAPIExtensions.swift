@@ -39,8 +39,8 @@ public extension SpotifyAPI {
             Future<(data: Data, response: HTTPURLResponse), Error> { promise in
                 if times > 0 {
                     self.logger.trace("returning error. times: \(times)")
-                    if case .httpError(let data, let response) = error as?
-                            SpotifyGeneralError {
+                    if let spotifyGeneralError = error as? SpotifyGeneralError,
+                            case .httpError(let data, let response) = spotifyGeneralError {
                         let output = (data: data, response: response)
                         promise(.success(output))
                     }

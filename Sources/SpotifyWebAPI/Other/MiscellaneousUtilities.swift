@@ -178,7 +178,7 @@ extension String {
            four spaces instead of the tab character.
     
      */
-    func indented(tabEquivalents: Int) -> Self {
+    func indented(tabEquivalents: Int) -> String {
         
         let leadingSpaces = String(repeating: " ", count: tabEquivalents * 4)
         

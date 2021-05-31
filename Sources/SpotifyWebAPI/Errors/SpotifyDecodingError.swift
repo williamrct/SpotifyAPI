@@ -113,7 +113,7 @@ public struct SpotifyDecodingError: LocalizedError, CustomStringConvertible {
         self.statusCode = statusCode
         self.underlyingError = underlyingError
         
-        if let folder = Self.dataDumpFolder {
+        if let folder = SpotifyDecodingError.dataDumpFolder {
             do {
                 let subFolder = try self.writeToFolder(folder)
                 let folderString = subFolder.path

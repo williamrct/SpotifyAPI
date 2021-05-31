@@ -1,4 +1,4 @@
-#if canImport(WebKit)
+#if canImport(WebKit) && compiler(>=5.3)
 import Foundation
 import SpotifyWebAPI
 import WebKit
@@ -123,6 +123,7 @@ extension HeadlessBrowserAuthorizer: WKNavigationDelegate {
     
     // MARK: - Did Finish Navigation -
 
+//    @available(macOS 10.13, iOS 13, *)
     public func webView(
         _ webView: WKWebView,
         didFinish navigation: WKNavigation!
@@ -192,6 +193,7 @@ extension HeadlessBrowserAuthorizer: WKNavigationDelegate {
     // MARK: - Decide Policy -
     
     // MARK: Request
+    @available(macOS 10.15, iOS 13, *)
     public func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,

@@ -107,11 +107,37 @@ public enum SpotifyGeneralError {
      */
     case httpError(Data, HTTPURLResponse)
 
+    #if compiler(>=5.1) && swift(>=5.1)
+    
     /// Some other error.
     case other(
         String,
         localizedDescription: String = "An unexpected error occurred."
     )
+    
+    #else
+    
+    /// Some other error.
+    case other(
+        String,
+        localizedDescription: String
+    )
+    
+    /**
+     Creates an instance of `SpotifyGeneralError.other(_:localizedDescription:)`
+     with the `localizedDescription` set to "An unexpected error occurred."
+     
+     - Parameter message: A message describing this error.
+     */
+    static func other(_ message: String) -> SpotifyGeneralError {
+        return SpotifyGeneralError.other(
+            message,
+            localizedDescription: "An unexpected error occurred."
+        )
+    }
+    
+
+    #endif
     
 }
 
@@ -158,26 +184,27 @@ extension SpotifyGeneralError: CustomStringConvertible {
         switch self {
              case .unauthorized(let message):
                 return """
-                    \(Self.self).unauthorized("\(message)")
+                    \(SpotifyGeneralError.self).unauthorized("\(message)")
                     """
             case .invalidState(let supplied, let received):
                 return """
-                    \(Self.self).invalidState(supplied: \(supplied as Any), \
-                    received: \(received as Any))
+                    \(SpotifyGeneralError.self).invalidState(supplied: \
+                    \(supplied as Any), received: \(received as Any))
                     """
             case .identifierParsingError(let message):
                 return """
-                    \(Self.self).identifierParsingError:("\(message)")
+                    \(SpotifyGeneralError.self).identifierParsingError:(\
+                    "\(message)")
                     """
             case .insufficientScope(let required, let authorized):
                 return """
-                    \(Self.self).insufficientScope(required: \
+                    \(SpotifyGeneralError.self).insufficientScope(required: \
                     \(required.map({ $0.rawValue })), authorized: \
                     \(authorized.map({ $0.rawValue })))
                     """
             case .invalidIdCategory(let expected, let received):
                 return """
-                    \(Self.self).invalidIdCategory(expected: \
+                    \(SpotifyGeneralError.self).invalidIdCategory(expected: \
                     \(expected.map({ $0.rawValue })), received: \
                     \(received.map({ $0.rawValue })))
                     """
@@ -192,20 +219,20 @@ extension SpotifyGeneralError: CustomStringConvertible {
                     dict[keyString] = item.value
                 }
                 return """
-                    \(Self.self).topLevelKeyNotFound(key: "\(key)", \
-                    dict: \(topLevelStringDict))
+                    \(SpotifyGeneralError.self).topLevelKeyNotFound(key: \
+                    "\(key)", dict: \(topLevelStringDict))
                     """
             case .httpError(let data, let response):
                 let dataString = String(data: data, encoding: .utf8)
                     .map({ #""\#($0)""# }) ?? "\(data)"
                 return """
-                    \(Self.self).httpError(HTTPURLResponse: \(response), \
-                    Data: \(dataString))
+                    \(SpotifyGeneralError.self).httpError(HTTPURLResponse: \
+                    \(response), Data: \(dataString))
                     """
             case .other(let message, let localizedDescription):
                 return """
-                    \(Self.self).other("\(message)", localizedDescription: \
-                    "\(localizedDescription)")
+                    \(SpotifyGeneralError.self).other("\(message)", \
+                    localizedDescription: "\(localizedDescription)")
                     """
         }
     }

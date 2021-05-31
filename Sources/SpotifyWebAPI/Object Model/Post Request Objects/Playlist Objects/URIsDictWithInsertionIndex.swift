@@ -89,7 +89,10 @@ extension URIsDictWithInsertionIndex: Hashable {
     }
     
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: URIsDictWithInsertionIndex,
+        rhs: URIsDictWithInsertionIndex
+    ) -> Bool {
         return lhs.position == rhs.position &&
                 lhs.uris.map({ $0.uri }) == rhs.uris.map({ $0.uri })
     }

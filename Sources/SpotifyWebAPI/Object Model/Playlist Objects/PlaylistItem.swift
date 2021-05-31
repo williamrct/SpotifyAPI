@@ -201,7 +201,7 @@ extension PlaylistItem: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: PlaylistItem) -> Bool {
         
         switch (self, other) {
             case (.track(let track), .track(let otherTrack)):

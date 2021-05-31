@@ -100,7 +100,7 @@ extension SearchResult: ApproximatelyEquatable {
 
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: SearchResult) -> Bool {
      
         return self.artists == other.artists &&
                 self.playlists == other.playlists &&

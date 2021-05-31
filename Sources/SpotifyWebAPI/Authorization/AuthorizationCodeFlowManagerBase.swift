@@ -288,7 +288,12 @@ public extension AuthorizationCodeFlowManagerBase {
             self._scopes = []
             self.refreshTokensPublisher = nil
         }
-        Self.baseLogger.trace("\(Self.self): didDeauthorize.send()")
+        AuthorizationCodeFlowManagerBase<Backend>.baseLogger.trace(
+            """
+            \(AuthorizationCodeFlowManagerBase<Backend>.self): \
+            didDeauthorize.send()
+            """
+        )
         self.didDeauthorize.send()
     }
     
@@ -352,7 +357,12 @@ extension AuthorizationCodeFlowManagerBase {
         self._scopes = authInfo.scopes
         self.refreshTokensPublisher = nil
         self.refreshTokensQueue.async {
-            Self.baseLogger.trace("\(Self.self): didChange.send()")
+            AuthorizationCodeFlowManagerBase<Backend>.baseLogger.trace(
+                """
+                \(AuthorizationCodeFlowManagerBase<Backend>.self): \
+                didChange.send()
+                """
+            )
             self.didChange.send()
         }
     }
@@ -364,9 +374,10 @@ extension AuthorizationCodeFlowManagerBase {
         if (self._accessToken == nil) != (self._expirationDate == nil) {
             let expirationDateString = self._expirationDate?
                 .description(with: .current) ?? "nil"
-            Self.baseLogger.error(
+            AuthorizationCodeFlowManagerBase<Backend>.baseLogger.error(
                 """
-                \(Self.self): accessToken or expirationDate was nil, but not both:
+                \(AuthorizationCodeFlowManagerBase<Backend>.self): \
+                accessToken or expirationDate was nil, but not both:
                 accessToken == nil: \(self._accessToken == nil); \
                 expiration date: \(expirationDateString)
                 """
@@ -439,7 +450,10 @@ extension AuthorizationCodeFlowManagerBase {
     func subscribeToDidChange() {
         
         self.didChange
-            .print("\(Self.self): subscribeToDidChange")
+            .print(
+                "\(AuthorizationCodeFlowManagerBase<Backend>.self): " +
+                "subscribeToDidChange"
+            )
             .sink(receiveValue: { _ in })
             .store(in: &cancellables)
         
@@ -453,8 +467,11 @@ extension AuthorizationCodeFlowManagerBase {
      */
     public func setExpirationDate(to date: Date) {
         self.updateAuthInfoQueue.sync {
-            Self.baseLogger.notice(
-                "\(Self.self): mock expiration date: \(date.description(with: .current))"
+            AuthorizationCodeFlowManagerBase<Backend>.baseLogger.notice(
+                """
+                \(AuthorizationCodeFlowManagerBase<Backend>.self): mock \
+                expiration date: \(date.description(with: .current))
+                """
             )
             self._expirationDate = date
         }

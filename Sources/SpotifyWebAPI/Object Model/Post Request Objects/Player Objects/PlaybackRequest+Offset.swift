@@ -82,7 +82,10 @@ extension PlaybackRequest.Offset: Codable {
 extension PlaybackRequest.Offset: Hashable {
     
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: PlaybackRequest.Offset,
+        rhs: PlaybackRequest.Offset
+    ) -> Bool {
         switch (lhs, rhs) {
             case (.position(let lhsIndex), .position(let rhsIndex)):
                 return lhsIndex == rhsIndex

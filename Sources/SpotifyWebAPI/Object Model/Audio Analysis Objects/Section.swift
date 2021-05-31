@@ -202,7 +202,7 @@ extension Section: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: Section) -> Bool {
         if !self.start.isApproximatelyEqual(
             to: other.start, absoluteTolerance: 0.001
         ) {

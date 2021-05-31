@@ -84,7 +84,10 @@ extension URIWithPositions: Hashable {
     }
         
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (
+        lhs: URIWithPositions,
+        rhs: URIWithPositions
+    ) -> Bool {
         return lhs.uri.uri == rhs.uri.uri &&
                 lhs.positions == rhs.positions
     }

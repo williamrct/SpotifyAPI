@@ -89,7 +89,7 @@ extension AttributeRange: ApproximatelyEquatable where Value: BinaryFloatingPoin
 
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: AttributeRange) -> Bool {
     
         for (lhs, rhs) in [
             (self.min, other.min),

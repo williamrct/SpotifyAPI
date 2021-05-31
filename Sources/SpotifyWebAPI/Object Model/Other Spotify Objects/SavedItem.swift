@@ -189,7 +189,7 @@ extension SavedItem: ApproximatelyEquatable {
 
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: SavedItem<Item>) -> Bool {
         
         return self.type == other.type &&
                 self.addedAt.isApproximatelyEqual(to: other.addedAt) &&
@@ -213,7 +213,7 @@ extension SavedItem where Item: ApproximatelyEquatable {
 
      - Parameter other: Another instance of `Self`.
      */
-    func isApproximatelyEqual(to other: Self) -> Bool {
+    func isApproximatelyEqual(to other: SavedItem<Item>) -> Bool {
         
         return self.type == other.type &&
                 self.addedAt.isApproximatelyEqual(to: other.addedAt) &&

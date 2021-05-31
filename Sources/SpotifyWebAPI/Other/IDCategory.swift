@@ -85,7 +85,7 @@ public enum IDCategory: String, CaseIterable, Codable, Hashable {
     public init?(rawValue: String) {
         
         let lowercasedRawValue = rawValue.lowercased()
-        for category in Self.allCases {
+        for category in IDCategory.allCases {
             if category.rawValue == lowercasedRawValue {
                 self = category
                 return

@@ -171,26 +171,29 @@ public extension String {
         let manager = FileManager.default
 
         if manager.fileExists(atPath: file.path) {
+            
             let handle = try FileHandle(forUpdating: file)
+            
+            #if compiler(>=5.3)
+            
             do {
-                #if compiler(>=5.3)
-                if #available(macOS 10.15.4, iOS 13.4, macCatalyst 13.4, tvOS 13.4, watchOS 6.2, *) {
-                    try handle.seekToEnd()
-                }
-                else {
-                    handle.seekToEndOfFile()
-                }
-                #else
-                handle.seekToEndOfFile()
-                #endif
+                try handle.seekToEnd()
                 handle.write(data)
                 try handle.close()
-
+                
             } catch {
                 try handle.close()
                 throw error
             }
             
+            #else
+
+            handle.seekToEndOfFile()
+            handle.write(data)
+            handle.closeFile()
+            
+            #endif
+
         }
         else {
             let directory = file.deletingLastPathComponent()
@@ -221,7 +224,7 @@ public struct VaporServerError: Error, Codable {
 extension VaporServerError: CustomStringConvertible {
     public var description: String {
         return """
-            \(Self.self)(reason: "\(self.reason)")
+            \(VaporServerError.self)(reason: "\(self.reason)")
             """
     }
 }
@@ -237,7 +240,7 @@ extension VaporServerError {
         }
         
         return try? JSONDecoder().decode(
-            Self.self, from: data
+            VaporServerError.self, from: data
         )
         
     }

@@ -141,7 +141,7 @@ public struct SpotifyPlayerError: LocalizedError, Hashable {
     
     /// :nodoc:
     public var errorDescription: String? {
-        "\(message) (status code: \(statusCode))"
+        return "\(message) (status code: \(statusCode))"
     }
     
     /**

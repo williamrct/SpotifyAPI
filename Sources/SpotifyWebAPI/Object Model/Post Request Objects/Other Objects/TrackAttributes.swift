@@ -521,7 +521,7 @@ extension TrackAttributes: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: TrackAttributes) -> Bool {
         
         if self.seedArtists != other.seedArtists ||
                 self.seedTracks != other.seedTracks ||

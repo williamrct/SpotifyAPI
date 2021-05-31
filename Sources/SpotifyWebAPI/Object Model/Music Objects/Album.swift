@@ -461,7 +461,7 @@ extension Album: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: Album) -> Bool {
         
         return self.name == other.name &&
                 self.tracks == other.tracks &&

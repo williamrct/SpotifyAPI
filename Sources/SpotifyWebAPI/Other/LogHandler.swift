@@ -26,12 +26,12 @@ public struct SpotifyAPILogHandler: LogHandler {
      This method is thread-safe.
      */
     public static func bootstrap() {
-        Self.initializeHandlerDispatchQueue.sync {
-            if !Self.handlerIsInitialized {
+        SpotifyAPILogHandler.initializeHandlerDispatchQueue.sync {
+            if !SpotifyAPILogHandler.handlerIsInitialized {
                 LoggingSystem.bootstrap { label in
-                    Self(label: label, logLevel: .info)
+                    SpotifyAPILogHandler(label: label, logLevel: .info)
                 }
-                Self.handlerIsInitialized = true
+                SpotifyAPILogHandler.handlerIsInitialized = true
             }
         }
     }

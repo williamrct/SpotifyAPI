@@ -203,7 +203,7 @@ extension Show: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: Show) -> Bool {
      
         return self.name == other.name &&
                 self.description == other.description &&

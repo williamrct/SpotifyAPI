@@ -425,7 +425,9 @@ public extension ClientCredentialsFlowBackendManager {
             self._expirationDate = nil
             self.refreshTokensPublisher = nil
         }
-        Self.logger.trace("self.didDeauthorize.send()")
+        ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+            "self.didDeauthorize.send()"
+        )
         self.didDeauthorize.send()
             
     }
@@ -492,14 +494,18 @@ public extension ClientCredentialsFlowBackendManager {
      */
     func authorize() -> AnyPublisher<Void, Error> {
         
-        Self.logger.trace("backend.makeClientCredentialsTokensRequest")
+        ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+            "backend.makeClientCredentialsTokensRequest"
+        )
 
         return self.backend.makeClientCredentialsTokensRequest()
             .decodeSpotifyObject(AuthInfo.self)
             .receive(on: self.updateAuthInfoQueue)
             .tryMap { authInfo in
                 
-                Self.logger.trace("received authInfo:\n\(authInfo)")
+                ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                    "received authInfo:\n\(authInfo)"
+                )
                 
                 if authInfo.accessToken == nil ||
                         authInfo.expirationDate == nil {
@@ -509,7 +515,9 @@ public extension ClientCredentialsFlowBackendManager {
                         (expected access token and expiration date):
                         \(authInfo)
                         """
-                    Self.logger.error("\(errorMessage)")
+                    ClientCredentialsFlowBackendManager<Backend>.logger.error(
+                        "\(errorMessage)"
+                    )
                     throw SpotifyGeneralError.other(errorMessage)
                 }
                 
@@ -522,7 +530,7 @@ public extension ClientCredentialsFlowBackendManager {
                 // so that the caller does not receive a publisher
                 // that has already finished.
                 receiveCompletion: { _ in
-                    Self.logger.trace(
+                    ClientCredentialsFlowBackendManager<Backend>.logger.trace(
                         """
                         refreshTokensPublisher received completion; \
                         setting to nil"
@@ -582,22 +590,30 @@ public extension ClientCredentialsFlowBackendManager {
                 if onlyIfExpired && !self.accessTokenIsExpiredNOTThreadSafe(
                     tolerance: tolerance
                 ) {
-                    Self.logger.trace("access token not expired; returning early")
+                    ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                        "access token not expired; returning early"
+                    )
                     return ResultPublisher(())
                         .eraseToAnyPublisher()
                 }
                 
-                Self.logger.trace("access token is expired; authorizing again")
+                ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                    "access token is expired; authorizing again"
+                )
                 
                 // If another request to refresh the tokens is currently in
                 // progress, return the same request instead of creating a new
                 // network request.
                 if let publisher = self.refreshTokensPublisher {
-                    Self.logger.trace("using previous publisher")
+                    ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                        "using previous publisher"
+                    )
                     return publisher
                 }
                 
-                Self.logger.trace("creating new publisher")
+                ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                    "creating new publisher"
+                )
                 
                 // The process for refreshing the token is the same as that for
                 // authorizing the application. The client credentials flow does
@@ -640,7 +656,9 @@ private extension ClientCredentialsFlowBackendManager {
         self._expirationDate = authInfo.expirationDate
         self.refreshTokensPublisher = nil
         self.refreshTokensQueue.async {
-            Self.logger.trace("self.didChange.send()")
+            ClientCredentialsFlowBackendManager<Backend>.logger.trace(
+                "self.didChange.send()"
+            )
             self.didChange.send()
         }
     }
@@ -651,7 +669,7 @@ private extension ClientCredentialsFlowBackendManager {
         if (self._accessToken == nil) != (self._expirationDate == nil) {
             let expirationDateString = self._expirationDate?
                 .description(with: .current) ?? "nil"
-            Self.logger.error(
+            ClientCredentialsFlowBackendManager<Backend>.logger.error(
                 """
                 accessToken or expirationDate was nil, but not both:
                 accessToken == nil: \(_accessToken == nil); \
@@ -687,7 +705,7 @@ extension ClientCredentialsFlowBackendManager {
      */
     public func setExpirationDate(to date: Date) {
         self.updateAuthInfoQueue.sync {
-            Self.logger.notice(
+            ClientCredentialsFlowBackendManager<Backend>.logger.notice(
                 "mock expiration date: \(date.description(with: .current))"
             )
             self._expirationDate = date
@@ -861,6 +879,26 @@ public final class ClientCredentialsFlowManager:
                 )
                 """
         
+        }
+    }
+    
+    /**
+     Returns a copy of self.
+     
+     Copies the following properties:
+     * `clientId`
+     * `clientSecret`
+     * `accessToken`
+     * `expirationDate`
+     */
+    public override func makeCopy() -> ClientCredentialsFlowManager {
+        let copy = ClientCredentialsFlowManager(
+            backend: backend
+        )
+        return self.updateAuthInfoQueue.sync {
+            copy._accessToken = self._accessToken
+            copy._expirationDate = self._expirationDate
+            return copy
         }
     }
 

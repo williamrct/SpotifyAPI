@@ -114,7 +114,7 @@ extension AudioAnalysis: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: AudioAnalysis) -> Bool {
 
         return self.bars.isApproximatelyEqual(to: other.bars) &&
                 self.beats.isApproximatelyEqual(to: other.beats) &&

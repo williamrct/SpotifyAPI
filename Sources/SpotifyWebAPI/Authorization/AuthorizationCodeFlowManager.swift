@@ -241,7 +241,7 @@ public class AuthorizationCodeFlowBackendManager<Backend: AuthorizationCodeFlowB
      * `scopes`
      */
     public func makeCopy() -> AuthorizationCodeFlowBackendManager<Backend> {
-        let copy = Self(
+        let copy = AuthorizationCodeFlowBackendManager<Backend>(
             backend: self.backend
         )
         return self.updateAuthInfoQueue.sync {
@@ -387,7 +387,7 @@ public extension AuthorizationCodeFlowBackendManager {
         state: String? = nil
     ) -> AnyPublisher<Void, Error> {
 
-		Self.logger.trace(
+		AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
             "redirectURIWithQuery: '\(redirectURIWithQuery)'"
         )
         
@@ -400,7 +400,9 @@ public extension AuthorizationCodeFlowBackendManager {
         guard let code = queryDict["code"] else {
             
             if let error = queryDict["error"] {
-                Self.logger.warning("redirect uri query has error")
+                AuthorizationCodeFlowBackendManager<Backend>.logger.warning(
+                    "redirect uri query has error"
+                )
                 // This is the way that the authorization should fail.
                 // For example, if the user denied the app's authorization
                 // request, then this error will be returned.
@@ -410,7 +412,9 @@ public extension AuthorizationCodeFlowBackendManager {
                 .anyFailingPublisher()
             }
             
-            Self.logger.error("unknown error")
+            AuthorizationCodeFlowBackendManager<Backend>.logger.error(
+                "unknown error"
+            )
             return SpotifyGeneralError.other(
                 """
                 an unknown error occurred when handling the redirect URI: \
@@ -431,7 +435,9 @@ public extension AuthorizationCodeFlowBackendManager {
             .anyFailingPublisher()
         }
         
-        Self.logger.trace("backend.requestAccessAndRefreshTokens")
+        AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
+            "backend.requestAccessAndRefreshTokens"
+        )
         
         return self.backend.requestAccessAndRefreshTokens(
             code: code,
@@ -440,7 +446,9 @@ public extension AuthorizationCodeFlowBackendManager {
         .decodeSpotifyObject(AuthInfo.self)
         .tryMap { authInfo in
             
-            Self.logger.trace("received authInfo:\n\(authInfo)")
+            AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
+                "received authInfo:\n\(authInfo)"
+            )
             
             if authInfo.accessToken == nil ||
                 authInfo.refreshToken == nil ||
@@ -452,7 +460,9 @@ public extension AuthorizationCodeFlowBackendManager {
                     and expiration date):
                     \(authInfo)
                     """
-                Self.logger.error("\(errorMessage)")
+                AuthorizationCodeFlowBackendManager<Backend>.logger.error(
+                    "\(errorMessage)"
+                )
                 throw SpotifyGeneralError.other(errorMessage)
                 
             }
@@ -505,7 +515,7 @@ public extension AuthorizationCodeFlowBackendManager {
                     if onlyIfExpired && !self.accessTokenIsExpiredNOTThreadSafe(
                         tolerance: tolerance
                     ) {
-                        Self.logger.trace(
+                        AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
                             "access token not expired; returning early"
                         )
                         return ResultPublisher(())
@@ -513,26 +523,36 @@ public extension AuthorizationCodeFlowBackendManager {
                         
                     }
                     
-                    Self.logger.notice("refreshing tokens...")
+                    AuthorizationCodeFlowBackendManager<Backend>.logger.notice(
+                        "refreshing tokens..."
+                    )
                 
                     // If another request to refresh the tokens is currently
                     // in progress, return the same request instead of creating
                     // a new network request.
                     if let refreshTokensPublisher = self.refreshTokensPublisher {
-                        Self.logger.notice("using previous publisher")
+                        AuthorizationCodeFlowBackendManager<Backend>.logger.notice(
+                            "using previous publisher"
+                        )
                         return refreshTokensPublisher
                     }
                     
-                    Self.logger.trace("creating new publisher")
+                    AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
+                        "creating new publisher"
+                    )
                     
                     guard let refreshToken = self._refreshToken else {
                         let errorMessage =
                                 "can't refresh access token: no refresh token"
-                        Self.logger.warning("\(errorMessage)")
+                        AuthorizationCodeFlowBackendManager<Backend>.logger.warning(
+                            "\(errorMessage)"
+                        )
                         throw SpotifyGeneralError.unauthorized(errorMessage)
                     }
                     
-                    Self.logger.trace("backend.refreshTokens")
+                    AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
+                        "backend.refreshTokens"
+                    )
                     let refreshTokensPublisher = self.backend.refreshTokens(
                         refreshToken: refreshToken
                     )
@@ -540,7 +560,9 @@ public extension AuthorizationCodeFlowBackendManager {
                     .receive(on: self.updateAuthInfoQueue)
                     .tryMap { authInfo in
                         
-                        Self.logger.trace("received authInfo:\n\(authInfo)")
+                        AuthorizationCodeFlowBackendManager<Backend>.logger.trace(
+                            "received authInfo:\n\(authInfo)"
+                        )
                         
                         if authInfo.accessToken == nil ||
                                 authInfo.expirationDate == nil {
@@ -551,7 +573,9 @@ public extension AuthorizationCodeFlowBackendManager {
                                 and expiration date):
                                 \(authInfo)
                                 """
-                            Self.logger.error("\(errorMessage)")
+                            AuthorizationCodeFlowBackendManager<Backend>.logger.error(
+                                "\(errorMessage)"
+                            )
                             throw SpotifyGeneralError.other(errorMessage)
                             
                         }
@@ -784,7 +808,7 @@ public final class AuthorizationCodeFlowManager:
      * `scopes`
      */
     public override func makeCopy() -> AuthorizationCodeFlowManager {
-        let copy = Self(
+        let copy = AuthorizationCodeFlowManager(
             backend: self.backend
         )
         return self.updateAuthInfoQueue.sync {

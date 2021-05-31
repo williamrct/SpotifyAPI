@@ -38,7 +38,7 @@ public extension RepeatMode {
      
      See also `cycle()`.
      */
-    func cycled() -> Self {
+    func cycled() -> RepeatMode {
         
         switch self {
             case .off:

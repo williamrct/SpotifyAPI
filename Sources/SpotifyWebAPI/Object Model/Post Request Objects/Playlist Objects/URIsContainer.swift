@@ -100,7 +100,7 @@ extension URIsContainer: Hashable {
     }
     
     /// :nodoc:
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: URIsContainer, rhs: URIsContainer) -> Bool {
         return lhs.snapshotId == rhs.snapshotId &&
                 lhs.items.lazy.map({ $0.uri }) == rhs.items.lazy.map({ $0.uri })
     }

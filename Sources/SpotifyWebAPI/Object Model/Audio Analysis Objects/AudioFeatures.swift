@@ -291,7 +291,7 @@ extension AudioFeatures: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: AudioFeatures) -> Bool {
         
         if self.key != other.key {
             return false

@@ -142,7 +142,7 @@ extension Array: ApproximatelyEquatable where Element: ApproximatelyEquatable { 
 extension Set: ApproximatelyEquatable where Element: ApproximatelyEquatable {
     
     @inlinable @inline(__always)
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: Set<Element>) -> Bool {
         // the documented complexity of `count` is O(1).
         if self.count != other.count {
             return false

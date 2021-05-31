@@ -405,7 +405,7 @@ public extension Scope {
         )
         var scopes: Set<Scope> = []
         for string in stringArray {
-            if let scope = Self(rawValue: string) {
+            if let scope = Scope(rawValue: string) {
                 scopes.insert(scope)
             }
         }
@@ -420,7 +420,7 @@ public extension Scope {
            contain only a single scope.
      */
     static func contains(_ scope: String) -> Bool {
-        return Self.allCases.map({ $0.rawValue }).contains(scope.strip())
+        return Scope.allCases.map({ $0.rawValue }).contains(scope.strip())
     }
     
 }

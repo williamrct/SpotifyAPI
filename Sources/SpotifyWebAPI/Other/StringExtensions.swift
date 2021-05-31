@@ -1,7 +1,7 @@
 import Foundation
 #if canImport(Crypto)
 import Crypto
-#else
+#elseif canImport(CommonCrypto)
 import CommonCrypto
 #endif
 
@@ -176,20 +176,26 @@ public extension String {
         // Convert the array of bytes into data.
         let bytes = Data(hash)
         
-        #else
+        #elseif canImport(CommonCrypto)
         
         let bytes = sha256Hash(data: data)
         
+        #else
+        
+        let bytes = Data()
+
         #endif
 
         // Base-64 URL-encode the bytes.
         return bytes.base64URLEncodedString()
-        
+     
+
     }
+    
     
 }
 
-#if !canImport(Crypto)
+#if !canImport(Crypto) && canImport(CommonCrypto)
 
 private func sha256Hash(data : Data) -> Data {
     var hash = Array<UInt8>(repeating: 0,  count: Int(CC_SHA256_DIGEST_LENGTH))

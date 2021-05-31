@@ -34,7 +34,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
         ensureCategoryMatches categories: [IDCategory]? = nil
     ) throws -> String where S.Element == SpotifyURIConvertible {
         
-        return try Self.idsArray(
+        return try SpotifyIdentifier.idsArray(
             uris,
             ensureCategoryMatches: categories
         )
@@ -60,7 +60,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
     ) throws -> [String] where S.Element == SpotifyURIConvertible {
         
         let identifiers = try uris.map { uri in
-            try Self(uri: uri)
+            try SpotifyIdentifier(uri: uri)
         }
         let allIdCategories = identifiers.map({ $0.idCategory }).removingDuplicates()
         
@@ -98,7 +98,7 @@ public struct SpotifyIdentifier: Codable, Hashable, SpotifyURIConvertible {
      */
     @inlinable
     public var uri: String {
-        "spotify:\(idCategory.rawValue):\(id)"
+        return "spotify:\(idCategory.rawValue):\(id)"
     }
 
     /**

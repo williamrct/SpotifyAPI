@@ -109,7 +109,7 @@ public class SpotifyTestObserver: NSObject, XCTestObservation {
     /// Only executes once per process.
     func globalSetup() {
         XCTestObservationCenter.shared.addTestObserver(self)
-        Self.isRegisteredAsObserver = true
+        SpotifyTestObserver.isRegisteredAsObserver = true
         SpotifyAPILogHandler.bootstrap()
     }
     
@@ -161,7 +161,7 @@ open class SpotifyAPITestCase: XCTestCase {
             _ = SpotifyTestObserver()
         }
         
-        Self.selectNetworkAdaptor()
+        selectNetworkAdaptor()
         
     }
     
@@ -200,12 +200,12 @@ open class SpotifyAPITestCase: XCTestCase {
             ------------------------------------------------
             """
         
-        if let logFile = Self.logFile {
+        if let logFile = logFile {
             try? message.append(to: logFile)
         }
         
-        if !Self.failingTests.contains(testName) {
-            Self.failingTests.append(testName)
+        if !failingTests.contains(testName) {
+            failingTests.append(testName)
         }
         
     }
@@ -236,12 +236,12 @@ open class SpotifyAPITestCase: XCTestCase {
             ------------------------------------------------
             """
         
-        if let logFile = Self.logFile {
+        if let logFile = SpotifyAPITestCase.logFile {
             try? message.append(to: logFile)
         }
         
-        if !Self.failingTests.contains(testName) {
-            Self.failingTests.append(testName)
+        if !SpotifyAPITestCase.failingTests.contains(testName) {
+            SpotifyAPITestCase.failingTests.append(testName)
         }
         
     }

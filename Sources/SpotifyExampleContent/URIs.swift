@@ -19,7 +19,7 @@ public extension SpotifyURIConvertibleEnum {
     
     /// A Spotify URI. Returns `self.rawValue`.
     @inlinable
-    var uri: String { self.rawValue }
+    var uri: String { return self.rawValue }
     
     /// Creates an array of URIs.
     ///

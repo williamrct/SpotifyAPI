@@ -166,8 +166,8 @@ extension AuthInfo: CustomStringConvertible {
 extension AuthInfo {
     
     /// Creates an instance with random values. Only use for tests.
-    static func withRandomValues() -> Self {
-        return Self(
+    static func withRandomValues() -> AuthInfo {
+        return AuthInfo(
             accessToken: UUID().uuidString,
             refreshToken: UUID().uuidString,
             expirationDate: Date(),

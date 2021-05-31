@@ -79,7 +79,7 @@ extension RecommendationsResponse: ApproximatelyEquatable {
      
      - Parameter other: Another instance of `Self`.
      */
-    public func isApproximatelyEqual(to other: Self) -> Bool {
+    public func isApproximatelyEqual(to other: RecommendationsResponse) -> Bool {
 
         return self.seeds == other.seeds &&
                 self.tracks.isApproximatelyEqual(to: other.tracks)
