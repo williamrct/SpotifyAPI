@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -8,7 +8,7 @@ var packageDependencies: [Package.Dependency] {
         .package(
             // name: "RegularExpressions",
             url: "https://github.com/Peter-Schorn/RegularExpressions.git",
-            "2.0.7"..<"3.0.0"
+            from: "2.2.0"
         ),
         .package(
             // name: "swift-log",
@@ -18,7 +18,7 @@ var packageDependencies: [Package.Dependency] {
         .package(
             // name: "OpenCombine",
             url: "https://github.com/OpenCombine/OpenCombine.git",
-            from: "0.11.0"
+            from: "0.12.0"
         ),
         .package(
             // name: "swift-crypto",
