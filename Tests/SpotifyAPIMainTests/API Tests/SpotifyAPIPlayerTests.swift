@@ -70,7 +70,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: _InternalSpotifyScop
             else {
                 XCTFail("context.progressMS should not be nil")
             }
-            if case .track(let track) = context.item {
+            if let item = context.item, case .track(let track) = item {
                 XCTAssertEqual(track.artists?.first?.name, "Pink Floyd")
                 XCTAssert(
                     track.album?.name.starts(with: "The Dark Side Of The Moon") ?? false,
@@ -642,8 +642,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: _InternalSpotifyScop
                     playback.context?.uri,
                     URIs.Albums.inRainbows.uri
                 )
-
-                if case .track(let track) = playback.item {
+                if let item = playback.item, case .track(let track) = item {
                     XCTAssertEqual(
                         track.artists?.first?.name,
                         "Radiohead"
@@ -916,7 +915,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: _InternalSpotifyScop
 
         let currentDate = Date()
         
-        Self.spotify.recentlyPlayed(.before(currentDate))
+        Self.spotify.recentlyPlayed(.before(date: currentDate))
             .XCTAssertNoFailure()
             .flatMap { recentlyPlayed -> AnyPublisher<CursorPagingObject<PlayHistory>, Error> in
                 
@@ -964,7 +963,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: _InternalSpotifyScop
 
         let distantPast = Date().addingTimeInterval(-500_000_000)
 
-        Self.spotify.recentlyPlayed(.before(distantPast))
+        Self.spotify.recentlyPlayed(.before(date: distantPast))
             .XCTAssertNoFailure()
             .sink(
                 receiveCompletion: { _ in
@@ -979,7 +978,7 @@ extension SpotifyAPIPlayerTests where AuthorizationManager: _InternalSpotifyScop
         // yesterday
         let recentPast = Date().addingTimeInterval(-86_400)
         
-        Self.spotify.recentlyPlayed(.after(recentPast), limit: 50)
+        Self.spotify.recentlyPlayed(.after(date: recentPast), limit: 50)
             .XCTAssertNoFailure()
             .sink(
                 receiveCompletion: { _ in
@@ -1383,11 +1382,11 @@ final class SpotifyAPIAuthorizationCodeFlowPlayerTests:
 
     override class func setUp() {
         super.setUp()
-        Self._setUp()
+        _setUp()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     func testPlayPause() { playPause() }
@@ -1435,11 +1434,11 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEPlayerTests:
 
     override class func setUp() {
         super.setUp()
-        Self._setUp()
+        _setUp()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     func testPlayPause() { playPause() }

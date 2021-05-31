@@ -35,20 +35,19 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
         )
         XCTAssertEqual(playHistory.limit, 45)
         
-        let cursors = try XCTUnwrap(playHistory.cursors)
+        guard let cursors = playHistory.cursors else {
+            XCTFail("playHistory.cursors was nil")
+            return
+        }
         XCTAssertEqual(cursors.before, "1600459749010")
         XCTAssertEqual(cursors.after, "1600711411419")
         
 
         let items = playHistory.items
-        #if compiler(>=5.2)
-        try XCTSkipIf(items.count != 45)
-        #else
         guard items.count == 45 else {
             XCTFail("items.count should be 45: \(items.count)")
             return
         }
-        #endif
         
         // MARK: First Track
         do {
@@ -59,7 +58,10 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
                 accuracy: 43_200
             )
             
-            let context = try XCTUnwrap(bones.context)
+            guard let context = bones.context else {
+                XCTFail("bones.context was nil")
+                return
+            }
             XCTAssertEqual(
                 context.uri,
                 "spotify:playlist:33yLOStnp2emkEA76ew1Dz"
@@ -105,7 +107,10 @@ final class CodingCursorPagingObjectPlayHistoryTests: SpotifyAPITestCase {
                 accuracy: 43_200
             )
             
-            let context = try XCTUnwrap(breathe.context)
+            guard let context = breathe.context else {
+                XCTFail("breathe.context was nil")
+                return
+            }
             XCTAssertEqual(
                 context.uri,
                 "spotify:album:4LH4d3cOWNNsVw41Gqt2kv"

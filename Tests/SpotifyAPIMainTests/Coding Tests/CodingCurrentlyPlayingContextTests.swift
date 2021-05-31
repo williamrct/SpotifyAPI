@@ -16,7 +16,7 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
     func testCodingCurrentlyPlayingContext() throws {
         
         let dataString = decodeEncodeDecode(
-            Self.currentlyPlayingContextData,
+            CodingCurrentlyPlayingContextTests.currentlyPlayingContextData,
             type: CurrentlyPlayingContext.self
         )
         XCTAssertNotNil(dataString)
@@ -24,7 +24,7 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
         
         let context = try JSONDecoder().decode(
             CurrentlyPlayingContext.self,
-            from: Self.currentlyPlayingContextData
+            from: CodingCurrentlyPlayingContextTests.currentlyPlayingContextData
         )
         
         try checkContext(context)
@@ -126,8 +126,11 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
         )
         
         // MARK: Check Album
+        guard let album = track.album else {
+            XCTFail("track.album was nil")
+            return
+        }
         
-        let album = try XCTUnwrap(track.album)
         XCTAssertEqual(album.type, .album)
         XCTAssertEqual(album.availableMarkets, ["AD", "AE", "ZA"])
         XCTAssertEqual(
@@ -156,7 +159,10 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
             XCTFail("release date should not be nil")
         }
         
-        let albumImages = try XCTUnwrap(album.images)
+        guard let albumImages = album.images else {
+            XCTFail("album.images was nil")
+            return
+        }
         XCTAssertEqual(albumImages[0].height, 640)
         XCTAssertEqual(albumImages[0].width, 641)
         XCTAssertEqual(
@@ -180,7 +186,10 @@ final class CodingCurrentlyPlayingContextTests: SpotifyAPITestCase {
         
         // MARK: Check Artist
         
-        let artist = try XCTUnwrap(track.artists?.first)
+        guard let artist = track.artists?.first else {
+            XCTFail("track.artists?.first was nil")
+            return
+        }
 
         XCTAssertEqual(artist.name, "Men I Trust")
         XCTAssertEqual(

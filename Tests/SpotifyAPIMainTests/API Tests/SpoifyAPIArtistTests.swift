@@ -750,11 +750,11 @@ final class SpotifyAPIAuthorizationCodeFlowArtistTests:
         scopes: Set<Scope> = Scope.allCases,
         showDialog: Bool = true
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     override func setUp() {
@@ -803,11 +803,11 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEArtistTests:
     override class func setupAuthorization(
         scopes: Set<Scope> = Scope.allCases
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     override func setUp() {
@@ -896,11 +896,11 @@ final class SpotifyAPIAuthorizationCodeFlowProxyArtistTests:
         scopes: Set<Scope> = Scope.allCases,
         showDialog: Bool = true
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     override func setUp() {
@@ -949,11 +949,11 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyArtistTests:
     override class func setupAuthorization(
         scopes: Set<Scope> = Scope.allCases
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override class func tearDown() {
-        Self._tearDown()
+        _tearDown()
     }
 
     override func setUp() {

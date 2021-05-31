@@ -585,8 +585,8 @@ extension SpotifyAPIErrorTests {
                     XCTFail("should not finished normally")
                     return
                 }
-                guard case .httpError(let data, let response) =
-                        error as? SpotifyGeneralError else {
+                guard let spotifyGeneralError = error as? SpotifyGeneralError,
+                        case .httpError(let data, let response) = spotifyGeneralError else {
                     XCTFail(
                         "should've received SpotifyGeneralError.httpError: \(error)"
                     )

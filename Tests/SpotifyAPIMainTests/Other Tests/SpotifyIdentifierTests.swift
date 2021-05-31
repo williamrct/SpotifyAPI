@@ -127,7 +127,7 @@ final class SpotifyIdentifierTests: SpotifyAPITestCase {
                 print("exists: \(url)")
                 expectation.fulfill()
             })
-            .store(in: &Self.cancellables)
+            .store(in: &SpotifyIdentifierTests.cancellables)
             
         }
         

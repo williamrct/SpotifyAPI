@@ -44,7 +44,7 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
     func testCodingOtherUserProfile() throws {
         let user = try JSONDecoder().decode(
             SpotifyUser.self,
-            from: Self.aprilUserProfileData
+            from: CodingSpotifyUserTests.aprilUserProfileData
         )
         encodeDecode(user, areEqual: ==)
         
@@ -67,7 +67,10 @@ final class CodingSpotifyUserTests: SpotifyAPITestCase {
         XCTAssertEqual(user.uri, "spotify:user:p8gjjfbirm8ucyt82ycfi9zuu")
         XCTAssertEqual(user.type, .user)
         XCTAssertEqual(user.images?.count, 1)
-        let image = try XCTUnwrap(user.images?.first)
+        guard let image = user.images?.first else {
+            XCTFail("user.images?.first was nil")
+            return
+        }
         XCTAssertNil(image.height)
         XCTAssertNil(image.width)
         XCTAssertEqual(

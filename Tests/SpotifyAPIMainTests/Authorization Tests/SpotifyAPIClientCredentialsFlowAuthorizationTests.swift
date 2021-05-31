@@ -158,7 +158,7 @@ final class SpotifyAPIClientCredentialsFlowClientAuthorizationTests:
     ]
 
     override class func setupAuthorization() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
     func makeFakeAuthManager() -> ClientCredentialsFlowManager {
@@ -170,10 +170,11 @@ final class SpotifyAPIClientCredentialsFlowClientAuthorizationTests:
 
     func testConvenienceInitializer() throws {
         
-        Self.spotify.authorizationManager.waitUntilAuthorized()
+        SpotifyAPIClientCredentialsFlowClientAuthorizationTests.spotify
+                .authorizationManager.waitUntilAuthorized()
         
         let authManagerData = try JSONEncoder().encode(
-            Self.spotify.authorizationManager
+            SpotifyAPIClientCredentialsFlowClientAuthorizationTests.spotify.authorizationManager
         )
         
         let decodedAuthManager = try JSONDecoder().decode(
@@ -196,7 +197,10 @@ final class SpotifyAPIClientCredentialsFlowClientAuthorizationTests:
             expirationDate: expirationDate
         )
         
-        XCTAssertEqual(Self.spotify.authorizationManager, newAuthorizationManager)
+        XCTAssertEqual(
+            SpotifyAPIClientCredentialsFlowClientAuthorizationTests.spotify.authorizationManager,
+            newAuthorizationManager
+        )
         
         self.deauthorizeReauthorize()
         
@@ -215,7 +219,7 @@ final class SpotifyAPIClientCredentialsFlowClientAuthorizationTests:
     }
 
     override class func tearDown() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
 }
@@ -234,7 +238,7 @@ final class SpotifyAPIClientCredentialsFlowProxyAuthorizationTests:
     ]
 
     override class func setupAuthorization() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
     func makeFakeAuthManager() -> ClientCredentialsFlowBackendManager<ClientCredentialsFlowProxyBackend> {
@@ -247,10 +251,11 @@ final class SpotifyAPIClientCredentialsFlowProxyAuthorizationTests:
 
     func testConvenienceInitializer() throws {
         
-        Self.spotify.authorizationManager.waitUntilAuthorized()
+        SpotifyAPIClientCredentialsFlowProxyAuthorizationTests.spotify
+                .authorizationManager.waitUntilAuthorized()
         
         let authManagerData = try JSONEncoder().encode(
-            Self.spotify.authorizationManager
+            SpotifyAPIClientCredentialsFlowProxyAuthorizationTests.spotify.authorizationManager
         )
         
         let decodedAuthManager = try JSONDecoder().decode(
@@ -276,7 +281,10 @@ final class SpotifyAPIClientCredentialsFlowProxyAuthorizationTests:
         )
         
         
-        XCTAssertEqual(Self.spotify.authorizationManager, newAuthorizationManager)
+        XCTAssertEqual(
+            SpotifyAPIClientCredentialsFlowProxyAuthorizationTests.spotify.authorizationManager,
+            newAuthorizationManager
+        )
         
         self.deauthorizeReauthorize()
         
@@ -289,7 +297,7 @@ final class SpotifyAPIClientCredentialsFlowProxyAuthorizationTests:
     func testRefreshTokens() { refreshTokens() }
 
     override class func tearDown() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
 }

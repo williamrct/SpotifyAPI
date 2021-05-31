@@ -91,13 +91,8 @@ extension SpotifyAPIFollowTests where
             guard allFollowedArtists.count >= 3 else {
                 let skipMessage =
                         "test requires the user to follow at least 3 artists"
-                #if compiler(>=5.2)
-                return XCTSkip(skipMessage)
-                    .anyFailingPublisher()
-                #else
                 return SpotifyGeneralError.other(skipMessage)
                     .anyFailingPublisher()
-                #endif
             }
             let artistURIs = allFollowedArtists.map({ $0.uri })
             let thirdFromLastArtist = artistURIs[

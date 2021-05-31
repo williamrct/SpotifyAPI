@@ -54,7 +54,8 @@ extension SpotifyAPIPlaylistsTests {
                         guard trackNames.count > i else {
                             return
                         }
-                        guard case .track(let track) = track else {
+                        guard let trackUW = track,
+                                case .track(let track) = trackUW else {
                             XCTFail("playlist should only contain tracks")
                             continue
                         }
@@ -342,8 +343,7 @@ extension SpotifyAPIPlaylistsTests {
                 XCTFail("test playlist should contain at least 7 items")
                 return
             }
-
-            if case .track(let partIII) = items[0] {
+            if let item = items[0], case .track(let partIII) = item {
                 encodeDecode(partIII)
                 XCTAssertFalse(partIII.isLocal)
                 XCTAssertEqual(partIII.name, "Part III")
@@ -373,8 +373,7 @@ extension SpotifyAPIPlaylistsTests {
             else {
                 XCTFail("should be track: \(items[0]?.name ?? "nil")")
             }
-
-            if case .track(let whenIGetHome) = items[1] {
+            if let item = items[1], case .track(let whenIGetHome) = item {
                 encodeDecode(whenIGetHome)
                 XCTAssertFalse(whenIGetHome.isLocal)
                 XCTAssertEqual(whenIGetHome.name, "When I Get Home")
@@ -449,8 +448,7 @@ extension SpotifyAPIPlaylistsTests {
                 XCTFail("third item should not be nil")
             }
 
-
-            if case .track(let bensound) = items[3] {
+            if let item = items[3], case .track(let bensound) = item {
                 encodeDecode(bensound)
                 XCTAssertEqual(bensound.name, "bensound-anewbeginning")
                 XCTAssertTrue(bensound.isLocal)
@@ -460,7 +458,7 @@ extension SpotifyAPIPlaylistsTests {
                 XCTFail("should be track: \(items[3]?.name ?? "nil")")
             }
 
-            if case .track(let echoes) = items[4] {
+            if let item = items[4], case .track(let echoes) = item {
                 encodeDecode(echoes)
                 XCTAssertEqual(echoes.name, "Echoes - Acoustic Version")
                 XCTAssertTrue(echoes.isLocal)
@@ -470,7 +468,7 @@ extension SpotifyAPIPlaylistsTests {
                 XCTFail("should be track: \(items[4]?.name ?? "nil")")
             }
 
-            if case .track(let oceanBloom) = items[5] {
+            if let item = items[5], case .track(let oceanBloom) = item {
                 encodeDecode(oceanBloom)
                 XCTAssertEqual(
                     oceanBloom.name,
@@ -483,7 +481,7 @@ extension SpotifyAPIPlaylistsTests {
                 XCTFail("should be track: \(items[5]?.name ?? "nil")")
             }
 
-            if case .track(let killshot) = items[6] {
+            if let item = items[6], case .track(let killshot) = item {
                 encodeDecode(killshot)
                 XCTAssertEqual(killshot.name, "Killshot")
                 XCTAssertTrue(killshot.isLocal)
@@ -1684,7 +1682,7 @@ final class SpotifyAPIAuthorizationCodeFlowPlaylistsTests:
         scopes: Set<Scope> = Scope.allCases,
         showDialog: Bool = true
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override func setUp() {
@@ -1758,7 +1756,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEPlaylistsTests:
     override class func setupAuthorization(
         scopes: Set<Scope> = Scope.allCases
     ) {
-        Self._setupAuthorization()
+        _setupAuthorization()
     }
 
     override func setUp() {

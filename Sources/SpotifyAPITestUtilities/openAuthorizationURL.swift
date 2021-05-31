@@ -142,6 +142,15 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
 
     // MARK: open the authorization URL
     
+    func tryToOpenURLWithPython3() {
+        do {
+            try openURLWithPython3(authorizationURL)
+        
+        } catch {
+            print("couldn't open \(authorizationURL) with python3: \(error)")
+        }
+    }
+
     #if compiler(>=5.3)
     
     #if canImport(AppKit) && !targetEnvironment(macCatalyst)
@@ -149,12 +158,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
     #elseif canImport(UIKit)
     UIApplication.shared.open(authorizationURL)
     #elseif os(macOS) || os(Linux)
-    do {
-        try openURLWithPython3(authorizationURL)
-        
-    } catch {
-        print("couldn't open \(authorizationURL) with python3: \(error)")
-    }
+    tryToOpenURLWithPython3()
     #endif
     
     #else
@@ -164,12 +168,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
     #elseif canImport(UIKit)
     UIApplication.shared.open(authorizationURL)
     #elseif os(macOS) || os(Linux)
-    do {
-        try openURLWithPython3(authorizationURL)
-    
-    } catch {
-        print("couldn't open \(authorizationURL) with python3: \(error)")
-    }
+    tryToOpenURLWithPython3()
     #endif
     
     #endif

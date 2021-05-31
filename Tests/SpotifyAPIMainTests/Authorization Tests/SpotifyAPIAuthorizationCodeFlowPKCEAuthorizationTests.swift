@@ -704,17 +704,13 @@ extension SpotifyAPIAuthorizationCodeFlowPKCEAuthorizationTests {
     }
 
     func denyAuthorizationRequest() throws {
-        #if canImport(WebKit)
+        #if canImport(WebKit) && compiler(>=5.3)
         
         let cannotTestMessage = """
         Cannot test \(#function) without 'SPOTIFY_DC' environment variable.
         """
         
-        #if compiler(>=5.2)
         try XCTSkipIf(spotifyDCCookieValue == nil, cannotTestMessage)
-        #else
-        _ = try XCTUnwrap(spotifyDCCookieValue, cannotTestMessage)
-        #endif
 
         encodeDecode(Self.spotify.authorizationManager, areEqual: ==)
         
@@ -861,12 +857,8 @@ extension SpotifyAPIAuthorizationCodeFlowPKCEAuthorizationTests {
         encodeDecode(Self.spotify.authorizationManager, areEqual: ==)
      
         #else
-        let errorMessage = "cannot test \(#function) without WebKit"
-        #if compiler(>=5.2)
-        throw XCTSkip(errorMessage)
-        #else
+        let errorMessage = "cannot test \(#function) without WebKit or swift 5.3+"
         XCTFail(errorMessage)
-        #endif
         #endif
     }
 
@@ -895,7 +887,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests:
     ]
 
     override class func setupAuthorization(scopes: Set<Scope> = Scope.allCases) {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
     func makeFakeAuthManager() -> AuthorizationCodeFlowPKCEManager{
@@ -906,10 +898,11 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests:
 
     func testConvenienceInitializer() throws {
         
-        Self.spotify.authorizationManager.authorizeAndWaitForTokens()
+        SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests.spotify
+                .authorizationManager.authorizeAndWaitForTokens()
         
         let authManagerData = try JSONEncoder().encode(
-            Self.spotify.authorizationManager
+            SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests.spotify.authorizationManager
         )
         
         let decodedAuthManager = try JSONDecoder().decode(
@@ -939,7 +932,10 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests:
             scopes: decodedAuthManager.scopes
         )
         
-        XCTAssertEqual(Self.spotify.authorizationManager, newAuthorizationManager)
+        XCTAssertEqual(
+            SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests.spotify.authorizationManager,
+            newAuthorizationManager
+        )
         
         self.deauthorizeReauthorize()
         
@@ -980,7 +976,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEClientAuthorizationTests:
     func testDenyAuthorizationRequest() throws { try denyAuthorizationRequest() }
 
     override class func tearDown() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
 }
@@ -1006,7 +1002,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests:
     ]
 
     override class func setupAuthorization(scopes: Set<Scope> = Scope.allCases) {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
     func makeFakeAuthManager() -> AuthorizationCodeFlowPKCEBackendManager<AuthorizationCodeFlowPKCEProxyBackend> {
@@ -1021,10 +1017,11 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests:
 
     func testConvenienceInitializer() throws {
         
-        Self.spotify.authorizationManager.authorizeAndWaitForTokens()
+        SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests.spotify
+                .authorizationManager.authorizeAndWaitForTokens()
         
         let authManagerData = try JSONEncoder().encode(
-            Self.spotify.authorizationManager
+            SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests.spotify.authorizationManager
         )
         
         let decodedAuthManager = try JSONDecoder().decode(
@@ -1045,7 +1042,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests:
             clientId: decodedAuthManager.backend.clientId,
             tokensURL: decodedAuthManager.backend.tokensURL,
             tokenRefreshURL: decodedAuthManager.backend.tokenRefreshURL,
-            decodeServerError: Self.spotify.authorizationManager.backend.decodeServerError
+            decodeServerError: SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests.spotify.authorizationManager.backend.decodeServerError
         )
         
         let newAuthorizationManager = AuthorizationCodeFlowPKCEBackendManager(
@@ -1056,7 +1053,10 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests:
             scopes: decodedAuthManager.scopes
         )
         
-        XCTAssertEqual(Self.spotify.authorizationManager, newAuthorizationManager)
+        XCTAssertEqual(
+            SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests.spotify.authorizationManager,
+            newAuthorizationManager
+        )
         
         self.deauthorizeReauthorize()
         
@@ -1093,7 +1093,7 @@ final class SpotifyAPIAuthorizationCodeFlowPKCEProxyAuthorizationTests:
     func testDenyAuthorizationRequest() throws { try denyAuthorizationRequest() }
 
     override class func tearDown() {
-        Self.spotify.authorizationManager.deauthorize()
+        spotify.authorizationManager.deauthorize()
     }
 
 }

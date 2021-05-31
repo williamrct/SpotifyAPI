@@ -1,4 +1,4 @@
-#if canImport(Combine)
+#if canImport(Combine) && compiler(>=5.3)
 import Foundation
 import Combine
 import SpotifyWebAPI
