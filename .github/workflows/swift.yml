@@ -57,65 +57,12 @@ jobs:
         RepeatModeTests\
         "
 
-  test_linux_old:
+  test_linux:
     strategy:
       max-parallel: 1
       fail-fast: false
       matrix:
-          image: ["swift:5.1", "swift:5.2"]
-
-    runs-on: ubuntu-latest
-    container: ${{ matrix.image }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build ${{ matrix.image }}
-      run: swift build -v --build-tests
-    - name: Run tests ${{ matrix.image }}
-      run: |
-        swift test --filter "\
-        AuthorizationScopesTests|\
-        CodingAuthInfoTests|\
-        CodingAuthorizationCodeFlowManagerTests|\
-        CodingAuthorizationCodeFlowPKCEManagerTests|\
-        CodingClientCredentialsFlowManagerTests|\
-        CodingCurrentlyPlayingContextTests|\
-        CodingPlaybackRequestTests|\
-        CodingSpotifyUserTests|\
-        CodingTimeReferenceTests|\
-        CodingTrackAttributesTests|\
-        CursorPagingObjectPlayHistoryCodingTests|\
-        ExampleContentTests|\
-        SpotifyAPIClientCredentialsFlowAlbumsTests|\
-        SpotifyAPIClientCredentialsFlowArtistTests|\
-        SpotifyAPIClientCredentialsFlowBrowseTests|\
-        SpotifyAPIClientCredentialsFlowClientAuthorizationTests|\
-        SpotifyAPIClientCredentialsFlowEpisodeTests|\
-        SpotifyAPIClientCredentialsFlowErrorTests|\
-        SpotifyAPIClientCredentialsFlowFollowTests|\
-        SpotifyAPIClientCredentialsFlowProxyFollowTests|\
-        SpotifyAPIClientCredentialsFlowInsufficientScopeTests|\
-        SpotifyAPIClientCredentialsFlowMarketTests|\
-        SpotifyAPIClientCredentialsFlowPlaylistsTests|\
-        SpotifyAPIClientCredentialsFlowProxyArtistTests|\
-        SpotifyAPIClientCredentialsFlowProxyAuthorizationTests|\
-        SpotifyAPIClientCredentialsFlowProxyInsufficientScopeTests|\
-        SpotifyAPIClientCredentialsFlowProxyRefreshTokensConcurrentTests|\
-        SpotifyAPIClientCredentialsFlowRefreshTokensConcurrentTests|\
-        SpotifyAPIClientCredentialsFlowSearchTests|\
-        SpotifyAPIClientCredentialsFlowShowTests|\
-        SpotifyAPIClientCredentialsFlowTrackTests|\
-        SpotifyAPIClientCredentialsFlowUserProfileTests|\
-        SpotifyIdentifierTests|\
-        SpotifyPlayerErrorCodingTests|\
-        RepeatModeTests\
-        "
-        
-  test_linux_new:
-    strategy:
-      max-parallel: 1
-      fail-fast: false
-      matrix:
-          image: ["swift:5.3", "swift:5.4"]
+          image: ["swift:5.1", "swift:5.2", "swift:5.3", "swift:5.4"]
 
     runs-on: ubuntu-latest
     container: ${{ matrix.image }}
