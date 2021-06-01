@@ -91,7 +91,6 @@ var spotifyWebAPIDependencies: [Target.Dependency] {
 let package = Package(
     name: "SpotifyAPI",
     platforms: [
-//        .macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)
         .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
     ],
     products: [

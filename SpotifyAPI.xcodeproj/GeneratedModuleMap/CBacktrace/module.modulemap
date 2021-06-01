@@ -1,4 +1,0 @@
-module CBacktrace {
-    umbrella "/Users/pschorn/Swift/Libraries/SpotifyAPI/.build/checkouts/swift-backtrace/Sources/CBacktrace/include"
-    export *
-}
