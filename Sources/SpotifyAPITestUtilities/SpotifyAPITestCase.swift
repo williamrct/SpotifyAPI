@@ -200,12 +200,12 @@ open class SpotifyAPITestCase: XCTestCase {
             ------------------------------------------------
             """
         
-        if let logFile = logFile {
+        if let logFile = Self.logFile {
             try? message.append(to: logFile)
         }
         
-        if !failingTests.contains(testName) {
-            failingTests.append(testName)
+        if !Self.failingTests.contains(testName) {
+            Self.failingTests.append(testName)
         }
         
     }

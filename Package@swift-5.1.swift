@@ -64,7 +64,7 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
     
     #if TEST
     dependencies += [
-        .product(name: "Vapor", package: "vapor"),
+//        .product(name: "Vapor", package: "vapor"),
         .product(name: "NIOHTTP1", package: "swift-nio"),
         .product(name: "NIO", package: "swift-nio"),
         .product(name: "AsyncHTTPClient", package: "async-http-client")
@@ -98,8 +98,7 @@ var spotifyWebAPIDependencies: [Target.Dependency] {
 let package = Package(
     name: "SpotifyAPI",
     platforms: [
-        // .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
-        .macOS(.v10_12), .iOS(.v10), .tvOS(.v9), .watchOS(.v2)
+        .macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)
     ],
     products: [
         .library(

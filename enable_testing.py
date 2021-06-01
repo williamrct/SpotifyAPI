@@ -2,7 +2,8 @@ import sys, os, re
 
 use_test = sys.argv[1].lower()
 
-project_directory = os.path.dirname(__file__)
+# project_directory = os.path.dirname(__file__)
+project_directory = "/Users/pschorn/Swift/Libraries/SpotifyAPI"
 
 # ensure the working directory is the SpotifyAPI package
 package_file = os.path.join(project_directory, "Package.swift")
@@ -24,7 +25,7 @@ elif use_test == "false":
 else:
     exit("first argument must be either 'true' or 'false'")
 
-print(f"will replace {flags[0]} with {flags[1]} in {project_directory}")
+print(f"will replace `{flags[0]}` with `{flags[1]}` in {project_directory}")
 
 sources_directory = os.path.join(project_directory, "Sources")
 tests_directory = os.path.join(project_directory, "Tests")
@@ -34,14 +35,13 @@ tests_directory = os.path.join(project_directory, "Tests")
 swift_files: [str] = []
 
 swift_files.append(package_file)
-package_swift_5_1_file = os.path.join(
-    project_directory, "Package@swift-5.1.swift"
-)
-swift_files.append(package_swift_5_1_file)
-package_swift_5_2_file = os.path.join(
-    project_directory, "Package@swift-5.2.swift"
-)
-swift_files.append(package_swift_5_2_file)
+
+# find all Package@swift files
+
+for file in os.listdir(project_directory):
+    if file.startswith("Package@swift-"):
+        full_path = os.path.join(project_directory, file)
+        swift_files.append(full_path)
 
 # search for all swift source code files
 for directory in (sources_directory, tests_directory):
@@ -52,7 +52,7 @@ for directory in (sources_directory, tests_directory):
             full_path = os.path.join(root, file)
             swift_files.append(full_path)
 
-pattern = rf"^(\s*){flags[0]}\s*$"
+pattern = rf"^(\s*){flags[0]}"
 replacement = rf"\1{flags[1]}"
 
 for file in swift_files:

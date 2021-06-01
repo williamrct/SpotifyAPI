@@ -174,26 +174,10 @@ public extension String {
             
             let handle = try FileHandle(forUpdating: file)
             
-            #if compiler(>=5.3)
-            
-            do {
-                try handle.seekToEnd()
-                handle.write(data)
-                try handle.close()
-                
-            } catch {
-                try handle.close()
-                throw error
-            }
-            
-            #else
-
             handle.seekToEndOfFile()
             handle.write(data)
             handle.closeFile()
             
-            #endif
-
         }
         else {
             let directory = file.deletingLastPathComponent()
