@@ -1,17 +1,8 @@
 language: swift
 os: osx
-jobs:
-  include:
-    - osx_image: xcode10.2
-    script:
-      - swift --version
-      - swift package generate-xcodeproj
-      - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
-    - osx_image: xcode11
-    script:
-      - swift --version
-      - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
-    - osx_image: xcode11.4
-    script:
-      - swift --version
-      - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
+osx_image:
+- xcode10.2
+script:
+    - swift --version
+    - swift package generate-xcodeproj
+    - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
