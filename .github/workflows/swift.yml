@@ -175,7 +175,7 @@ jobs:
         xcode: ["/Applications/Xcode_11.2.1.app", "/Applications/Xcode_11.4.1.app"]
         include:
           - xcode: "/Applications/Xcode_11.2.1.app"
-            platform: "platform=iOS Simulator,name=iPhone 11,OS=13.2"
+            platform: "platform=iOS Simulator,name=iPhone 11,OS=13.2.2"
           - xcode: "/Applications/Xcode_11.4.1.app"
             platform: "platform=tvOS Simulator,name=Apple TV,OS=13.4"
             
