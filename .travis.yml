@@ -1,10 +1,10 @@
 language: swift
 os: osx
 osx_image:
-- xcode11.0
+- xcode11
 - xcode11.4
 - xcode12.0
 - xcode12.5
 script:
     - swift --version
-    - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS' -sdk 'macosx10.14'
+    - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
