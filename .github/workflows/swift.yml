@@ -69,7 +69,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build ${{ matrix.image }}
-      run: swift build --build-tests
+      run: swift build -v --build-tests
     - name: Run tests ${{ matrix.image }}
       run: |
         swift test --filter "\

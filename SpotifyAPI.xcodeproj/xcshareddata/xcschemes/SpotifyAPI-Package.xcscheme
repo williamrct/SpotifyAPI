@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SpotifyAPI::SpotifyWebAPI"
-               BuildableName = "SpotifyWebAPI.framework"
-               BlueprintName = "SpotifyWebAPI"
+               BlueprintIdentifier = "SpotifyAPI::SpotifyExampleContent"
+               BuildableName = "SpotifyExampleContent.framework"
+               BlueprintName = "SpotifyExampleContent"
                ReferencedContainer = "container:SpotifyAPI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SpotifyAPI::SpotifyExampleContent"
-               BuildableName = "SpotifyExampleContent.framework"
-               BlueprintName = "SpotifyExampleContent"
+               BlueprintIdentifier = "SpotifyAPI::SpotifyWebAPI"
+               BuildableName = "SpotifyWebAPI.framework"
+               BlueprintName = "SpotifyWebAPI"
                ReferencedContainer = "container:SpotifyAPI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -83,9 +83,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SpotifyAPI::SpotifyWebAPI"
-            BuildableName = "SpotifyWebAPI.framework"
-            BlueprintName = "SpotifyWebAPI"
+            BlueprintIdentifier = "SpotifyAPI::SpotifyExampleContent"
+            BuildableName = "SpotifyExampleContent.framework"
+            BlueprintName = "SpotifyExampleContent"
             ReferencedContainer = "container:SpotifyAPI.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

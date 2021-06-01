@@ -1,4 +1,4 @@
-#if TEST && compiler(>=5.1)
+#if TEST && compiler(>=5.3)
 import Foundation
 import Vapor
 

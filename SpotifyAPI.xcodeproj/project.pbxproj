@@ -2125,16 +2125,16 @@
       "OBJ_391" = {
          isa = "PBXGroup";
          children = (
-            "RegularExpressions::RegularExpressions::Product",
-            "swift-log::Logging::Product",
             "SpotifyAPI::SpotifyExampleContent::Product",
-            "OpenCombine::OpenCombineFoundation::Product",
-            "SpotifyAPI::SpotifyWebAPI::Product",
-            "OpenCombine::OpenCombine::Product",
+            "swift-log::Logging::Product",
             "SpotifyAPI::SpotifyAPITestUtilities::Product",
-            "OpenCombine::OpenCombineDispatch::Product",
             "SpotifyAPI::SpotifyAPIMainTests::Product",
-            "OpenCombine::COpenCombineHelpers::Product"
+            "OpenCombine::OpenCombineFoundation::Product",
+            "OpenCombine::OpenCombineDispatch::Product",
+            "SpotifyAPI::SpotifyWebAPI::Product",
+            "OpenCombine::COpenCombineHelpers::Product",
+            "OpenCombine::OpenCombine::Product",
+            "RegularExpressions::RegularExpressions::Product"
          );
          name = "Products";
          path = "";

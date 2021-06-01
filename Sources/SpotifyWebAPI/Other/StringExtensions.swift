@@ -176,19 +176,20 @@ public extension String {
         // Convert the array of bytes into data.
         let bytes = Data(hash)
         
+        return bytes.base64URLEncodedString()
+        
         #elseif canImport(CommonCrypto)
         
         let bytes = sha256Hash(data: data)
+        return bytes.base64URLEncodedString()
         
         #else
         
-        let bytes = Data()
+        fatalError(
+            "makeCodeChallenge is not supported without Crypto or CommonCrypto"
+        )
 
         #endif
-
-        // Base-64 URL-encode the bytes.
-        return bytes.base64URLEncodedString()
-     
 
     }
     

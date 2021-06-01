@@ -113,7 +113,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
         DistributedLock.redirectListener.unlock()
     }
 
-    #if TEST && compiler(>=5.1)
+    #if TEST && compiler(>=5.3)
     // MARK: start the server
     
     var redirectURIWithQuery: URL? = nil
@@ -184,7 +184,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
         """
     )
     
-    #if TEST && compiler(>=5.1)
+    #if TEST && compiler(>=5.3)
     print(
         """
 

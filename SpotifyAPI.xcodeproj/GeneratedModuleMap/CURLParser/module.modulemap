@@ -1,0 +1,4 @@
+module CURLParser {
+    umbrella "/Users/pschorn/Swift/Libraries/SpotifyAPI/.build/checkouts/vapor/Sources/CURLParser/include"
+    export *
+}

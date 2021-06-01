@@ -3,7 +3,7 @@
 import PackageDescription
 
 var packageDependencies: [Package.Dependency] {
-    
+
     var dependencies: [Package.Dependency] = [
         .package(
             // name: "RegularExpressions",
@@ -29,12 +29,6 @@ var packageDependencies: [Package.Dependency] {
     
     #if TEST
     dependencies += [
-        // .package(
-        //     // name: "vapor",
-        //     url: "https://github.com/vapor/vapor.git",
-        //     // from: "4.45.3"
-        //     // .branch("3")
-        // ),
         .package(
             // name: "swift-nio",
             url: "https://github.com/apple/swift-nio.git",
@@ -47,12 +41,12 @@ var packageDependencies: [Package.Dependency] {
         )
     ]
     #endif
-    
+
     return dependencies
 }
 
 var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
-    
+
     var dependencies: [Target.Dependency] = [
         "SpotifyWebAPI",
         "SpotifyExampleContent",
@@ -61,22 +55,21 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
         .product(name: "OpenCombineDispatch", package: "OpenCombine"),
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
-    
+
     #if TEST
     dependencies += [
-//        .product(name: "Vapor", package: "vapor"),
         .product(name: "NIOHTTP1", package: "swift-nio"),
         .product(name: "NIO", package: "swift-nio"),
         .product(name: "AsyncHTTPClient", package: "async-http-client")
     ]
     #endif
-    
+
     return dependencies
-    
+
 }
 
 var spotifyWebAPIDependencies: [Target.Dependency] {
-    
+
     var dependencies: [Target.Dependency] = [
         .product(name: "RegularExpressions", package: "RegularExpressions"),
         .product(name: "Logging", package: "swift-log"),
@@ -84,21 +77,22 @@ var spotifyWebAPIDependencies: [Target.Dependency] {
         .product(name: "OpenCombineDispatch", package: "OpenCombine"),
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
-    
-    #if os(Linux)
+
+//    #if os(Linux)
     dependencies += [
         .product(name: "Crypto", package: "swift-crypto")
     ]
-    #endif
-    
+//    #endif
+
     return dependencies
-    
+
 }
 
 let package = Package(
     name: "SpotifyAPI",
     platforms: [
-        .macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)
+//        .macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)
+        .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
     ],
     products: [
         .library(
@@ -130,9 +124,9 @@ let package = Package(
             dependencies: spotifyAPITestUtilitiesDependencies
             // exclude: ["README.md"]
         ),
-        
+
         // MARK: Test Targets
-        
+
         .testTarget(
             name: "SpotifyAPIMainTests",
             dependencies: [

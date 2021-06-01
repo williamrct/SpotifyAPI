@@ -1,13 +1,11 @@
 language: swift
 os: osx
 osx_image:
-- xcode10.3
 - xcode10.2
-- xcode10.1
-- xcode10
+- xcode11.0
+- xcode11.4
+- xcode12.0
+- xcode12.5
 script:
-    - brew install kylef/formulae/swiftenv
-    - swiftenv install 5.1
-    - swiftenv global 5.1
     - swift --version
-    - swift build
+    - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS' -sdk 'macosx10.14'

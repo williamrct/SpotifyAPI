@@ -29,12 +29,6 @@ var packageDependencies: [Package.Dependency] {
     
     #if TEST
     dependencies += [
-        // .package(
-        //     // name: "vapor",
-        //     url: "https://github.com/vapor/vapor.git",
-        //     // from: "4.45.3"
-        //     // .branch("3")
-        // ),
         .package(
             // name: "swift-nio",
             url: "https://github.com/apple/swift-nio.git",
@@ -64,7 +58,6 @@ var spotifyAPITestUtilitiesDependencies: [Target.Dependency] {
     
     #if TEST
     dependencies += [
-//        .product(name: "Vapor", package: "vapor"),
         .product(name: "NIOHTTP1", package: "swift-nio"),
         .product(name: "NIO", package: "swift-nio"),
         .product(name: "AsyncHTTPClient", package: "async-http-client")
