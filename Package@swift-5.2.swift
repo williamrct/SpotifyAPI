@@ -19,13 +19,18 @@ var packageDependencies: [Package.Dependency] {
             // name: "OpenCombine",
             url: "https://github.com/OpenCombine/OpenCombine.git",
             from: "0.12.0"
-        ),
+        )
+    ]
+    
+    #if os(Linux)
+    dependencies += [
         .package(
             // name: "swift-crypto",
             url: "https://github.com/apple/swift-crypto.git",
             from: "1.1.3"
         )
     ]
+    #endif
     
     #if TEST
     dependencies += [
@@ -78,21 +83,27 @@ var spotifyWebAPIDependencies: [Target.Dependency] {
         .product(name: "OpenCombineFoundation", package: "OpenCombine")
     ]
 
-//    #if os(Linux)
+    #if os(Linux)
     dependencies += [
         .product(name: "Crypto", package: "swift-crypto")
     ]
-//    #endif
+    #endif
 
     return dependencies
 
 }
 
+var supportedPlatforms: [SupportedPlatform] {
+    #if canImport(Combine)
+    return [.iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)]
+    #else
+    return [.iOS(.v11), .macOS(.v10_13), .tvOS(.v11), .watchOS(.v4)]
+    #endif
+}
+
 let package = Package(
     name: "SpotifyAPI",
-    platforms: [
-        .iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)
-    ],
+    platforms: supportedPlatforms,
     products: [
         .library(
             name: "SpotifyAPI",
