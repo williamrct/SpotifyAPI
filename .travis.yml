@@ -3,8 +3,9 @@ os: osx
 osx_image:
 - xcode11
 - xcode11.4
-- xcode12.0
+- xcode12
 - xcode12.5
 script:
     - swift --version
     - xcodebuild -quiet -scheme "SpotifyAPI-Package" -destination 'platform=macOS'
+    

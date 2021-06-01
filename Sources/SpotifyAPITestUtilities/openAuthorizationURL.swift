@@ -142,6 +142,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
 
     // MARK: open the authorization URL
     
+    #if os(macOS) || os(Linux)
     func tryToOpenURLWithPython3() {
         do {
             try openURLWithPython3(authorizationURL)
@@ -150,6 +151,7 @@ public func openAuthorizationURLAndWaitForRedirectNonHeadless(
             print("couldn't open \(authorizationURL) with python3: \(error)")
         }
     }
+    #endif
 
     #if compiler(>=5.3)
     
