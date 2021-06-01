@@ -1,7 +1,7 @@
 import Foundation
 #if canImport(Crypto)
 import Crypto
-#elseif canImport(CommonCrypto)
+#else
 import CommonCrypto
 #endif
 
@@ -178,17 +178,11 @@ public extension String {
         
         return bytes.base64URLEncodedString()
         
-        #elseif canImport(CommonCrypto)
+        #else
         
         let bytes = sha256Hash(data: data)
         return bytes.base64URLEncodedString()
         
-        #else
-        
-        fatalError(
-            "makeCodeChallenge is not supported without Crypto or CommonCrypto"
-        )
-
         #endif
 
     }
