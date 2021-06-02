@@ -2,6 +2,7 @@ language: swift
 os: osx
 jobs:
   include:
+  
     - osx_image: xcode10.2
       script:
         - swift --version
