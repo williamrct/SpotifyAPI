@@ -12,7 +12,7 @@ import UIKit
 import FoundationNetworking
 #endif
 
-#if canImport(WebKit) && compiler(>=5.3)
+#if canImport(WebKit)
 
 /**
  Opens the authorization URL in a headless browser and then clicks either the

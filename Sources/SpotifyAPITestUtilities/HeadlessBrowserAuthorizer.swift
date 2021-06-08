@@ -1,4 +1,4 @@
-#if canImport(WebKit) && compiler(>=5.3)
+#if canImport(WebKit)
 import Foundation
 import SpotifyWebAPI
 import WebKit
