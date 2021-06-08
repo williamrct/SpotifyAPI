@@ -56,9 +56,9 @@ public func encodeDecode<T: Codable>(
     
     do {
         
-        let encodedData = try JSONEncoder().encode(object)
+        let encodedData = try _JSONFragmentEncoder().encode(object)
         
-        let decodedObject = try JSONDecoder().decode(
+        let decodedObject = try _JSONFragmentDecoder().decode(
             T.self, from: encodedData
         )
         
@@ -81,7 +81,7 @@ public func encodeDecode<T: Codable>(
 
     } catch {
         
-        let rawData = try? JSONEncoder().encode(object)
+        let rawData = try? _JSONFragmentEncoder().encode(object)
         
         let decodingError = SpotifyDecodingError(
             url: nil,
@@ -162,12 +162,12 @@ public func decodeEncodeDecode<T: Codable>(
     
     do {
         
-        let decodedObject = try JSONDecoder().decode(
+        let decodedObject = try _JSONFragmentDecoder().decode(
             T.self, from: data
         )
-        let encodedObject = try JSONEncoder().encode(decodedObject)
+        let encodedObject = try _JSONFragmentEncoder().encode(decodedObject)
         
-        let reDecodedObject = try JSONDecoder().decode(
+        let reDecodedObject = try _JSONFragmentDecoder().decode(
             T.self, from: encodedObject
         )
         

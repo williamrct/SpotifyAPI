@@ -107,7 +107,7 @@ public func decodeSpotifyErrors(
         
     }
 
-    let decoder = JSONDecoder()
+    let decoder = _JSONFragmentDecoder()
     
     if let error = try? decoder.decode(
         SpotifyAuthenticationError.self, from: data
@@ -194,7 +194,7 @@ public func decodeSpotifyObject<ResponseType: Decodable>(
     
     do {
         
-        return try JSONDecoder().decode(
+        return try _JSONFragmentDecoder().decode(
             ResponseType.self, from: data
         )
     

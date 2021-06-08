@@ -280,7 +280,7 @@ extension SpotifyAPI {
         do {
             
             let encodedBody = try body.map {
-                try JSONEncoder().encode($0)
+                try _JSONFragmentEncoder().encode($0)
             }
             
             return self.apiRequest(

@@ -330,3 +330,47 @@ public extension KeyedEncodingContainer {
 
     
 }
+
+public class _JSONFragmentDecoder: JSONDecoder {
+    
+    public override func decode<T>(
+        _ type: T.Type, from data: Data
+    ) throws -> T where T : Decodable {
+        
+        // if the JSON is a fragment
+        if let dataString = String(data: data, encoding: .utf8)?.strip(),
+                !(dataString.starts(with: "{") || dataString.starts(with: "[")) {
+            let arrayData = "[\(dataString)]".data(using: .utf8)!
+            // print("will decode fragment wrapped in array")
+            let decodedArray = try super.decode([T].self, from: arrayData)
+            if let fragment = decodedArray.first {
+                return fragment
+            }
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "could not decode fragment"
+                )
+            )
+            
+        }
+        
+        return try super.decode(type, from: data)
+        
+    }
+    
+}
+
+public class _JSONFragmentEncoder: JSONEncoder {
+    
+    public override func encode<T>(
+        _ value: T
+    ) throws -> Data where T : Encodable {
+        
+        return try JSONSerialization.data(
+            withJSONObject: value, options: .fragmentsAllowed
+        )
+        
+    }
+    
+}
