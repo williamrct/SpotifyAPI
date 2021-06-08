@@ -191,14 +191,12 @@ extension HeadlessBrowserAuthorizer: WKNavigationDelegate {
     }
     
     // MARK: - Decide Policy -
-    
+
     // MARK: Request
-    @available(macOS 10.15, iOS 13, *)
     public func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
-        preferences: WKWebpagePreferences,
-        decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
         
         let url = navigationAction.request.url!
@@ -214,14 +212,14 @@ extension HeadlessBrowserAuthorizer: WKNavigationDelegate {
         if baseURL == self.redirectURI {
             self.didReceiveRedirect = true
             self.receiveRedirectURIWithQuery(url)
-            decisionHandler(.cancel, .init())
+            decisionHandler(.cancel)
         }
         else {
-            decisionHandler(.allow, .init())
+            decisionHandler(.allow)
         }
-        
+
     }
-    
+
     // MARK: Response
     public func webView(
         _ webView: WKWebView,
