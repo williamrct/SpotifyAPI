@@ -176,8 +176,10 @@ jobs:
   
   test_xcode_10_3:
     strategy:
+      max-parallel: 1
+      fail-fast: false
       matrix:
-        platform: ["platform=macOS", "platform=iOS Simulator,name=iPhone 6,OS=11.3"]
+        platform: ["platform=macOS", "platform=iOS Simulator,name=iPhone 6,OS=12.4"]
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: "/Applications/Xcode_10.3.app"
