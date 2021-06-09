@@ -331,6 +331,8 @@ public extension KeyedEncodingContainer {
     
 }
 
+// MARK: Fragment Coding
+
 public class _JSONFragmentDecoder: JSONDecoder {
     
     public override func decode<T>(
@@ -367,9 +369,42 @@ public class _JSONFragmentEncoder: JSONEncoder {
         _ value: T
     ) throws -> Data where T : Encodable {
         
-        return try JSONSerialization.data(
-            withJSONObject: value, options: .fragmentsAllowed
+        if JSONSerialization.isValidJSONObject(value) {
+            // print("_JSONFragmentEncoder: IS valid JSON object")
+            return try super.encode(value)
+        }
+        // print("_JSONFragmentEncoder: NOT valid JSON object")
+        
+        let boxedData = try super.encode([value])
+        guard let dataString = String(
+            data: boxedData, encoding: .utf8
+        ) else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "could not convert data to string"
+                )
+            )
+        }
+        
+        // remove any leading and trailing whitespace
+        var trimmedDataString = dataString.trimmingCharacters(
+            in: .whitespacesAndNewlines
         )
+        // remove the leading and trailing square brackets
+        trimmedDataString.removeLast()
+        trimmedDataString.removeFirst()
+        
+        guard let unboxedData = trimmedDataString.data(using: .utf8) else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "could not convert string to data"
+                )
+            )
+        }
+        
+        return unboxedData
         
     }
     
