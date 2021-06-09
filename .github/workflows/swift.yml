@@ -179,20 +179,22 @@ jobs:
       matrix:
         platform: ["platform=macOS", "platform=iOS Simulator,name=iPhone 6,OS=11.3"]
     runs-on: macos-latest
+    env:
+      DEVELOPER_DIR: "/Applications/Xcode_10.3.app"
     steps:
     - uses: actions/checkout@v2
     - name: configure environment variables
       run: ./set_credentials.sh
     - name: Build ${{ matrix.platform }}
       run: |
-        python3 enable_testing.py true
-        env DEVELOPER_DIR="/Applications/Xcode_10.3.app" xcrun xcodebuild \
+        swift package generate-xcodeproj
+        xcodebuild \
         -scheme "SpotifyAPI-Package" \
         -destination "${{ matrix.platform }}" \
         build-for-testing
     - name: test ${{ matrix.platform }}
       run: |
-        env DEVELOPER_DIR="/Applications/Xcode_10.3.app" xcrun xcodebuild \
+        xcodebuild \
         -scheme "SpotifyAPI-Package" \
         -destination "${{ matrix.platform }}" \
         test \
