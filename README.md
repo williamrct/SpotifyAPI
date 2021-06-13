@@ -31,11 +31,11 @@ Read the full [documentation][1] and check out [this example iOS app][14] and th
 
 ## Supported Platforms
 
-* Swift 5.3+ (for Swift 5.1 and 5.2 support, use the [`swift-tools-5-1`](https://github.com/Peter-Schorn/SpotifyAPI/tree/swift-tools-5-1) branch)
-* iOS 13+
-* macOS 10.15+
-* tvOS 13+
-* watchOS 6+
+* Swift 5.1+
+* iOS 11+
+* macOS 10.13+
+* tvOS 11+
+* watchOS 4+
 * Linux
 
 ## Installation
