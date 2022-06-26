@@ -81,7 +81,7 @@ var packageDependencies: [Package.Dependency] {
         .package(
             name: "swift-crypto",
             url: "https://github.com/apple/swift-crypto.git",
-            from: "1.1.3"
+            from: "2.1.0"
         )
     ]
     
